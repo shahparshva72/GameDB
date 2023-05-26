@@ -35,6 +35,8 @@ class DominantColorProvider: ObservableObject {
 struct GameThumbnail: View {
     var game: GameModel
     @State private var dominantColor: Color = Color.white
+    @State private var dominantUIColor: UIColor = UIColor.white
+
     var body: some View {
         VStack {
             AsyncImage(url: game.coverURL) { image in
@@ -62,9 +64,11 @@ struct GameThumbnail: View {
                     
                     DispatchQueue.main.async {
                         dominantColor = Color(mainUIColor)
+                        dominantUIColor = mainUIColor
                     }
                 }
             }
+
             HStack(alignment: .top){
                 VStack(alignment: .leading) {
                     Text(game.name)
@@ -74,6 +78,7 @@ struct GameThumbnail: View {
                     Text(game.company)
                         .font(.subheadline)
                 }
+                .foregroundColor(dominantUIColor.perceivedBrightness < 0.5 ? Color.white : Color.black)
             }
             .frame(maxWidth: .infinity, alignment: .bottomLeading)
             .padding(EdgeInsets.init(top: 16, leading: 16, bottom: 16, trailing: 16))

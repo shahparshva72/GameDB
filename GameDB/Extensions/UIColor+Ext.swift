@@ -63,3 +63,19 @@ struct HSLColor {
         return abs((value + amount).truncatingRemainder(dividingBy: 1))
     }
 }
+
+extension UIColor {
+    var rgbComponents: (red: CGFloat, green: CGFloat, blue: CGFloat) {
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        getRed(&r, green: &g, blue: &b, alpha: nil)
+        return (r, g, b)
+    }
+
+    var perceivedBrightness: Double {
+        let components = rgbComponents
+        return (0.299 * Double(components.red) + 0.587 * Double(components.green) + 0.114 * Double(components.blue))
+    }
+}
+
