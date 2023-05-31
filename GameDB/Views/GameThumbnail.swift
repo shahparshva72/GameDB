@@ -6,37 +6,11 @@
 //
 
 import SwiftUI
-import Combine
-
-class DominantColorProvider: ObservableObject {
-    @Published var dominantColor: Color?
-    private var kMeansClusterer = KMeansClusterer()
-    
-    func findDominantColor(for image: UIImage?) {
-        guard let image = image else { return }
-        
-        DispatchQueue.global(qos: .userInitiated).async {
-            let smallImage = image.resized(to: CGSize(width: 100, height: 100))
-            let points = smallImage.getPixels().map({ KMeansClusterer.Point(from: $0) })
-            let clusters = self.kMeansClusterer.cluster(points: points, into: 3).sorted(by: {$0.points.count > $1.points.count})
-            let colors = clusters.map(({$0.center.toUIColor()}))
-            
-            guard let mainColor = colors.first else {
-                return
-            }
-            
-            DispatchQueue.main.async {
-                self.dominantColor = Color(mainColor)
-            }
-        }
-    }
-}
-
 struct GameThumbnail: View {
     var game: GameModel
     @State private var dominantColor: Color = Color.white
     @State private var dominantUIColor: UIColor = UIColor.white
-
+    
     var body: some View {
         VStack {
             AsyncImage(url: game.coverURL) { image in
@@ -49,26 +23,12 @@ struct GameThumbnail: View {
             .cornerRadius(15)
             .shadow(color: dominantColor, radius: 10, x: 0.0, y: 0.0)
             .onAppear {
-                DispatchQueue.global(qos: .userInitiated).async {
-                    guard let url = URL(string: game.coverURLString),
-                          let data = try? Data(contentsOf: url),
-                          let uiImage = UIImage(data: data) else { return }
-                    
-                    let smallImage = uiImage.resized(to: CGSize(width: 100, height: 100))
-                    let kMeans = KMeansClusterer()
-                    let points = smallImage.getPixels().map({ KMeansClusterer.Point(from: $0) })
-                    let clusters = kMeans.cluster(points: points, into: 3).sorted(by: { $0.points.count > $1.points.count })
-                    let uiColors = clusters.map({ $0.center.toUIColor() })
-                    
-                    guard let mainUIColor = uiColors.first else { return }
-                    
-                    DispatchQueue.main.async {
-                        dominantColor = Color(mainUIColor)
-                        dominantUIColor = mainUIColor
-                    }
+                ImageProcessing.getDominantColor(imageURLString: game.coverURLString) { color, uiColor in
+                    dominantColor = color
+                    dominantUIColor = uiColor
                 }
             }
-
+            
             HStack(alignment: .top){
                 VStack(alignment: .leading) {
                     Text(game.name)
