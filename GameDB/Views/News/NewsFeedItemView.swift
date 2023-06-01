@@ -9,6 +9,7 @@ import SwiftUI
 
 struct NewsFeedItemView: View {
     let newsItem: RSSItem
+    
     @State private var dominantColor: Color = Color.white
     @State private var dominantUIColor: UIColor = UIColor.white
 

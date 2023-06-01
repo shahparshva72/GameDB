@@ -7,23 +7,27 @@
 
 import SwiftUI
 import Combine
-import WebKit
 
-// The News Feed View
 struct NewsFeedView: View {
     @StateObject private var viewModel = NewsFeedViewModel()
     
     var body: some View {
         NavigationView {
             List(viewModel.newsItems, id: \.link) { newsItem in
-                NavigationLink(destination: EmptyView()) {
+                ZStack {
                     NewsFeedItemView(newsItem: newsItem)
+                    NavigationLink(destination: EmptyView()) {
+                        EmptyView()
+                    }
+                    .opacity(0.0)
                 }
             }
             .listStyle(.plain)
             .navigationTitle("News Feed")
         }
-        .onAppear(perform: viewModel.fetchNews)
+        .onAppear{
+            viewModel.fetchNews(for: .ign)
+        }
     }
 }
 

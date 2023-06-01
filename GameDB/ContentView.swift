@@ -14,13 +14,14 @@ struct ContentView: View {
                 .tabItem {
                     Label("Home", systemImage: "gamecontroller")
                 }
-            SearchView()
-                .tabItem {
-                    Label("Search", systemImage: "magnifyingglass")
-                }
             NewsFeedView()
                 .tabItem {
                     Label("News", systemImage: "newspaper")
+                }
+            SettingsView()
+                .tabItem {
+                    Image(systemName: "gear")
+                    Text("Settings")
                 }
         }
     }
