@@ -7,28 +7,20 @@
 
 import SwiftUI
 
-enum SettingsModel: String, CaseIterable {
-    case appearance = "Appearance"
-    case feed = "Feed"
-    case credits = "Credits"
-    case about = "About"
-}
-
 struct SettingsView: View {
     
     // TODO: - Add Appearances
-    // TODO: - Add options for user to select RSS Feeds
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List(SettingsModel.allCases, id: \.self) { setting in
-                NavigationLink(destination: SettingsDestinationView(setting: setting)) {
-                    Text(setting.rawValue)
-                }
+                NavigationLink(setting.rawValue, value: setting)
             }
+            .buttonStyle(.bordered)
+            .navigationDestination(for: SettingsModel.self) { $0 }
             .navigationBarTitle("Settings")
         }
-
+        
     }
 }
 

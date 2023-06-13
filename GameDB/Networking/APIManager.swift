@@ -37,7 +37,7 @@ class APIManager {
     }
     
     func fetchGame(id: Int, completion: @escaping (Result<GameModel, Error>) -> Void) {
-        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, summary, genres.name, storyline, first_release_date, screenshots.image_id, id, rating, cover.image_id, involved_companies.company.name; where id = \(id);", dataResponse: { (bytes) -> (Void) in
+        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, summary, genres.name, storyline, first_release_date, screenshots.image_id, id, rating, cover.image_id, involved_companies.company.name, videos.video_id; where id = \(id);", dataResponse: { (bytes) -> (Void) in
             guard let protoGame = try? Proto_GameResult(serializedData: bytes).games.first else {
                 return
             }
@@ -55,13 +55,15 @@ class APIManager {
 
 fileprivate extension GameModel {
     
-    init(game: Proto_Game, coverSize: ImageSize = .COVER_BIG) {
+    init(game: Proto_Game, coverSize: ImageSize = .HD) {
         let coverURL = imageBuilder(imageID: game.cover.imageID, size: coverSize, imageType: .PNG)
         
         let screenshotURLs = game.screenshots.map { (scr) -> String in
             let url = imageBuilder(imageID: scr.imageID, size: .SCREENSHOT_MEDIUM, imageType: .JPEG)
             return url
         }
+        
+        let videoIDs = game.videos.map { $0.videoID }
         
         let company = game.involvedCompanies.first?.company.name ?? ""
         let genres = game.genres.map { $0.name }
@@ -70,10 +72,8 @@ fileprivate extension GameModel {
                   storyline: game.storyline,
                   summary: game.summary,
                   releaseDate: game.firstReleaseDate.date,
-                  //popularity: game.popularity,
                   rating: game.rating,
-                  coverURLString: coverURL, screenshotURLsString: screenshotURLs, genres: genres, company: company)
-        
+                  coverURLString: coverURL, screenshotURLsString: screenshotURLs, genres: genres, company: company, videoIDs: videoIDs)
     }
     
 }

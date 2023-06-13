@@ -10,6 +10,7 @@ import Combine
 
 struct NewsFeedView: View {
     @StateObject private var viewModel = NewsFeedViewModel()
+    @State private var feedModel: FeedsModel = .verge
     
     var body: some View {
         NavigationView {
@@ -21,12 +22,37 @@ struct NewsFeedView: View {
                     }
                     .opacity(0.0)
                 }
+                .listRowSeparator(.hidden)
             }
-            .listStyle(.plain)
+            .listStyle(.inset)
             .navigationTitle("News Feed")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    
+                    Menu {
+                        Button {
+                            self.viewModel.fetchAllNews()
+                        } label: {
+                            Text("All")
+                        }
+                        Divider()
+                        ForEach(FeedsModel.allCases, id: \.self) { feed in
+                            Button {
+                                feedModel = feed
+                                self.viewModel.fetchNews(for: feedModel)
+                            } label: {
+                                Text(feed.feed.name)
+                            }
+                            
+                        }
+                    } label: {
+                        Image(systemName: "list.bullet")
+                    }
+                }
+            }
         }
         .onAppear{
-            viewModel.fetchNews(for: .ign)
+            viewModel.fetchNews(for: feedModel)
         }
     }
 }

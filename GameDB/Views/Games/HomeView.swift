@@ -27,6 +27,8 @@ struct HomeView: View {
                             }
                             .opacity(0.0)
                         }
+                        .padding(.vertical, 8)
+                        .listRowSeparator(.hidden)
                     }
                     .listStyle(.plain)
                 }

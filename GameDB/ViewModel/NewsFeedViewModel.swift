@@ -12,6 +12,12 @@ import Kanna
 class NewsFeedViewModel: ObservableObject {
     @Published var newsItems = [RSSItem]()
     
+    func fetchAllNews() {
+        for feed in FeedsModel.allCases {
+            fetchNews(for: feed)
+        }
+    }
+    
     func fetchNews(for feedModel: FeedsModel) {
         let feed = feedModel.feed
         guard let url = URL(string: feed.url) else { return }

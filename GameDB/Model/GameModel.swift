@@ -21,6 +21,7 @@ struct GameModel {
     let screenshotURLsString: [String]
     let genres: [String]
     let company: String
+    let videoIDs: [String]
     
     var releaseDateText: String {
         return releaseDate.formatted(.dateTime.day().month(.wide).year())
