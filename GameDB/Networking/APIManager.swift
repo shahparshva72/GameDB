@@ -12,9 +12,7 @@ class APIManager {
     
     static let shared = APIManager()
     
-    private init() {
-        
-    }
+    private init() { }
     
     lazy var wrapper: IGDBWrapper = IGDBWrapper(clientID: Constants.clientID, accessToken: Constants.accessToken)
     
@@ -23,7 +21,7 @@ class APIManager {
             guard let gameResults = try? Proto_GameResult(serializedData: bytes) else {
                 return
             }
-            let games = gameResults.games.map { GameModel(game: $0) }
+            let games = gameResults.games.map { GameModel(game: $0, coverSize: .HD) }
             DispatchQueue.main.async {
                 completion(.success(games))
             }
@@ -51,11 +49,43 @@ class APIManager {
         }
     }
     
+    func fetchPlatformDetails(completion: @escaping (Result<[GamePlatformModel], Error>) -> Void) {
+        wrapper.apiProtoRequest(endpoint: .PLATFORMS, apicalypseQuery: "fields name, platform_logo.image_id, platform_logo.url; where category=1; limit 100;") { (bytes) -> (Void) in
+            guard let platformResults = try? Proto_PlatformResult(serializedData: bytes) else {
+                return
+            }
+            
+            let consoles = platformResults.platforms.map {
+                GamePlatformModel(platform: $0)
+            }
+            
+            DispatchQueue.main.async {
+                completion(.success(consoles))
+            }
+        } errorResponse: { error in
+            DispatchQueue.main.async {
+                completion(.failure(error))
+            }
+        }
+        
+    }
+    
 }
+
+fileprivate extension GamePlatformModel {
+    init(platform: Proto_Platform) {
+        self.init(id: Int(platform.id),
+                  name: platform.name,
+                  platformLogo: Platform_Logo(id: Int(platform.platformLogo.id),
+                                              image_id: platform.platformLogo.imageID,
+                                              urlString: platform.platformLogo.url))
+    }
+}
+
 
 fileprivate extension GameModel {
     
-    init(game: Proto_Game, coverSize: ImageSize = .HD) {
+    init(game: Proto_Game, coverSize: ImageSize = .COVER_SMALL) {
         let coverURL = imageBuilder(imageID: game.cover.imageID, size: coverSize, imageType: .PNG)
         
         let screenshotURLs = game.screenshots.map { (scr) -> String in
@@ -77,3 +107,4 @@ fileprivate extension GameModel {
     }
     
 }
+

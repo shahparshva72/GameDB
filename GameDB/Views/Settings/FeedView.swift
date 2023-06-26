@@ -9,18 +9,16 @@ import SwiftUI
 
 struct FeedView: View {
     
-    // TODO: - Add options for user to select RSS Feeds
-    
-    @State private var multiSelection = Set<FeedsModel>()
-    
+    // TODO: - Add option for user to add RSS Feeds
+    @ObservedObject var feedListModel = FeedListModel()
+
     var body: some View {
         VStack {
-            List(FeedsModel.allCases, id: \.self, selection: $multiSelection) { feedModel in
-                Text(feedModel.feed.name)
+            List(feedListModel.feeds, id: \.id) { feedModel in
+                Text(feedModel.name)
             }
         }
         .navigationTitle(Text("Feeds"))
-        
     }
 }
 

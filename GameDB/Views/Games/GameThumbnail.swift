@@ -13,40 +13,27 @@ struct GameThumbnail: View {
     @State private var dominantUIColor: UIColor = UIColor.white
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading) {
             if let imageURL = game.coverURL {
                 AsyncImage(url: imageURL) { image in
-                    image.resizable()
-                        .aspectRatio(contentMode: .fill)
+                    image
+                        .resizable()
                 } placeholder: {
-                    ProgressView()
+                    Color.gray
                 }
-                .clipShape(TopCornerRounded(radius: 10))
-                .onAppear {
-                    ImageProcessing.getDominantColor(imageURLString: game.coverURLString) { color, uiColor in
-                        dominantColor = color
-                        dominantUIColor = uiColor
-                    }
-                }
+                .frame(width: 155, height: 155)
+                .cornerRadius(5)
             }
             
-            VStack(alignment: .leading, spacing: 8.0) {
+            VStack {
                 Text(game.name)
-                    .font(.headline)
-                    .fontWeight(.bold)
-                
-                Text(game.releaseDateText)
-                    .font(.subheadline)
-                    
-                Text(game.company)
-                    .font(.subheadline)
+                    .font(.caption)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
             }
-            .foregroundColor(dominantUIColor.perceivedBrightness < 0.5 ? Color.white : Color.black)
-            .padding(.horizontal, 16)
+            .frame(width: 155)
+            .frame(minHeight: 50)
         }
-        .padding(.bottom, 16)
-        .background(dominantColor.opacity(0.6))
-        .cornerRadius(20)
-        .shadow(color: dominantColor.opacity(0.3), radius: 20, x: 0.0, y: 0.0)
+        .padding(.leading, 15)
     }
 }

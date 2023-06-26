@@ -72,6 +72,7 @@ extension KMeansClusterer {
         }
     }
 }
+
 extension KMeansClusterer {
     struct Point : Equatable {
         let x : CGFloat
@@ -112,8 +113,8 @@ extension KMeansClusterer {
         }
         func distanceSquared(to p : Point) -> CGFloat {
             return (self.x - p.x) * (self.x - p.x)
-                + (self.y - p.y) * (self.y - p.y)
-                + (self.z - p.z) * (self.z - p.z)
+            + (self.y - p.y) * (self.y - p.y)
+            + (self.z - p.z) * (self.z - p.z)
         }
         func toUIColor() -> UIColor {
             return UIColor(red: x, green: y, blue: z, alpha: 1)

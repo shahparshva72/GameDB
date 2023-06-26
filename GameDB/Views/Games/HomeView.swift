@@ -19,18 +19,24 @@ struct HomeView: View {
                 if gameList.isLoading {
                     ProgressView()
                 } else {
-                    List(gameList.games) { game in
-                        ZStack {
-                            GameThumbnail(game: game)
-                            NavigationLink(destination: GameDetailView(gameID: game.id)) {
-                                EmptyView()
+                    VStack(alignment: .leading) {
+                        //                        Text(platformName.description)
+                        //                            .font(.headline)
+                        //                            .padding(.leading, 15)
+                        //                            .padding(.top, 5)
+                        
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            LazyHStack(spacing: 15) {
+                                ForEach(gameList.games) { game in
+                                    NavigationLink(destination: GameDetailView(gameID: game.id)) {
+                                        GameThumbnail(game: game)
+                                            .frame(width: 155)
+                                    }
+                                }
                             }
-                            .opacity(0.0)
+                            .padding(.horizontal, 15)
                         }
-                        .padding(.vertical, 8)
-                        .listRowSeparator(.hidden)
                     }
-                    .listStyle(.plain)
                 }
             }
             .navigationTitle(Text(gameList.platformName))

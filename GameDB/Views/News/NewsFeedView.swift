@@ -10,14 +10,13 @@ import Combine
 
 struct NewsFeedView: View {
     @StateObject private var viewModel = NewsFeedViewModel()
-    @State private var feedModel: FeedsModel = .verge
-    
+
     var body: some View {
         NavigationView {
             List(viewModel.newsItems, id: \.link) { newsItem in
                 ZStack {
                     NewsFeedItemView(newsItem: newsItem)
-                    NavigationLink(destination: EmptyView()) {
+                    NavigationLink(destination: NewsContentView(urlString: newsItem.link)) {
                         EmptyView()
                     }
                     .opacity(0.0)
@@ -28,7 +27,6 @@ struct NewsFeedView: View {
             .navigationTitle("News Feed")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    
                     Menu {
                         Button {
                             self.viewModel.fetchAllNews()
@@ -36,14 +34,12 @@ struct NewsFeedView: View {
                             Text("All")
                         }
                         Divider()
-                        ForEach(FeedsModel.allCases, id: \.self) { feed in
+                        ForEach(viewModel.feedListModel.feeds, id: \.id) { feed in
                             Button {
-                                feedModel = feed
-                                self.viewModel.fetchNews(for: feedModel)
+                                self.viewModel.fetchNews(for: feed)
                             } label: {
-                                Text(feed.feed.name)
+                                Text(feed.name)
                             }
-                            
                         }
                     } label: {
                         Image(systemName: "list.bullet")
@@ -52,12 +48,10 @@ struct NewsFeedView: View {
             }
         }
         .onAppear{
-            viewModel.fetchNews(for: feedModel)
+            viewModel.fetchAllNews()
         }
     }
 }
-
-
 
 struct NewsFeedView_Previews: PreviewProvider {
     static var previews: some View {
