@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9cf083ce-7e6b-4f49-92ab-37fa209a0e17" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/GameDB.xcodeproj/project.xcworkspace/xcuserdata/parshvashah.xcuserdatad/xcschemes/xcschememanagement.plist" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GameDB/Assets.xcassets/ps4.imageset/Contents.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GameDB/Assets.xcassets/ps4.imageset/playstation-4-png-logo-5880.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GameDB/Assets.xcassets/ps5.imageset/Contents.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GameDB/Assets.xcassets/ps5.imageset/ps5-logo-black.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GameDB/Assets.xcassets/switch.imageset/Contents.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GameDB/Assets.xcassets/switch.imageset/nintendo_switch_icon_136357.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GameDB/Assets.xcassets/xbox.imageset/Contents.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GameDB/Assets.xcassets/xbox.imageset/xbox-logo-png-2504.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GameDB/Constants.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GameDB/GameList.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GameDB/HomeView.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GameDB/Model/GameModel.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GameDB/Model/PlatformModel.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GameDB/Networking/APIManager.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GameDB/SearchView.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GameDB.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/GameDB.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GameDB.xcodeproj/xcuserdata/parshva.xcuserdatad/xcschemes/xcschememanagement.plist" beforeDir="false" afterPath="$PROJECT_DIR$/GameDB.xcodeproj/xcuserdata/parshva.xcuserdatad/xcschemes/xcschememanagement.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GameDB/Assets.xcassets/AppIcon.appiconset/Contents.json" beforeDir="false" afterPath="$PROJECT_DIR$/GameDB/Assets.xcassets/AppIcon.appiconset/Contents.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GameDB/ContentView.swift" beforeDir="false" afterPath="$PROJECT_DIR$/GameDB/ContentView.swift" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectApplicationVersion">
+    <option name="ide" value="AppCode" />
+    <option name="majorVersion" value="2022" />
+    <option name="minorVersion" value="1.3" />
+  </component>
+  <component name="ProjectId" id="2C0P4Jqo5IQQJgUX7eVjH86ZttG" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "cidr.known.project.marker": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9cf083ce-7e6b-4f49-92ab-37fa209a0e17" name="Changes" comment="" />
+      <created>1657936341743</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1657936341743</updated>
+      <workItem from="1657936346176" duration="4141000" />
+    </task>
+    <servers />
+  </component>
+</project>
