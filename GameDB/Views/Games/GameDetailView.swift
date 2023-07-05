@@ -18,12 +18,17 @@ struct GameDetailView: View {
             if let game = viewModel.game {
                 ScrollView {
                     VStack {
-                        AsyncImage(url: game.coverURL) { image in
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                        } placeholder: {
-                            Image(systemName: "gamecontroller")
+                        AsyncImage(url: game.coverURL) { phase in
+                            switch phase {
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                            default:
+                                Image(systemName: "photo")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                            }
                         }
                         .frame(maxWidth: .infinity)
                         
@@ -32,7 +37,7 @@ struct GameDetailView: View {
                                 .font(.title2)
                                 .padding(.top, standardPadding)
                             
-                            Section {
+                            GroupBox(label: Text("Game Details")) {
                                 Text("By: \(game.company)")
                                 Text("Release date: \(game.releaseDateText)")
                                 Text(game.genreText)
@@ -41,34 +46,66 @@ struct GameDetailView: View {
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                             
-                            Text(game.summary)
-                                .font(.body)
-                                .lineLimit(nil)
+                            GroupBox(label: Text("Summary")) {
+                                Text(game.summary)
+                                    .font(.body)
+                                    .lineLimit(nil)
+                            }
                             
-                            Text(game.storyline)
-                                .font(.body)
-                                .lineLimit(nil)
+                            GroupBox(label: Text("Storyline")) {
+                                Text(game.storyline)
+                                    .font(.body)
+                                    .lineLimit(nil)
+                            }
                             
-                            Section {
-                                ScrollView {
-                                    ForEach(game.screenshootURLs, id: \.self) { url in
-                                        AsyncImage(url: url) { image in
-                                            image
-                                                .resizable()
-                                                .aspectRatio(contentMode: .fit)
-                                        } placeholder: {
-                                            ProgressView()
+                            Section(header: Text("Screenshots")) {
+                                if game.screenshootURLs.isEmpty {
+                                    Text("No screenshots available.")
+                                        .foregroundColor(.secondary)
+                                } else {
+                                    ScrollView(.horizontal, showsIndicators: false) {
+                                        LazyHStack(spacing: 10) {
+                                            ForEach(game.screenshootURLs, id: \.self) { url in
+                                                AsyncImage(url: url) { phase in
+                                                    switch phase {
+                                                    case .success(let image):
+                                                        image
+                                                            .resizable()
+                                                            .aspectRatio(1.78, contentMode: .fit)
+                                                    case .failure:
+                                                        Image(systemName: "photo")
+                                                            .resizable()
+                                                            .aspectRatio(1.78, contentMode: .fit)
+                                                    case .empty:
+                                                        ProgressView()
+                                                    @unknown default:
+                                                        ProgressView()
+                                                    }
+                                                }
+                                                .frame(height: 200)
+                                                .cornerRadius(10)
+                                            }
                                         }
                                     }
                                 }
                             }
                             
-                            Section {
-                                ForEach(game.videoIDs, id: \.self) { id in
-                                    YoutubePlayerView(youtubeVideoID: id)
-                                        .frame(width: UIScreen.main.bounds.width - (2 * standardPadding), height: 200)
+                            Section(header: Text("Videos")) {
+                                if game.videoIDs.isEmpty {
+                                    Text("No videos available.")
+                                        .foregroundColor(.secondary)
+                                } else {
+                                    ScrollView(.horizontal, showsIndicators: false) {
+                                        LazyHStack {
+                                            ForEach(game.videoIDs, id: \.self) { id in
+                                                YoutubePlayerView(youtubeVideoID: id)
+                                                    .frame(width: UIScreen.main.bounds.width - (2 * standardPadding), height: 200)
+                                            }
+                                        }
+                                    }
                                 }
                             }
+                            
                         }
                         .padding(standardPadding)
                     }
@@ -85,6 +122,7 @@ struct GameDetailView: View {
         }
     }
 }
+
 
 
 struct GameDetailView_Previews: PreviewProvider {

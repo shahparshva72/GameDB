@@ -9,8 +9,6 @@ import SwiftUI
 
 struct GameThumbnail: View {
     var game: GameModel
-    @State private var dominantColor: Color = Color.white
-    @State private var dominantUIColor: UIColor = UIColor.white
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -18,22 +16,25 @@ struct GameThumbnail: View {
                 AsyncImage(url: imageURL) { image in
                     image
                         .resizable()
+                        .scaledToFill()
+                        .clipped()
                 } placeholder: {
-                    Color.gray
+                    Rectangle()
+                        .foregroundColor(Color.gray)
+                        .frame(width: 155, height: 155)
                 }
                 .frame(width: 155, height: 155)
-                .cornerRadius(5)
+                .cornerRadius(10)
             }
             
-            VStack {
-                Text(game.name)
-                    .font(.caption)
-                    .lineLimit(2)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .frame(width: 155)
-            .frame(minHeight: 50)
+            Text(game.name)
+                .font(.caption)
+                .foregroundColor(.primary)
+                .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(width: 155, alignment: .leading)
         }
         .padding(.leading, 15)
+        .cornerRadius(10)
     }
 }

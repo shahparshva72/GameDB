@@ -11,25 +11,19 @@ class GameList: ObservableObject {
     
     @Published var games: [GameModel] = []
     @Published var isLoading = false
-    @Published var platformName = ""
     
-    
-    var manager = APIManager.shared
-    
-    func reload(platform: PlatformModel) {
-        self.games = []
-        self.isLoading = true
-        
-        manager.getPopularGames(for: platform) { [weak self]  (result) in
-            self?.isLoading = false
-            
-            switch result {
-            case .success(let games):
-                self?.games = games
-                self?.platformName = platform.description
-                
-            case .failure(let error):
-                print(error.localizedDescription)
+    func fetchGames(for platform: PlatformModel) {
+        isLoading = true
+        platform.fetchGames { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.isLoading = false
+                switch result {
+                case .success(let games):
+                    self.games = games
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
             }
         }
     }

@@ -17,11 +17,11 @@ class APIManager {
     lazy var wrapper: IGDBWrapper = IGDBWrapper(clientID: Constants.clientID, accessToken: Constants.accessToken)
     
     func getPopularGames(for platform: PlatformModel, completion: @escaping (Result<[GameModel], Error>) -> Void) {
-        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (platforms = (\(platform.rawValue)) & rating >= 85 & themes != 42); sort first_release_date desc; limit 50;") { bytes in
+        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (platforms = (\(platform.rawValue)) & rating >= 85 & themes != 42); sort first_release_date desc; limit 10;") { bytes in
             guard let gameResults = try? Proto_GameResult(serializedData: bytes) else {
                 return
             }
-            let games = gameResults.games.map { GameModel(game: $0, coverSize: .HD) }
+            let games = gameResults.games.map { GameModel(game: $0, coverSize: .COVER_BIG) }
             DispatchQueue.main.async {
                 completion(.success(games))
             }
@@ -40,7 +40,7 @@ class APIManager {
                 return
             }
             DispatchQueue.main.async {
-                completion(.success(GameModel(game: protoGame, coverSize: .COVER_BIG)))
+                completion(.success(GameModel(game: protoGame, coverSize: .HD)))
             }
         }) { error  in
             DispatchQueue.main.async {
@@ -70,6 +70,29 @@ class APIManager {
         
     }
     
+    func getUpcomingGames(completion: @escaping (Result<[GameModel], Error>) -> Void) {
+        let currentTimestamp = Int(Date().timeIntervalSince1970)
+        
+        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (first_release_date > \(currentTimestamp) & themes != 42); sort first_release_date asc; limit 10;") { bytes in
+            
+            guard let gameResults = try? Proto_GameResult(serializedData: bytes) else {
+                return
+            }
+            
+            let games = gameResults.games.map { GameModel(game: $0, coverSize: .HD) }
+            
+            DispatchQueue.main.async {
+                completion(.success(games))
+            }
+            
+        } errorResponse: { error in
+            DispatchQueue.main.async {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    
 }
 
 fileprivate extension GamePlatformModel {
@@ -86,7 +109,7 @@ fileprivate extension GamePlatformModel {
 fileprivate extension GameModel {
     
     init(game: Proto_Game, coverSize: ImageSize = .COVER_SMALL) {
-        let coverURL = imageBuilder(imageID: game.cover.imageID, size: coverSize, imageType: .PNG)
+        let coverURL = imageBuilder(imageID: game.cover.imageID, size: coverSize, imageType: .JPEG)
         
         let screenshotURLs = game.screenshots.map { (scr) -> String in
             let url = imageBuilder(imageID: scr.imageID, size: .SCREENSHOT_MEDIUM, imageType: .JPEG)
