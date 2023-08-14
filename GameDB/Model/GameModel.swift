@@ -15,7 +15,6 @@ struct GameModel {
     let summary: String
     
     let releaseDate: Date
-    //let popularity: Double
     let rating: Double
     let coverURLString: String
     let screenshotURLsString: [String]

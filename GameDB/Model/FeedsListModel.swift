@@ -18,6 +18,8 @@ class FeedListModel: ObservableObject {
 
     init() {
         // initialize with default feeds
+
+        // TODO: - Add more feeds
         feeds = [
             Feed(name: "Verge", url: "https://www.theverge.com/rss/games/index.xml"),
             Feed(name: "IGN", url: "https://www.ign.com/rss/articles/feed?tags=games"),

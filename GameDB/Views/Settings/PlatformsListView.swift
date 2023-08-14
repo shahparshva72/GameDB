@@ -16,6 +16,9 @@ struct PlatformsListView: View {
             VStack {
                 Text("\(platform.name) - \(platform.id)")
             }
+            .onAppear {
+                print("\(platform.name) - \(platform.id)")
+            }
         }
         .onAppear {
             self.platformsList.fetchPlatform()

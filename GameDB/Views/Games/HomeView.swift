@@ -10,7 +10,7 @@ import IGDB_SWIFT_API
 
 struct HomeView: View {
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView {
                 VStack {
                     ForEach(PlatformModel.allCases, id: \.self) { platform in
@@ -18,12 +18,10 @@ struct HomeView: View {
                     }
                 }
             }
-            .navigationBarTitle("Game Platforms")
+            .navigationBarTitle("Home")
         }
     }
 }
-
-
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {

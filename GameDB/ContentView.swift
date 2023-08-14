@@ -23,6 +23,11 @@ struct ContentView: View {
                     Image(systemName: "gear")
                     Text("Settings")
                 }
+            SearchView()
+                .tabItem {
+                    Image(systemName: "magnifyingglass")
+                    Text("Search")
+                }
         }
     }
 }
