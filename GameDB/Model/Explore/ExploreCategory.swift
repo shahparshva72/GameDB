@@ -1,4 +1,6 @@
-enum ExploreCategoryCategory: String, CaseIterable {
+import SwiftUI
+
+enum ExploreCategory: String, CaseIterable {
     case genres = "Genres"
     case platforms = "Platforms"
     case companies = "Companies"
@@ -13,26 +15,27 @@ enum ExploreCategoryCategory: String, CaseIterable {
         return self.rawValue
     }
     
-    func showView() {
+    @ViewBuilder
+    func showView() -> some View {
         switch self {
         case .genres:
-            print("Genres")
+            GenresView()
         case .platforms:
-            print("Platforms")
+            PlatformsView()
         case .companies:
-            print("Companies")
+            CompaniesView()
         case .franchises:
-            print("Franchises")
+            FranchisesView()
         case .gameEngines:
-            print("Game Engines")
+            GameEnginesView()
         case .themes:
-            print("Themes")
+            GameThemesView()
         case .playerPerspective:
-            print("Player Perspective")
+            PlayerPersceptiveView()
         case .modes:
-            print("Modes")
+            GameModesView()
         case .ageRatings:
-            print("Age Ratings")
+            AgeRatingsView()
         }
     }
 }

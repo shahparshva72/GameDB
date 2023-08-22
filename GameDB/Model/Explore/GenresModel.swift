@@ -51,3 +51,5 @@ enum GameGenre: Int {
         }
     }
 }
+
+extension GameGenre: CaseIterable {}

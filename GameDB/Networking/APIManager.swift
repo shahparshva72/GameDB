@@ -12,6 +12,8 @@ class APIManager {
     
     static let shared = APIManager()
     
+    typealias GameFetchCompletion = (Result<[GameModel], Error>) -> Void
+    
     private init() { }
     
     lazy var wrapper: IGDBWrapper = IGDBWrapper(clientID: Constants.clientID, accessToken: Constants.accessToken)
@@ -104,7 +106,7 @@ class APIManager {
     /// - Parameters:
     ///   - query: pass in a string to search for
     ///   - completion: returns an array of GameModels
-    func searchGames(for query: String, completion: @escaping (Result<[GameModel], RequestException>) -> Void) {
+    func searchGames(for query: String, completion: @escaping (Result<[GameModel], Error>) -> Void) {
         let apicalypseQuery = "fields name, first_release_date, id, rating, cover.image_id; search \"\(query)\";"
         
         wrapper.apiJsonRequest(endpoint: .GAMES, apicalypseQuery: apicalypseQuery) { jsonString in
@@ -145,7 +147,7 @@ class APIManager {
     }
 
     // function with an apicalypse query to show games as per the genre selected by the user, pass genre as a parameter
-    func gamesByGenre(for genre: GameGenre) {
+    func gamesByGenre(for genre: GameGenre, completion: @escaping GameFetchCompletion) {
         wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (genres = (\(genre.rawValue)) & rating >= 85 & themes != 42); sort first_release_date desc; limit 10;") { bytes in
             guard let gameResults = try? Proto_GameResult(serializedData: bytes) else {
                 return
@@ -153,33 +155,36 @@ class APIManager {
             
             let games = gameResults.games.map { GameModel(game: $0, coverSize: .HD) }
             
-            print(games)
+            DispatchQueue.main.async {
+                completion(.success(games))
+            }
             
         } errorResponse: { error in
-            print(error)
+            DispatchQueue.main.async {
+                completion(.failure(error))
+            }
         }
     }
 
-    // function with an apicalypse query to show games as per the age_rating selected by the user, pass age_rating as a parameter
-    /// - Parameters:
-    ///  - ageRating: pass in an age rating
-    ///  - completion: returns an array of GameModels
-    func gamesByAgeRating(for ageRating: AgeRatings) {
-        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (age_ratings = (\(ageRating.rawValue)) & rating >= 85 & themes != 42); sort first_release_date desc; limit 10;") { bytes in
+    // function with an apicalypse query to show games as per the theme selected by the user, pass theme as a parameter
+    func gamesByThemes(for theme: GameTheme, completion: @escaping GameFetchCompletion) {
+        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (themes = (\(theme.rawValue)) & rating >= 85); sort first_release_date desc; limit 10;") { bytes in
             guard let gameResults = try? Proto_GameResult(serializedData: bytes) else {
                 return
             }
             
             let games = gameResults.games.map { GameModel(game: $0, coverSize: .HD) }
             
-            print(games)
+            DispatchQueue.main.async {
+                completion(.success(games))
+            }
             
         } errorResponse: { error in
-            print(error)
+            DispatchQueue.main.async {
+                completion(.failure(error))
+            }
         }
     }
-
-    // TODO: - Complete the remaining ExploreView functions using apicalypse queries and IGDB API
 }
 
 fileprivate extension GamePlatformModel {

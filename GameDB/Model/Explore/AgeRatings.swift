@@ -1,4 +1,4 @@
-enum AgeRatings: Int, CaseIterable {
+enum AgeRatings {
     // apicalypse query to fetch age ratings
     // fields name, category, rating, synopsis;
     

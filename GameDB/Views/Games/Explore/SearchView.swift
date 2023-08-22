@@ -9,59 +9,57 @@ import SwiftUI
 import IGDB_SWIFT_API
 import Combine
 
+// MARK: - SearchView
 struct SearchView: View {
     @StateObject private var viewModel = SearchViewModel()
-    
-    public init() {}
-    
+
     var body: some View {
         NavigationStack {
             Group {
                 if viewModel.searchQuery.isEmpty {
                     ExploreView()
                 } else {
-                    List {
-                        makeSearchResultsView()
-                    }
-                    .listStyle(PlainListStyle())
+                    searchResultsList
                 }
             }
             .navigationTitle("Search")
             .searchable(text: $viewModel.searchQuery,
                         placement: .navigationBarDrawer(displayMode: .always),
                         prompt: Text("Search for games"))
+            .onChange(of: viewModel.searchQuery, perform: viewModel.fetchSearchResults)
         }
     }
     
-    @ViewBuilder
-    private func makeSearchResultsView() -> some View {
-        if let results = viewModel.results {
-            if results.isEmpty && !viewModel.isLoading {
-                EmptyStateView(iconName: "magnifyingglass",
-                               title: "No Results",
-                               message: "No games found for \(viewModel.searchQuery)")
-                .listRowSeparator(.hidden)
-            } else {
-                ForEach(results, id: \.id) { game in
+    private var searchResultsList: some View {
+        List {
+            switch viewModel.state {
+            case .idle:
+                EmptyView()
+            case .loading:
+                loadingView
+            case .loaded(let results):
+                ForEach(results) { game in
                     NavigationLink(destination: GameDetailView(gameID: game.id)) {
                         Text(game.name)
                     }
                 }
+            case .error(let message):
+                Text(message)
             }
-        } else if viewModel.isLoading {
-            HStack {
-                Spacer()
-                ProgressView()
-                Spacer()
-            }
-            .listRowSeparator(.hidden)
-        } else if let errorMessage = viewModel.errorMessage {
-            Text(errorMessage)
-                .listRowSeparator(.hidden)
+        }
+        .listStyle(PlainListStyle())
+    }
+    
+    private var loadingView: some View {
+        HStack {
+            Spacer()
+            ProgressView()
+            Spacer()
         }
     }
 }
 
+// MARK: - EmptyStateView
 struct EmptyStateView: View {
     var iconName: String
     var title: String
@@ -82,49 +80,40 @@ struct EmptyStateView: View {
     }
 }
 
-
+// MARK: - SearchViewModel
 class SearchViewModel: ObservableObject {
-    @Published var searchQuery: String = ""
-    @Published var results: [GameModel]?
-    @Published var isLoading: Bool = false
-    @Published var errorMessage: String?
-    
-    var manager = APIManager.shared
-    
-    init() {
-        $searchQuery
-            .debounce(for: 0.5, scheduler: DispatchQueue.main)
-            .sink { query in
-                self.fetchSearchResults(for: query)
-            }
-            .store(in: &cancellables)
+    enum State {
+        case idle
+        case loading
+        case loaded([GameModel])
+        case error(String)
     }
+
+    @Published var searchQuery: String = ""
+    @Published private(set) var state: State = .idle
     
+    private var manager = APIManager.shared
     private var cancellables: Set<AnyCancellable> = []
-    
-    private func fetchSearchResults(for query: String) {
-        if query.isEmpty {
-            results = []
+
+    func fetchSearchResults(for query: String) {
+        guard !query.isEmpty else {
+            state = .idle
             return
         }
         
-        isLoading = true
-        errorMessage = nil
+        state = .loading
         manager.searchGames(for: query) { result in
             DispatchQueue.main.async {
-                self.isLoading = false
                 switch result {
                 case .success(let games):
-                    self.results = games
+                    self.state = .loaded(games)
                 case .failure(let error):
-                    self.errorMessage = error.localizedDescription
+                    self.state = .error(error.localizedDescription)
                 }
             }
         }
     }
 }
-
-
 
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {

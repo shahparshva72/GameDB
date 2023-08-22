@@ -7,48 +7,57 @@
 
 import SwiftUI
 
-enum GameCategory: String, CaseIterable {
-    case genres = "Genres"
-    case platforms = "Platforms"
-    case companies = "Companies"
-    case franchises = "Franchises"
-    case gameEngines = "Game Engines"
-    case themes = "Themes"
-    case playerPerspective = "Player Perspective"
-    case modes = "Modes"
-    case ageRatings = "Age Ratings"
-    
-    var description: String {
-        return self.rawValue
+struct NavigationItem: Hashable, Identifiable {
+    var id: UUID = UUID()
+    var title: String
+    var icon: String
+    var category: ExploreCategory
+
+    init(category: ExploreCategory, icon: String) {
+        self.title = category.description
+        self.icon = icon
+        self.category = category
     }
 }
-
 
 struct ExploreView: View {
     let columns = [
         GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 20)
     ]
     
+    let navigationItems: [NavigationItem] = [
+        NavigationItem(category: .genres, icon: "music.note.list"),
+        NavigationItem(category: .platforms, icon: "gamecontroller"),
+        NavigationItem(category: .companies, icon: "building.2"),
+        NavigationItem(category: .franchises, icon: "star"),
+        NavigationItem(category: .gameEngines, icon: "cpu"),
+        NavigationItem(category: .themes, icon: "paintbrush"),
+        NavigationItem(category: .playerPerspective, icon: "person.crop.circle"),
+        NavigationItem(category: .modes, icon: "person.3"),
+        NavigationItem(category: .ageRatings, icon: "face.smiling")
+    ]
+    
     var body: some View {
-        NavigationView {
-            ScrollView {
-                LazyVGrid(columns: columns, spacing: 20) {
-                    ForEach(GameCategory.allCases, id: \.self) { category in
-                        NavigationLink(destination: EmptyView()) {
-                            ExploreCategory(category: category.description)
-                        }
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 20) {
+                ForEach(navigationItems) { item in
+                    NavigationLink(value: item) {
+                        ExploreCategoryView(category: item.title, icon: item.icon)
                     }
                 }
-                .padding(.horizontal)
             }
-            .padding(.top)
+            .padding(.horizontal)
+        }
+        .padding(.top)
+        .navigationDestination(for: NavigationItem.self) { item in
+            item.category.showView()
         }
     }
 }
 
-
-struct ExploreCategory: View {
+struct ExploreCategoryView: View {
     var category: String
+    var icon: String
 
     var body: some View {
         ZStack {
@@ -57,15 +66,23 @@ struct ExploreCategory: View {
                 .shadow(color: .gray, radius: 5, x: 0, y: 5)
                 .frame(width: 150, height: 150)
             
-            Text(category)
-                .font(.title2)
-                .fontWeight(.bold)
-                .foregroundColor(.white)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
+            VStack {
+                Image(systemName: icon)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 40, height: 40)
+                    .foregroundColor(.white)
+                Text(category)
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+            }
         }
     }
 }
+
 
 
 struct ExploreView_Previews: PreviewProvider {
