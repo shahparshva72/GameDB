@@ -107,7 +107,10 @@ class APIManager {
     ///   - query: pass in a string to search for
     ///   - completion: returns an array of GameModels
     func searchGames(for query: String, completion: @escaping (Result<[GameModel], Error>) -> Void) {
-        let apicalypseQuery = "fields name, first_release_date, id, rating, cover.image_id; search \"\(query)\";"
+        let apicalypseQuery = """
+        fields name, first_release_date, id, rating, cover.image_id;
+        search \"\(query)\";
+        """
         
         wrapper.apiJsonRequest(endpoint: .GAMES, apicalypseQuery: apicalypseQuery) { jsonString in
             guard let jsonData = jsonString.data(using: .utf8),
@@ -131,18 +134,22 @@ class APIManager {
     }
 
     // function with an apicalypse query to fetch popular game characters using IGDB API 
-    func popularCharacters() {
-        wrapper.apiProtoRequest(endpoint: .CHARACTERS, apicalypseQuery: "fields name, games.name, games.cover.image_id, games.rating, games.first_release_date; where games.rating >= 85 & games.cover != null; sort games.rating desc; limit 10;") { bytes in
+    func popularCharacters(completion: @escaping (Result<[CharacterModel], Error>) -> Void) {
+        wrapper.apiProtoRequest(endpoint: .CHARACTERS, apicalypseQuery: "fields name, games.name, games.cover.image_id, games.rating, games.first_release_date; where games.rating >= 85 & games.cover != null; sort games.rating desc; limit 50;") { bytes in
             guard let characterResults = try? Proto_CharacterResult(serializedData: bytes) else {
                 return
             }
             
             let characters = characterResults.characters.map { CharacterModel(character: $0) }
             
-            print(characters)
+            DispatchQueue.main.async {
+                completion(.success(characters))
+            }
             
         } errorResponse: { error in
-            print(error)
+            DispatchQueue.main.async {
+                completion(.failure(error))
+            }
         }
     }
 
@@ -169,6 +176,45 @@ class APIManager {
     // function with an apicalypse query to show games as per the theme selected by the user, pass theme as a parameter
     func gamesByThemes(for theme: GameTheme, completion: @escaping GameFetchCompletion) {
         wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (themes = (\(theme.rawValue)) & rating >= 85); sort first_release_date desc; limit 10;") { bytes in
+            guard let gameResults = try? Proto_GameResult(serializedData: bytes) else {
+                return
+            }
+            
+            let games = gameResults.games.map { GameModel(game: $0, coverSize: .HD) }
+            
+            DispatchQueue.main.async {
+                completion(.success(games))
+            }
+            
+        } errorResponse: { error in
+            DispatchQueue.main.async {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    // function with an apicalypse query to show games as per the player perspective selected by the user, pass player perspective as a parameter
+    func gamesByPlayerPerspective(for playerPerspective: PlayerPerspective, completion: @escaping GameFetchCompletion) {
+        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (player_perspectives = (\(playerPerspective.rawValue)) & rating >= 85); sort first_release_date desc; limit 10;") { bytes in
+            guard let gameResults = try? Proto_GameResult(serializedData: bytes) else {
+                return
+            }
+            
+            let games = gameResults.games.map { GameModel(game: $0, coverSize: .HD) }
+            
+            DispatchQueue.main.async {
+                completion(.success(games))
+            }
+            
+        } errorResponse: { error in
+            DispatchQueue.main.async {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    func gamesByModes(for mode: GameMode, completion: @escaping GameFetchCompletion) {
+        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (game_modes = (\(mode.rawValue)) & rating >= 85); sort first_release_date desc; limit 10;") { bytes in
             guard let gameResults = try? Proto_GameResult(serializedData: bytes) else {
                 return
             }

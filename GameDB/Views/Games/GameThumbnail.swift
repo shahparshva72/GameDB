@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct GameThumbnail: View {
+    @StateObject private var gameManager = GameManager()
     var game: GameModel
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 10) {
+            // Game cover image
             if let imageURL = game.coverURL {
                 AsyncImage(url: imageURL) { image in
                     image
@@ -21,20 +23,27 @@ struct GameThumbnail: View {
                 } placeholder: {
                     Rectangle()
                         .foregroundColor(Color.gray)
-                        .frame(width: 155, height: 155)
                 }
-                .frame(width: 155, height: 155)
                 .cornerRadius(10)
+                .shadow(radius: 5)
             }
-            
-            Text(game.name)
-                .font(.caption)
-                .foregroundColor(.primary)
-                .lineLimit(2)
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(width: 155, alignment: .leading)
         }
-        .padding(.leading, 15)
+        .background(Color.white)
         .cornerRadius(10)
+        .contextMenu {
+            if isUpcoming(game: game) {
+                Button(action: {
+                    gameManager.saveGame(game)
+                }) {
+                    Text("Save Game")
+                    Image(systemName: "bookmark.fill")
+                }
+            }
+        }
+    }
+    
+    func isUpcoming(game: GameModel) -> Bool {
+        return game.releaseDate > Date()
     }
 }
+

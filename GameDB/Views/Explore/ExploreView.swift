@@ -28,9 +28,6 @@ struct ExploreView: View {
     let navigationItems: [NavigationItem] = [
         NavigationItem(category: .genres, icon: "music.note.list"),
         NavigationItem(category: .platforms, icon: "gamecontroller"),
-        NavigationItem(category: .companies, icon: "building.2"),
-        NavigationItem(category: .franchises, icon: "star"),
-        NavigationItem(category: .gameEngines, icon: "cpu"),
         NavigationItem(category: .themes, icon: "paintbrush"),
         NavigationItem(category: .playerPerspective, icon: "person.crop.circle"),
         NavigationItem(category: .modes, icon: "person.3"),

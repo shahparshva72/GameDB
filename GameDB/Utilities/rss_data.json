@@ -1,0 +1,694 @@
+[
+    {
+        "name": "Kotaku",
+        "url": "https://kotaku.com/rss"
+    },
+    {
+        "name": "VG247",
+        "url": "https://www.vg247.com/feed/"
+    },
+    {
+        "name": "TouchArcade",
+        "url": "https://toucharcade.com/feed/"
+    },
+    {
+        "name": "GameSpot",
+        "url": "https://www.gamespot.com/feeds/mashup"
+    },
+    {
+        "name": "Wolfs Gaming Blog",
+        "url": "https://wolfsgamingblog.com/feed/"
+    },
+    {
+        "name": "Game Informer",
+        "url": "https://www.gameinformer.com/feeds/thefeedrss.aspx"
+    },
+    {
+        "name": "IGN",
+        "url": "http://feeds.ign.com/ign/games-all"
+    },
+    {
+        "name": "Polygon",
+        "url": "http://www.polygon.com/rss/index.xml"
+    },
+    {
+        "name": "Unblocked Games",
+        "url": "https://www.gamebunblocked.com/feeds/posts/default"
+    },
+    {
+        "name": "Adrelien Gaming",
+        "url": "https://adrelien.com/gaming/rss/"
+    },
+    {
+        "name": "The Clashify",
+        "url": "https://theclashify.com/feed/"
+    },
+    {
+        "name": "Gematsu",
+        "url": "https://www.gematsu.com/feed"
+    },
+    {
+        "name": "Gaming Intel",
+        "url": "https://gamingintel.com/feed/"
+    },
+    {
+        "name": "DualShockers",
+        "url": "https://www.dualshockers.com/feed/"
+    },
+    {
+        "name": "Destructoid",
+        "url": "https://www.destructoid.com/feed/"
+    },
+    {
+        "name": "NVIDIA Blog » Gaming",
+        "url": "https://blogs.nvidia.com/blog/category/gaming/feed/"
+    },
+    {
+        "name": "Present Perfect Gaming",
+        "url": "https://presentperfectgaming.com/feed/"
+    },
+    {
+        "name": "Kowl Network: World's Gaming Network",
+        "url": "https://www.kowl.net/feeds/posts/default"
+    },
+    {
+        "name": "Roblox Blog",
+        "url": "https://blog.roblox.com/feed/"
+    },
+    {
+        "name": "Rock Paper Shotgun",
+        "url": "https://www.rockpapershotgun.com/feed/"
+    },
+    {
+        "name": "Xbox Wire",
+        "url": "https://news.xbox.com/en-us/feed/"
+    },
+    {
+        "name": "Official PlayStation Blog",
+        "url": "https://blog.playstation.com/feed/"
+    },
+    {
+        "name": "PC Gamer Magazine",
+        "url": "https://www.pcgamer.com/rss/"
+    },
+    {
+        "name": "PCGamesN",
+        "url": "https://www.pcgamesn.com/feed"
+    },
+    {
+        "name": "Eurogamer",
+        "url": "http://www.eurogamer.net/?format=rss"
+    },
+    {
+        "name": "Twinfinite",
+        "url": "https://twinfinite.net/feed/"
+    },
+    {
+        "name": "Push Square",
+        "url": "http://www.pushsquare.com/feeds/latest"
+    },
+    {
+        "name": "Try Hard Guides",
+        "url": "https://tryhardguides.com/feed/"
+    },
+    {
+        "name": "PlayerAuctions Blog",
+        "url": "https://blog.playerauctions.com/feed/"
+    },
+    {
+        "name": "SKOAR!",
+        "url": "http://feeds.feedburner.com/digit/latest-gaming"
+    },
+    {
+        "name": "Gamepur",
+        "url": "https://www.gamepur.com/feed"
+    },
+    {
+        "name": "GameSkinny",
+        "url": "https://www.gameskinny.com/feed/rss2"
+    },
+    {
+        "name": "RealSport",
+        "url": "https://realsport101.com/feed.xml"
+    },
+    {
+        "name": "N4G",
+        "url": "https://n4g.com/rss/news?channel="
+    },
+    {
+        "name": "Shacknews",
+        "url": "https://www.shacknews.com/feed/rss"
+    },
+    {
+        "name": "Pocket Gamer",
+        "url": "https://www.pocketgamer.com/rss/"
+    },
+    {
+        "name": "Siliconera",
+        "url": "https://www.siliconera.com/feed/"
+    },
+    {
+        "name": "Attack of the Fanboy",
+        "url": "https://attackofthefanboy.com/feed/"
+    },
+    {
+        "name": "Operation Sports",
+        "url": "https://www.operationsports.com/feed/"
+    },
+    {
+        "name": "GamesIndustry International",
+        "url": "http://www.gamesindustry.biz/rss/gamesindustry_news_feed.rss"
+    },
+    {
+        "name": "PC Invasion",
+        "url": "https://www.pcinvasion.com/feed/"
+    },
+    {
+        "name": "The Escapist",
+        "url": "https://www.escapistmagazine.com/feed/"
+    },
+    {
+        "name": "Indie DB",
+        "url": "http://rss.indiedb.com/headlines/feed/rss.xml"
+    },
+    {
+        "name": "Nintendo Everything",
+        "url": "http://nintendoeverything.com/feed"
+    },
+    {
+        "name": "Game Developer Blog",
+        "url": "https://www.gamedeveloper.com/rss.xml"
+    },
+    {
+        "name": "AFK Gaming",
+        "url": "https://afkgaming.com/stories.rss?limit=40"
+    },
+    {
+        "name": "Niche Gamer",
+        "url": "https://nichegamer.com/feed/"
+    },
+    {
+        "name": "TechRaptor",
+        "url": "https://techraptor.net/news/feed"
+    },
+    {
+        "name": "Massively Overpowered | MMORPG news and opinions",
+        "url": "https://massivelyop.com/feed/"
+    },
+    {
+        "name": "The Tech Game",
+        "url": "https://www.thetechgame.com/rss.php"
+    },
+    {
+        "name": "PlayStation LifeStyle",
+        "url": "https://www.playstationlifestyle.net/feed/"
+    },
+    {
+        "name": "GamingBolt.com",
+        "url": "http://feeds.feedburner.com/gamingbolt"
+    },
+    {
+        "name": "WhatIfGaming",
+        "url": "https://whatifgaming.com/feed/"
+    },
+    {
+        "name": "Gamer Empire",
+        "url": "https://gamerempire.net/feed/"
+    },
+    {
+        "name": "GameFront",
+        "url": "https://www.gamefront.com/feed/news"
+    },
+    {
+        "name": "Guide Fall",
+        "url": "https://guidefall.com/feed/"
+    },
+    {
+        "name": "Gamezebo",
+        "url": "https://www.gamezebo.com/feed/"
+    },
+    {
+        "name": "TheSixthAxis",
+        "url": "https://www.thesixthaxis.com/feed/"
+    },
+    {
+        "name": "GoNintendo",
+        "url": "http://feedpress.me/gonintendo"
+    },
+    {
+        "name": "GamingOnLinux",
+        "url": "https://www.gamingonlinux.com/article_rss.php"
+    },
+    {
+        "name": "Indie Retro News",
+        "url": "https://www.indieretronews.com/feeds/posts/default?alt=rss"
+    },
+    {
+        "name": "VideoGamer",
+        "url": "https://www.videogamer.com/feed/"
+    },
+    {
+        "name": "TheXboxHub",
+        "url": "https://www.thexboxhub.com/feed/"
+    },
+    {
+        "name": "Invision Game Community",
+        "url": "https://invisioncommunity.co.uk/feed/"
+    },
+    {
+        "name": "VideoGamesBlogger",
+        "url": "http://www.videogamesblogger.com/feed"
+    },
+    {
+        "name": "Adventure Gamers",
+        "url": "http://www.adventuregamers.com/rss/"
+    },
+    {
+        "name": "NintendoSmash",
+        "url": "https://nintendosmash.com/feed/"
+    },
+    {
+        "name": "The Centurion Report",
+        "url": "https://thecenturionreport.com/feed/"
+    },
+    {
+        "name": "ISK Mogul Adventures",
+        "url": "https://www.iskmogul.com/feed/"
+    },
+    {
+        "name": "WholesGame",
+        "url": "https://wholesgame.com/news/feed/"
+    },
+    {
+        "name": "Ordinary Gaming",
+        "url": "https://www.ordinarygaming.com/feed/"
+    },
+    {
+        "name": "Tabletop Gaming News",
+        "url": "https://www.tabletopgamingnews.com/feed/"
+    },
+    {
+        "name": "Video Chums",
+        "url": "https://videochums.com/feed.rss"
+    },
+    {
+        "name": "Unigamesity",
+        "url": "https://www.unigamesity.com/feed/"
+    },
+    {
+        "name": "Droid Gamers",
+        "url": "https://feeds.feedburner.com/DroidGamers/?x=1"
+    },
+    {
+        "name": "HappyGamer",
+        "url": "https://happygamer.com/feed/"
+    },
+    {
+        "name": "eGamers.io",
+        "url": "https://egamers.io/feed/"
+    },
+    {
+        "name": "60fps",
+        "url": "https://60fps.in/feed/"
+    },
+    {
+        "name": "MonsterVine",
+        "url": "https://monstervine.com/feed/"
+    },
+    {
+        "name": "GO GO Free Games",
+        "url": "https://www.gogofreegames.com/feed/"
+    },
+    {
+        "name": "Pivotal Gamers",
+        "url": "https://www.pivotalgamers.com/feed/"
+    },
+    {
+        "name": "PlayToEarnDiary",
+        "url": "https://playtoearndiary.com/feed/"
+    },
+    {
+        "name": "Jay Is Games",
+        "url": "https://jayisgames.com/index.xml"
+    },
+    {
+        "name": "JoyFreak Forum",
+        "url": "https://www.joyfreak.com/forums/-/index.rss"
+    },
+    {
+        "name": "TopGamersGuide",
+        "url": "https://topgamersguide.com/feed/"
+    },
+    {
+        "name": "Alpha Beta Gamer",
+        "url": "https://www.alphabetagamer.com/feed/"
+    },
+    {
+        "name": "Pure Nintendo Magazine",
+        "url": "https://purenintendo.com/feed/"
+    },
+    {
+        "name": "SUPERJUMP",
+        "url": "https://www.superjumpmagazine.com/rss/"
+    },
+    {
+        "name": "Mega Visions",
+        "url": "https://www.megavisions.net/feed/"
+    },
+    {
+        "name": "New Game Network",
+        "url": "https://feeds.feedburner.com/newgamenetwork/news"
+    },
+    {
+        "name": "Gnome Stew | The Gaming Blog",
+        "url": "https://gnomestew.com/feed/"
+    },
+    {
+        "name": "Gaming Debugged",
+        "url": "https://www.gamingdebugged.com/feed/"
+    },
+    {
+        "name": "GameOgre",
+        "url": "https://www.gameogre.com/feed/"
+    },
+    {
+        "name": "GameX.gg",
+        "url": "https://gamex.gg/feed/"
+    },
+    {
+        "name": "iDev.Games",
+        "url": "https://idev.games/rss-feed.xml"
+    },
+    {
+        "name": "Rise Up Gamer",
+        "url": "https://riseupgamer.com/feed/"
+    },
+    {
+        "name": "Quretic",
+        "url": "https://quretic.com/feed/"
+    },
+    {
+        "name": "Last Word On Gaming",
+        "url": "https://lastwordongaming.com/feed/"
+    },
+    {
+        "name": "GameCritics",
+        "url": "https://gamecritics.com/feed/"
+    },
+    {
+        "name": "Vgamerz",
+        "url": "https://vgamerz.com/feed/"
+    },
+    {
+        "name": "GeekySweetie.com",
+        "url": "https://geekysweetie.com/feed/"
+    },
+    {
+        "name": "NFMGAME",
+        "url": "https://nfmgame.com/feed/"
+    },
+    {
+        "name": "VG Stores Blog",
+        "url": "https://www.vgstores.ng/feed/"
+    },
+    {
+        "name": "Rehanous",
+        "url": "https://www.rehanous.com/feed/"
+    },
+    {
+        "name": "The Game Fanatics",
+        "url": "https://thegamefanatics.com/feed/"
+    },
+    {
+        "name": "1 TO 1 GAMES",
+        "url": "https://1to1games.blogspot.com/feeds/posts/default?alt=rss"
+    },
+    {
+        "name": "8Bit/Digi",
+        "url": "https://8bitdigi.com/feed/"
+    },
+    {
+        "name": "Gaming Instincts",
+        "url": "https://www.gaminginstincts.com/feed/"
+    },
+    {
+        "name": "Console Creatures",
+        "url": "https://www.consolecreatures.com/feed/"
+    },
+    {
+        "name": "KABALYERO",
+        "url": "https://www.kabalyero.info/feeds/posts/default?alt=rss"
+    },
+    {
+        "name": "Too Much Gaming",
+        "url": "https://www.toomuchgaming.net/blog-news?format=rss"
+    },
+    {
+        "name": "Amiga Guru",
+        "url": "https://blog.amigaguru.com/feed/"
+    },
+    {
+        "name": "Xbox Live's Major Nelson",
+        "url": "https://majornelson.com/feed/"
+    },
+    {
+        "name": "Nintendo Life",
+        "url": "http://www.nintendolife.com/feeds/latest"
+    },
+    {
+        "name": "Gamers Heroes",
+        "url": "https://www.gamersheroes.com/feed/"
+    },
+    {
+        "name": "GamerDad Blog",
+        "url": "http://www.gamerdad.com/blog/feed/"
+    },
+    {
+        "name": "My Nintendo News",
+        "url": "https://mynintendonews.com/feed/"
+    },
+    {
+        "name": "Blue's News",
+        "url": "https://www.bluesnews.com/news/atom.xml"
+    },
+    {
+        "name": "GTOGG",
+        "url": "https://www.gtogg.com/rss/"
+    },
+    {
+        "name": "Push Start Play",
+        "url": "https://www.pushstartplay.com/feed/"
+    },
+    {
+        "name": "GameHaunt",
+        "url": "https://gamehaunt.com/feed/"
+    },
+    {
+        "name": "Space Game Junkie",
+        "url": "https://www.spacegamejunkie.com/feed/"
+    },
+    {
+        "name": "FortniteBR.news",
+        "url": "https://fortnitebr.news/feed"
+    },
+    {
+        "name": "Game Hype",
+        "url": "http://www.gamehype.co.uk/feed/"
+    },
+    {
+        "name": "MP3s and NPCs",
+        "url": "https://mp3sandnpcs.com/home?format=rss"
+    },
+    {
+        "name": "Cowded",
+        "url": "https://cowded.com/feed/"
+    },
+    {
+        "name": "All About Games",
+        "url": "https://www.allaboutgames.net/feed/"
+    },
+    {
+        "name": "The Secret Cabal Gaming Podcast",
+        "url": "http://www.thesecretcabal.com/feed"
+    },
+    {
+        "name": "SassyGamers.com",
+        "url": "https://sassygamers.com/feed/"
+    },
+    {
+        "name": "Comics Gaming Magazine",
+        "url": "https://www.cgmagonline.com/feed/"
+    },
+    {
+        "name": "Two Average Gamers",
+        "url": "https://twoaveragegamers.com/feed/"
+    },
+    {
+        "name": "We Play Mobile",
+        "url": "https://weplaymobile.com/feed/"
+    },
+    {
+        "name": "Demon gaming",
+        "url": "https://www.demonvideogame.com/feeds/posts/default?alt=rss"
+    },
+    {
+        "name": "NintendoFuse",
+        "url": "https://nintendofuse.com/feed/"
+    },
+    {
+        "name": "Level Up",
+        "url": "https://thisislevelup.net/feed/"
+    },
+    {
+        "name": "Classic-Games.net",
+        "url": "http://www.classic-games.net/feed/"
+    },
+    {
+        "name": "NekoJonez's Gaming Blog",
+        "url": "https://arpegi.wordpress.com/feed/"
+    },
+    {
+        "name": "IndieGames.com",
+        "url": "https://feeds.feedburner.com/IndependentGaming"
+    },
+    {
+        "name": "Lev3lup.be",
+        "url": "https://lev3lup.be/feed/"
+    },
+    {
+        "name": "Buy Cheap PS4 Games BuyGames",
+        "url": "https://buycheapps4games.blogspot.com/feeds/posts/default?alt=rss"
+    },
+    {
+        "name": "Finding God in the World of Video Games",
+        "url": "https://findinggodintheworldofvideogames.com/feed/"
+    },
+    {
+        "name": "360fov",
+        "url": "https://www.360fov.net/feed/"
+    },
+    {
+        "name": "Gaming Yeeter",
+        "url": "https://gamingyeeter.com/feed/"
+    },
+    {
+        "name": "GhostCap Gaming Blog",
+        "url": "https://www.ghostcap.com/feed/"
+    },
+    {
+        "name": "GAME Blog",
+        "url": "https://hotyhs.wordpress.com/feed/"
+    },
+    {
+        "name": "GamerForFun",
+        "url": "https://gamerforfun.com/feed/"
+    },
+    {
+        "name": "GameInstants",
+        "url": "https://gameinstants.com/feed/"
+    },
+    {
+        "name": "DGMA",
+        "url": "https://dgma.io/feed/"
+    },
+    {
+        "name": "GamesRoid",
+        "url": "https://gamesroid.com/feed/"
+    },
+    {
+        "name": "GearNuke",
+        "url": "https://gearnuke.com/feed"
+    },
+    {
+        "name": "Green Man Gaming Blog",
+        "url": "https://www.greenmangaming.com/blog/feed/"
+    },
+    {
+        "name": "Marks Angry Review",
+        "url": "https://marksangryreview.com/feed/"
+    },
+    {
+        "name": "GameZone",
+        "url": "https://www.gamezone.com/feed/"
+    },
+    {
+        "name": "Game Rant",
+        "url": "http://gamerant.com/feed"
+    },
+    {
+        "name": "Fextralife",
+        "url": "https://fextralife.com/news/feed/"
+    },
+    {
+        "name": "Giant Bomb",
+        "url": "https://www.giantbomb.com/feeds/reviews/"
+    },
+    {
+        "name": "The Sims-4 Game",
+        "url": "https://www.thesims-4.com/feed/"
+    },
+    {
+        "name": "Next-Gen Gaming",
+        "url": "https://www.nextgenbase.com/feed/"
+    },
+    {
+        "name": "Techy Nickk",
+        "url": "https://techynickk.com/feed/"
+    },
+    {
+        "name": "Gamedoper",
+        "url": "https://gamedoper.com/feed/"
+    },
+    {
+        "name": "Pure PlayStation",
+        "url": "https://pureplaystation.com/feed/"
+    },
+    {
+        "name": "Tiny Cartridge 3DS",
+        "url": "https://tinycartridge.com/rss"
+    },
+    {
+        "name": "Vortainment",
+        "url": "https://vortainment.com/feed/"
+    },
+    {
+        "name": "Ind13 Magazine",
+        "url": "https://ind13.com/feed/"
+    },
+    {
+        "name": "UBGURUKUL",
+        "url": "https://ubgurukul.com/feed/"
+    },
+    {
+        "name": "Nitchigamer",
+        "url": "https://nitchigamer.com/feed/?post_type=wpbdp_listing"
+    },
+    {
+        "name": "Game Hitch",
+        "url": "https://gamehitch.wordpress.com/feed/"
+    },
+    {
+        "name": "Lokky the gamer",
+        "url": "https://lokkythegamer.com/feed/"
+    },
+    {
+        "name": "Gaming on PC",
+        "url": "https://www.gamingonpc.com/feed/"
+    },
+    {
+        "name": "Gamehalla",
+        "url": "https://gamehalla.com/feed/"
+    },
+    {
+        "name": "QTopTens",
+        "url": "https://qtoptens.com/feed/"
+    },
+    {
+        "name": "Retro Gamer",
+        "url": "http://www.retrogamer.net/feed/"
+    },
+    {
+        "name": "CTRL+ZED",
+        "url": "https://ctrlzed.com/feed/"
+    }
+]

@@ -25,30 +25,9 @@ struct NewsFeedView: View {
             }
             .listStyle(.inset)
             .navigationTitle("News Feed")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Menu {
-                        Button {
-                            self.viewModel.fetchAllNews()
-                        } label: {
-                            Text("All")
-                        }
-                        Divider()
-                        ForEach(viewModel.feedListModel.feeds, id: \.id) { feed in
-                            Button {
-                                self.viewModel.fetchNews(for: feed)
-                            } label: {
-                                Text(feed.name)
-                            }
-                        }
-                    } label: {
-                        Image(systemName: "list.bullet")
-                    }
-                }
-            }
         }
-        .onAppear{
-            viewModel.fetchAllNews()
+        .onAppear {
+            viewModel.fetchNews()
         }
     }
 }

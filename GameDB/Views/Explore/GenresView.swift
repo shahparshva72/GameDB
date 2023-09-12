@@ -41,9 +41,8 @@ struct GenreDetailView: View {
                 
             } else {
                 ForEach(games) { game in
-                    HStack {
+                    NavigationLink(destination: GameDetailView(gameID: game.id)) {
                         Text(game.name)
-                        Spacer()
                     }
                 }
             }

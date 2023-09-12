@@ -1,4 +1,4 @@
-enum PlayerPerspective: Int {
+enum PlayerPerspective: Int, CaseIterable {
     case firstPerson = 1
     case thirdPerson = 2
     case birdViewIsometric = 3

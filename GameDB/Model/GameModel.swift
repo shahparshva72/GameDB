@@ -7,13 +7,14 @@
 
 import Foundation
 
+// MARK: - GameModel Definition
 struct GameModel {
     
+    // MARK: Properties
     let id: Int
     let name: String
     let storyline: String
     let summary: String
-    
     let releaseDate: Date
     let rating: Double
     let coverURLString: String
@@ -22,6 +23,9 @@ struct GameModel {
     let company: String
     let videoIDs: [String]
     
+    var isSaved: Bool = false
+    
+    // MARK: Computed Properties
     var releaseDateText: String {
         return releaseDate.formatted(.dateTime.day().month(.wide).year())
     }
@@ -40,5 +44,5 @@ struct GameModel {
     
 }
 
-
+// MARK: - GameModel Identifiable Extension
 extension GameModel: Identifiable {}

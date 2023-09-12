@@ -3,9 +3,6 @@ import SwiftUI
 enum ExploreCategory: String, CaseIterable {
     case genres = "Genres"
     case platforms = "Platforms"
-    case companies = "Companies"
-    case franchises = "Franchises"
-    case gameEngines = "Game Engines"
     case themes = "Themes"
     case playerPerspective = "Player Perspective"
     case modes = "Modes"
@@ -22,12 +19,6 @@ enum ExploreCategory: String, CaseIterable {
             GenresView()
         case .platforms:
             PlatformsView()
-        case .companies:
-            CompaniesView()
-        case .franchises:
-            FranchisesView()
-        case .gameEngines:
-            GameEnginesView()
         case .themes:
             GameThemesView()
         case .playerPerspective:

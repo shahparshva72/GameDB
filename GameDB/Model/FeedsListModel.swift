@@ -6,34 +6,33 @@
 //
 
 import Foundation
+import Combine
 
-struct Feed {
-    var id = UUID()
+struct Feed: Decodable {
     let name: String
     let url: String
 }
 
 class FeedListModel: ObservableObject {
-    @Published var feeds: [Feed]
+    @Published var feeds: [Feed] = []
 
     init() {
-        // initialize with default feeds
+        do {
+            // Get the file URL
+            guard let fileUrl = Bundle.main.url(forResource: "valid_feeds", withExtension: "json") else {
+                fatalError("rss_data.json not found")
+            }
+            // Read the file data
+            let jsonData = try Data(contentsOf: fileUrl)
+            
+            // Decode the JSON data into an array of Feed objects
+            let decoder = JSONDecoder()
+            let feeds = try decoder.decode([Feed].self, from: jsonData)
 
-        // TODO: - Add more feeds
-        feeds = [
-            Feed(name: "Verge", url: "https://www.theverge.com/rss/games/index.xml"),
-            Feed(name: "IGN", url: "https://www.ign.com/rss/articles/feed?tags=games"),
-            Feed(name: "Polygon", url: "https://www.polygon.com/rss/index.xml"),
-            Feed(name: "Playstation", url: "https://blog.playstation.com/feed/")
-        ]
-    }
-    
-    func addFeed(name: String, url: String) {
-        let newFeed = Feed(id: UUID(), name: name, url: url)
-        feeds.append(newFeed)
-    }
-    
-    func removeFeed(id: UUID) {
-        feeds.removeAll { $0.id == id }
+            // Replace the selected feeds with the decoded feeds
+            self.feeds = feeds
+        } catch {
+            print("Error decoding JSON: \(error)")
+        }
     }
 }

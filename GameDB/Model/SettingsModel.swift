@@ -9,7 +9,6 @@ import SwiftUI
 
 enum SettingsModel: String, Hashable, CaseIterable, Identifiable, View {
     case appearance = "Appearance"
-    case feed = "Feed"
     case credits = "Credits"
     case about = "About"
     
@@ -21,8 +20,6 @@ enum SettingsModel: String, Hashable, CaseIterable, Identifiable, View {
         switch self {
         case .appearance:
             AppearanceView()
-        case .feed:
-            FeedView()
         case .credits:
             CreditsView()
         case .about:

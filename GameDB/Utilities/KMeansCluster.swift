@@ -21,7 +21,7 @@ class KMeansClusterer {
             clusters.append(Cluster(center: p!))
         }
         
-        for i in 0 ..< 10 {
+        for _ in 0 ..< 10 {
             clusters.forEach {
                 $0.points.removeAll()
             }
@@ -38,7 +38,6 @@ class KMeansClusterer {
                 }
             }
             if converged {
-                print("Converged. Took \(i) iterations")
                 break;
             }
         }
