@@ -37,7 +37,7 @@ struct GameDetailContent: View {
     var game: GameModel
     @Binding var showSpoilerWarning: Bool
     @Binding var showStorylineWarning: Bool
-    @State private var isSaved: Bool = false  // Introduce this to track saved state
+    @State private var isSaved: Bool = false
     
     var body: some View {
         ScrollView {
@@ -61,7 +61,7 @@ struct CoverImageView: View {
     var url: URL?
     @Binding var isSaved: Bool
     var toggleSaved: () -> Void
-
+    
     var body: some View {
         ZStack(alignment: .topTrailing) {
             AsyncImage(url: url) { phase in
@@ -80,7 +80,7 @@ struct CoverImageView: View {
             .frame(maxWidth: .infinity)
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .shadow(color: Color.black.opacity(0.25), radius: 10, x: 0, y: 10)
-
+            
             Button(action: toggleSaved) {
                 Image(systemName: isSaved ? "star.fill" : "star")
                     .resizable()
@@ -256,7 +256,7 @@ struct ScreenshotCarouselView: View {
     var urls: [URL]
     @State private var selectedPage: Int = 0
     @State private var showFullScreenImage: Bool = false
-
+    
     var body: some View {
         VStack {
             TabView(selection: $selectedPage) {
@@ -373,11 +373,5 @@ struct VideosSection: View {
 struct GameDetailView_Previews: PreviewProvider {
     static var previews: some View {
         GameDetailView(gameID: 1009) // The Last of Us
-    }
-}
-
-extension Array {
-    subscript(safe index: Index) -> Element? {
-        return indices.contains(index) ? self[index] : nil
     }
 }

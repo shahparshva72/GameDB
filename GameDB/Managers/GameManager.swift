@@ -14,8 +14,8 @@ class GameManager: ObservableObject {
     
     // MARK: Properties
     
-    @Published private var games: [GameModel] = []  // Normally, you'd fetch this from an API or database.
-    @Published private var savedGames: [GameModel] = [] // Simulating a storage for saved games
+    @Published private var games: [GameModel] = []
+    @Published private var savedGames: [GameModel] = []
     
     // MARK: Initialization
     

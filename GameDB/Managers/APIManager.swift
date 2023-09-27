@@ -132,10 +132,16 @@ class APIManager {
             }
         }
     }
-
-    // function with an apicalypse query to fetch popular game characters using IGDB API 
+    
+    // function with an apicalypse query to fetch popular game characters using IGDB API
     func popularCharacters(completion: @escaping (Result<[CharacterModel], Error>) -> Void) {
-        wrapper.apiProtoRequest(endpoint: .CHARACTERS, apicalypseQuery: "fields name, games.name, games.cover.image_id, games.rating, games.first_release_date; where games.rating >= 85 & games.cover != null; sort games.rating desc; limit 50;") { bytes in
+        let query = """
+        fields name, games.name, games.cover.image_id, games.rating, games.first_release_date, games.genres.name, games.platforms.name;
+        where games.rating >= 90 & games.cover != null & games.first_release_date > 1672531199;
+        sort games.rating desc, games.first_release_date desc;
+        limit 50;
+        """
+        wrapper.apiProtoRequest(endpoint: .CHARACTERS, apicalypseQuery: query) { bytes in
             guard let characterResults = try? Proto_CharacterResult(serializedData: bytes) else {
                 return
             }
@@ -152,10 +158,14 @@ class APIManager {
             }
         }
     }
-
+    
+    
     // function with an apicalypse query to show games as per the genre selected by the user, pass genre as a parameter
     func gamesByGenre(for genre: GameGenre, completion: @escaping GameFetchCompletion) {
-        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (genres = (\(genre.rawValue)) & rating >= 85 & themes != 42); sort first_release_date desc; limit 10;") { bytes in
+        let query = """
+        fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (genres = (\(genre.rawValue))); limit 20;
+        """
+        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: query) { bytes in
             guard let gameResults = try? Proto_GameResult(serializedData: bytes) else {
                 return
             }
@@ -172,7 +182,8 @@ class APIManager {
             }
         }
     }
-
+    
+    
     // function with an apicalypse query to show games as per the theme selected by the user, pass theme as a parameter
     func gamesByThemes(for theme: GameTheme, completion: @escaping GameFetchCompletion) {
         wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (themes = (\(theme.rawValue)) & rating >= 85); sort first_release_date desc; limit 10;") { bytes in
@@ -192,7 +203,7 @@ class APIManager {
             }
         }
     }
-
+    
     // function with an apicalypse query to show games as per the player perspective selected by the user, pass player perspective as a parameter
     func gamesByPlayerPerspective(for playerPerspective: PlayerPerspective, completion: @escaping GameFetchCompletion) {
         wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (player_perspectives = (\(playerPerspective.rawValue)) & rating >= 85); sort first_release_date desc; limit 10;") { bytes in
@@ -212,7 +223,7 @@ class APIManager {
             }
         }
     }
-
+    
     func gamesByModes(for mode: GameMode, completion: @escaping GameFetchCompletion) {
         wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (game_modes = (\(mode.rawValue)) & rating >= 85); sort first_release_date desc; limit 10;") { bytes in
             guard let gameResults = try? Proto_GameResult(serializedData: bytes) else {
