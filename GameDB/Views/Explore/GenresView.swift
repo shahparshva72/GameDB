@@ -25,6 +25,7 @@ struct GenreDetailView: View {
     @State private var games = [GameModel]()
     @State private var loading = true
     @State private var error: Error?
+    @State private var currentOffset = 0
     
     var body: some View {
         List {
@@ -40,22 +41,32 @@ struct GenreDetailView: View {
                     .foregroundColor(.red)
                 
             } else {
-                ForEach(games) { game in
+                ForEach(games, id: \.id) { game in
                     NavigationLink(destination: GameDetailView(gameID: game.id)) {
                         Text(game.name)
                     }
                 }
+                if !loading {
+                    Text("Load More")
+                        .onAppear(perform: {
+                            self.currentOffset += 30
+                            self.fetchGames(offset: currentOffset)
+                        })
+                }
             }
         }
         .navigationTitle(genre.description)
-        .onAppear(perform: fetchGames)
+        .onAppear(perform: {
+            self.fetchGames(offset: currentOffset)
+        })
     }
     
-    func fetchGames() {
-        APIManager.shared.gamesByGenre(for: genre) { result in
+    func fetchGames(offset: Int) {
+        loading = true
+        APIManager.shared.gamesByGenre(for: genre, currentOffset: offset) { result in
             switch result {
             case .success(let fetchedGames):
-                self.games = fetchedGames
+                self.games.append(contentsOf: fetchedGames)
                 self.loading = false
                 
             case .failure(let error):
@@ -66,6 +77,7 @@ struct GenreDetailView: View {
         }
     }
 }
+
 
 struct GenresView_Previews: PreviewProvider {
     static var previews: some View {

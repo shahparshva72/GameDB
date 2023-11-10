@@ -10,24 +10,30 @@ import SwiftUI
 struct ContentView: View {
     
     init() {
-        // Setting the background color
-        UITabBar.appearance().barTintColor = UIColor.systemBackground
-        
-        // Setting the selected item tint
-        UITabBar.appearance().tintColor = UIColor.blue
-        
-        // Customizing unselected items
-        let attributes = [
-            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12, weight: .bold),
-            NSAttributedString.Key.foregroundColor: UIColor.gray
+        let appearance = UITabBar.appearance()
+        appearance.standardAppearance.backgroundEffect = UIBlurEffect(style: .systemMaterialDark)
+        appearance.tintColor = .blue
+
+        appearance.standardAppearance.stackedLayoutAppearance.normal.titleTextAttributes = [
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10, weight: .regular),
+            NSAttributedString.Key.foregroundColor: UIColor.lightGray
         ]
-        UITabBarItem.appearance().setTitleTextAttributes(attributes, for: .normal)
+
+        appearance.standardAppearance.stackedLayoutAppearance.selected.titleTextAttributes = [
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10, weight: .semibold),
+            NSAttributedString.Key.foregroundColor: UIColor.blue
+        ]
     }
+
 
     
     var body: some View {
         TabView {
-            HomeView()
+            ZStack {
+                Color.red
+                
+                HomeView()
+            }
                 .tabItem {
                     VStack {
                         Image(systemName: "gamecontroller")
@@ -66,8 +72,15 @@ struct ContentView: View {
                     }
                 }
                 .tag(3)
+            SummaryView()
+                .tabItem {
+                    VStack {
+                        Image(systemName: "chart.pie.fill")
+                        Text("Summary")
+                    }
+                }
+                .tag(4)
         }
-        .font(.headline)  // Increase the font size for tab item texts.
     }
 }
 

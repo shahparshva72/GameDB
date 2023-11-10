@@ -22,8 +22,8 @@ class APIManager {
     /// - Parameters:
     ///   - platform: pass in a platform model
     ///   - completion: returns an array of GameModels
-    func getPopularGames(for platform: PlatformModel, completion: @escaping (Result<[GameModel], Error>) -> Void) {
-        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (platforms = (\(platform.rawValue)) & rating >= 85 & themes != 42); sort first_release_date desc; limit 10;") { bytes in
+    func getPopularGames(for platform: GamePlatformModel, completion: @escaping (Result<[GameModel], Error>) -> Void) {
+        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (platforms = (\(platform.id)) & rating >= 85 & themes != 42); sort first_release_date desc; limit 10;") { bytes in
             guard let gameResults = try? Proto_GameResult(serializedData: bytes) else {
                 return
             }
@@ -40,12 +40,30 @@ class APIManager {
         
     }
     
+    func getGames(for category: GameCategory, platform: PlatformModel, completion: @escaping (Result<[GameModel], Error>) -> Void) {
+        let query = category.getQuery(for: platform)
+        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: query) { bytes in
+            guard let gameResults = try? Proto_GameResult(serializedData: bytes) else {
+                return
+            }
+            let games = gameResults.games.map { GameModel(game: $0, coverSize: .COVER_BIG) }
+            DispatchQueue.main.async {
+                completion(.success(games))
+            }
+        } errorResponse: { error in
+            DispatchQueue.main.async {
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    
     /// Fetches a game for a given id
     /// - Parameters:
     ///  - id: pass in a game id
     /// - completion: returns a GameModel with all the details
     func fetchGame(id: Int, completion: @escaping (Result<GameModel, Error>) -> Void) {
-        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, summary, genres.name, storyline, first_release_date, screenshots.image_id, id, rating, cover.image_id, involved_companies.company.name, videos.video_id; where id = \(id);", dataResponse: { (bytes) -> (Void) in
+        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, summary, genres.name, storyline, first_release_date, screenshots.image_id, id, rating, cover.image_id, involved_companies.company.name, videos.video_id, platforms.name; where id = \(id);", dataResponse: { (bytes) -> (Void) in
             guard let protoGame = try? Proto_GameResult(serializedData: bytes).games.first else {
                 return
             }
@@ -57,27 +75,6 @@ class APIManager {
                 completion(.failure(error))
             }
         }
-    }
-    
-    func fetchPlatformDetails(completion: @escaping (Result<[GamePlatformModel], Error>) -> Void) {
-        wrapper.apiProtoRequest(endpoint: .PLATFORMS, apicalypseQuery: "fields name, platform_logo.image_id, platform_logo.url; where category=1; limit 100;") { (bytes) -> (Void) in
-            guard let platformResults = try? Proto_PlatformResult(serializedData: bytes) else {
-                return
-            }
-            
-            let consoles = platformResults.platforms.map {
-                GamePlatformModel(platform: $0)
-            }
-            
-            DispatchQueue.main.async {
-                completion(.success(consoles))
-            }
-        } errorResponse: { error in
-            DispatchQueue.main.async {
-                completion(.failure(error))
-            }
-        }
-        
     }
     
     func getUpcomingGames(completion: @escaping (Result<[GameModel], Error>) -> Void) {
@@ -133,38 +130,16 @@ class APIManager {
         }
     }
     
-    // function with an apicalypse query to fetch popular game characters using IGDB API
-    func popularCharacters(completion: @escaping (Result<[CharacterModel], Error>) -> Void) {
-        let query = """
-        fields name, games.name, games.cover.image_id, games.rating, games.first_release_date, games.genres.name, games.platforms.name;
-        where games.rating >= 90 & games.cover != null & games.first_release_date > 1672531199;
-        sort games.rating desc, games.first_release_date desc;
-        limit 50;
-        """
-        wrapper.apiProtoRequest(endpoint: .CHARACTERS, apicalypseQuery: query) { bytes in
-            guard let characterResults = try? Proto_CharacterResult(serializedData: bytes) else {
-                return
-            }
-            
-            let characters = characterResults.characters.map { CharacterModel(character: $0) }
-            
-            DispatchQueue.main.async {
-                completion(.success(characters))
-            }
-            
-        } errorResponse: { error in
-            DispatchQueue.main.async {
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    
     // function with an apicalypse query to show games as per the genre selected by the user, pass genre as a parameter
-    func gamesByGenre(for genre: GameGenre, completion: @escaping GameFetchCompletion) {
+    func gamesByGenre(for genre: GameGenre, currentOffset: Int, completion: @escaping GameFetchCompletion) {
         let query = """
-        fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (genres = (\(genre.rawValue))); limit 20;
+            fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id;
+            where (genres = (\(genre.rawValue)));
+            sort name asc;
+            limit 30;
+            offset \(currentOffset);
         """
+        
         wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: query) { bytes in
             guard let gameResults = try? Proto_GameResult(serializedData: bytes) else {
                 return
@@ -182,6 +157,7 @@ class APIManager {
             }
         }
     }
+    
     
     
     // function with an apicalypse query to show games as per the theme selected by the user, pass theme as a parameter
@@ -242,19 +218,8 @@ class APIManager {
             }
         }
     }
-}
-
-fileprivate extension GamePlatformModel {
-    init(platform: Proto_Platform) {
-        self.init(id: Int(platform.id),
-                  name: platform.name,
-                  platformLogo: Platform_Logo(
-                    id: Int(platform.platformLogo.id),
-                    image_id: platform.platformLogo.imageID,
-                    urlString: platform.platformLogo.url
-                  )
-        )
-    }
+    
+    
 }
 
 struct GameResponse: Decodable {
@@ -285,6 +250,7 @@ fileprivate extension GameModel {
         self.genres = []
         self.company = ""
         self.videoIDs = []
+        self.platforms = []
     }
     
     init(game: Proto_Game, coverSize: ImageSize = .COVER_SMALL) {
@@ -299,6 +265,7 @@ fileprivate extension GameModel {
         
         let company = game.involvedCompanies.first?.company.name ?? ""
         let genres = game.genres.map { $0.name }
+        let platforms = game.platforms.map { $0.name }
         self.init(
             id: Int(game.id),
             name: game.name,
@@ -309,19 +276,31 @@ fileprivate extension GameModel {
             coverURLString: coverURL,
             screenshotURLsString: screenshotURLs,
             genres: genres, company: company,
-            videoIDs: videoIDs
+            videoIDs: videoIDs, platforms: platforms
         )
     }
 }
 
-struct CharacterModel {
-    let id: Int
-    let name: String
-    let games: [GameModel]
+// MARK: - Home Game Filter category
+
+enum GameCategory: String, CaseIterable {
+    case popular = "Popular"
+    case recentlyReleased = "Recently Released"
+    case upcoming = "Upcoming Games"
+    case mostAnticipated = "Most Anticipated"
     
-    init(character: Proto_Character) {
-        self.id = Int(character.id)
-        self.name = character.name
-        self.games = character.games.map { GameModel(game: $0, coverSize: .COVER_BIG) }
+    func getQuery(for platform: PlatformModel) -> String {
+        let unixTimestamp = Int(Date().timeIntervalSince1970)
+        switch self {
+        case .popular:
+            return "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (platforms = (\(platform.rawValue)) & rating >= 85 & themes != 42); sort first_release_date desc; limit 10;"
+        case .recentlyReleased:
+            return "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (platforms = \(platform.rawValue) & first_release_date < \(unixTimestamp)); sort first_release_date desc; limit 10;"
+        case .upcoming:
+            return "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (platforms = \(platform.rawValue) & first_release_date >= \(unixTimestamp)); sort first_release_date asc; limit 10;"
+        case .mostAnticipated:
+            return "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (platforms = \(platform.rawValue)); sort follows desc; limit 10;"
+        }
     }
 }
+

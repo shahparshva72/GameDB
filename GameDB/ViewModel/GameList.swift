@@ -6,25 +6,43 @@
 //
 
 import Foundation
+import Combine
 
 class GameList: ObservableObject {
-    
     @Published var games: [GameModel] = []
     @Published var isLoading = false
+    private var cancellables = Set<AnyCancellable>()
+    private let platform: PlatformModel
+    private var category: GameCategory {
+        didSet {
+            fetchGames()
+        }
+    }
+
+    init(platform: PlatformModel, category: GameCategory) {
+        self.platform = platform
+        self.category = category
+        fetchGames()
+    }
     
-    func fetchGames(for platform: PlatformModel) {
+    var platformDescription: String {
+        platform.description
+    }
+
+    private func fetchGames() {
         isLoading = true
-        platform.fetchGames { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
+        platform.fetchGames(for: category)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                guard let self = self else { return }
                 self.isLoading = false
-                switch result {
-                case .success(let games):
-                    self.games = games
-                case .failure(let error):
+                if case .failure(let error) = completion {
                     print(error.localizedDescription)
                 }
+            } receiveValue: { [weak self] games in
+                guard let self = self else { return }
+                self.games = games
             }
-        }
+            .store(in: &cancellables)
     }
 }

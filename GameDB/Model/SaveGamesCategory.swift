@@ -5,17 +5,32 @@
 //  Created by Parshva Shah on 10/9/23.
 //
 
-import Foundation
+import SwiftUI
 
-/*
-enum track category
-
-Games Played
-Games to Play
-upcomingGames
-Favorite Games
-*/
-
-enum TrackCategory {
+enum SaveGamesCategory: String, CaseIterable {
+    case played = "Games Played"
+    case toPlay = "Games to Play"
+    case upcoming = "Upcoming Games"
+    case favorite = "Favorite Games"
     
+    var description: String {
+        return self.rawValue
+    }
+    
+    var color: Color {
+        switch self {
+        case .played:
+            // Cadmium Red
+            return Color(red: 223 / 255.0, green: 0 / 255.0, blue: 36 / 255.0)
+        case .toPlay:
+            // Golden Poppy
+            return Color(red: 243 / 255.0, green: 195 / 255.0, blue: 0 / 255.0)
+        case .upcoming:
+            // Persian Green
+            return Color(red: 0 / 255.0, green: 172 / 255.0, blue: 159 / 255.0)
+        case .favorite:
+            // Celtic Blue
+            return Color(red: 46 / 255.0, green: 109 / 255.0, blue: 180 / 255.0)
+        }
+    }
 }

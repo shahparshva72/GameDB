@@ -5,8 +5,8 @@
 //  Created by Parshva Shah on 5/23/23.
 //
 
-import SwiftUI
 import Combine
+import SwiftUI
 
 class GameDetailViewModel: ObservableObject {
     @Published var game: GameModel?
@@ -20,9 +20,9 @@ class GameDetailViewModel: ObservableObject {
         apiManager.fetchGame(id: id) { [weak self] result in
             self?.isLoading = false
             switch result {
-            case .success(let game):
+            case let .success(game):
                 self?.game = game
-            case .failure(let error):
+            case let .failure(error):
                 self?.error = error
             }
         }

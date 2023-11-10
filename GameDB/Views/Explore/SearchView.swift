@@ -40,7 +40,7 @@ struct SearchView: View {
             case .loaded(let results):
                 ForEach(results) { game in
                     NavigationLink(destination: GameDetailView(gameID: game.id)) {
-                        Text(game.name)
+                        GameThumbnailCell(url: game.coverURL, name: game.name)
                     }
                 }
             case .error(let message):
@@ -58,6 +58,9 @@ struct SearchView: View {
         }
     }
 }
+
+
+
 
 // MARK: - EmptyStateView
 struct EmptyStateView: View {

@@ -12,6 +12,7 @@ struct GameDBApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(\.managedObjectContext, GameDataProvider.shared.viewContext)
         }
     }
 }

@@ -5,45 +5,34 @@
 //  Created by Parshva Shah on 5/22/23.
 //
 
+import Kingfisher
 import SwiftUI
 
 struct GameThumbnail: View {
-    @StateObject private var gameManager = GameManager()
-    var game: GameModel
-    
+    var url: URL?
+    var name: String
+    let thumbnailHeight: CGFloat = 200
+    let thumbnailWidth: CGFloat = 155
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            // Game cover image
-            if let imageURL = game.coverURL {
-                AsyncImage(url: imageURL) { image in
-                    image
-                        .resizable()
-                        .scaledToFill()
-                        .clipped()
-                } placeholder: {
-                    Rectangle()
-                        .foregroundColor(Color.gray)
-                }
-                .cornerRadius(10)
-                .shadow(radius: 5)
+            if let safeURL = url {
+                KFImage.url(safeURL)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: thumbnailWidth, height: thumbnailHeight)
+                    .clipped()
+                    .cornerRadius(10)
+                    .shadow(radius: 5)
             }
+            Text(name)
+                .font(.headline)
+                .lineLimit(1)
+                .truncationMode(.tail)
+                .padding(.horizontal, 5)
+                .frame(width: thumbnailWidth, alignment: .leading)
         }
-        .background(Color.white)
         .cornerRadius(10)
-        .contextMenu {
-            if isUpcoming(game: game) {
-                Button(action: {
-                    gameManager.saveGame(game)
-                }) {
-                    Text("Save Game")
-                    Image(systemName: "bookmark.fill")
-                }
-            }
-        }
-    }
-    
-    func isUpcoming(game: GameModel) -> Bool {
-        return game.releaseDate > Date()
+        .shadow(radius: 5)
     }
 }
-

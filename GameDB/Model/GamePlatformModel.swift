@@ -1,25 +1,36 @@
-    //
-    //  GamePlatformModel.swift
-    //  GameDB
-    //
-    //  Created by Parshva Shah on 6/18/23.
-    //
+//
+//  GamePlatformModel.swift
+//  GameDB
+//
+//  Created by Parshva Shah on 6/18/23.
+//
 
-import Foundation
+import SwiftUI
 
 struct GamePlatformModel: Identifiable, Decodable {
     let id: Int
     var name: String
-    var platformLogo: Platform_Logo?
-    
 }
 
-struct Platform_Logo: Identifiable, Decodable {
-    let id: Int
-    var image_id: String
-    var urlString: String
-    
-    var url: URL? {
-        return URL(string: urlString)
+class GamePlatformViewModel: ObservableObject {
+    @Published var platforms: [GamePlatformModel] = []
+
+    init() {
+        loadPlatforms()
+    }
+
+    func loadPlatforms() {
+        guard let url = Bundle.main.url(forResource: "Platforms", withExtension: "json") else {
+            print("Platforms.json file not found")
+            return
+        }
+
+        do {
+            let data = try Data(contentsOf: url)
+            let decoder = JSONDecoder()
+            platforms = try decoder.decode([GamePlatformModel].self, from: data)
+        } catch {
+            print("Error loading platforms: \(error)")
+        }
     }
 }

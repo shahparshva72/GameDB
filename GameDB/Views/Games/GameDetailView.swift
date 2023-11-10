@@ -6,21 +6,23 @@
 //
 
 import SwiftUI
+import QuickLook
 
 struct GameDetailView: View {
     @StateObject private var viewModel = GameDetailViewModel()
     var gameID: Int
-    @State private var isSaved: Bool = false
     
-    private let standardPadding: CGFloat = 20
     @State private var showSpoilerWarning = false
     @State private var showStorylineWarning = false
+    
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+    @State private var alertTitle = ""
     
     var body: some View {
         Group {
             if let game = viewModel.game {
                 GameDetailContent(game: game, showSpoilerWarning: $showSpoilerWarning, showStorylineWarning: $showStorylineWarning)
-                    .padding([.horizontal], standardPadding)
             } else if let error = viewModel.error {
                 Text(error.localizedDescription)
             } else {
@@ -30,6 +32,41 @@ struct GameDetailView: View {
         .onAppear {
             viewModel.fetchGame(id: gameID)
         }
+        .toolbar {
+            Menu {
+                Section {
+                    Text("Save to")
+                    ForEach(SaveGamesCategory.allCases, id: \.self) { category in
+                        Button(category.description) {
+                            saveGame(inCategory: category)
+                        }
+                    }
+                }
+            } label: {
+                Label("Save to", systemImage: "plus.app")
+            }
+        }
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+        }
+    }
+    
+    func saveGame(inCategory category: SaveGamesCategory) {
+        guard let game = viewModel.game else { return }
+        
+        if category == .upcoming && game.releaseDate <= Date() {
+            alertMessage = "Cannot save \(game.name) as upcoming games as release date has already passed"
+            alertTitle = "Cannot add game"
+            showAlert = true
+        } else {
+            GameDataProvider.shared.saveOrUpdateGame(
+                id: game.id,
+                name: game.name,
+                releaseDate: game.releaseDate,
+                coverURLString: game.coverURLString,
+                category: category
+            )
+        }
     }
 }
 
@@ -37,36 +74,27 @@ struct GameDetailContent: View {
     var game: GameModel
     @Binding var showSpoilerWarning: Bool
     @Binding var showStorylineWarning: Bool
-    @State private var isSaved: Bool = false
     
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             VStack {
-                CoverImageView(url: game.coverURL, isSaved: $isSaved, toggleSaved: toggleSaved)
+                CoverImageView(url: game.coverURL)
                 GameInformationView(game: game, showSpoilerWarning: $showSpoilerWarning, showStorylineWarning: $showStorylineWarning)
+                    .padding([.horizontal], 20)
             }
             Spacer()
         }
     }
-    
-    // Function to toggle the saved state
-    func toggleSaved() {
-        isSaved.toggle()
-        // Here you can also add logic to save this state somewhere if needed, e.g., UserDefaults, CoreData, etc.
-    }
 }
-
 
 struct CoverImageView: View {
     var url: URL?
-    @Binding var isSaved: Bool
-    var toggleSaved: () -> Void
     
     var body: some View {
         ZStack(alignment: .topTrailing) {
             AsyncImage(url: url) { phase in
                 switch phase {
-                case .success(let image):
+                case let .success(image):
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)
@@ -80,18 +108,9 @@ struct CoverImageView: View {
             .frame(maxWidth: .infinity)
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .shadow(color: Color.black.opacity(0.25), radius: 10, x: 0, y: 10)
-            
-            Button(action: toggleSaved) {
-                Image(systemName: isSaved ? "star.fill" : "star")
-                    .resizable()
-                    .foregroundColor(isSaved ? .yellow : .gray)
-                    .frame(width: 24, height: 24)
-                    .padding(.all, 16)
-            }
         }
     }
 }
-
 
 struct GameInformationView: View {
     var game: GameModel
@@ -121,6 +140,7 @@ struct GameDetailsSection: View {
                 .font(.headline)
         }) {
             VStack(alignment: .leading, spacing: 8) {
+                // Developed by
                 HStack {
                     Image(systemName: "person.fill")
                         .foregroundColor(.secondary)
@@ -128,6 +148,7 @@ struct GameDetailsSection: View {
                         .fontWeight(.medium)
                 }
                 
+                // Release Date
                 HStack {
                     Image(systemName: "calendar")
                         .foregroundColor(.secondary)
@@ -135,18 +156,29 @@ struct GameDetailsSection: View {
                         .fontWeight(.medium)
                 }
                 
+                // Genres
                 HStack {
                     Image(systemName: "star.fill")
                         .foregroundColor(.yellow)
-                    Text(game.genreText)
-                        .fontWeight(.medium)
+                    
+                    TagsGridView(tagNames: game.genres, tagColor: .green)
+                        .padding()
                 }
                 
+                // Rating
                 HStack {
                     Image(systemName: "star.circle.fill")
                         .foregroundColor(.orange)
                     Text("Rating: \(String(format: "%.1f", game.rating))")
                         .fontWeight(.medium)
+                }
+                
+                // Platforms
+                HStack {
+                    Image(systemName: "gamecontroller")
+                        .foregroundColor(.purple)
+                    TagsGridView(tagNames: game.platforms, tagColor: .purple)
+                        .padding()
                 }
             }
             .font(.subheadline)
@@ -155,7 +187,6 @@ struct GameDetailsSection: View {
         }
     }
 }
-
 
 struct SummarySection: View {
     var summary: String
@@ -168,7 +199,6 @@ struct SummarySection: View {
                     .foregroundColor(.secondary)
             } else {
                 ZStack {
-                    // The actual summary, but it will be hidden when the spoiler warning is not shown
                     Text(summary)
                         .font(.body)
                         .lineLimit(nil)
@@ -202,7 +232,6 @@ struct StorylineSection: View {
                     .foregroundColor(.secondary)
             } else {
                 ZStack {
-                    // The actual storyline, but it will be hidden when the spoiler warning is not shown
                     Text(storyline)
                         .font(.body)
                         .lineLimit(nil)
@@ -225,24 +254,11 @@ struct StorylineSection: View {
     }
 }
 
-
-struct ScreenshotsViewWrapper: View {
-    var urls: [URL]
-    
-    var body: some View {
-        NavigationView {
-            ScreenshotsSection(urls: urls)
-        }
-    }
-}
-
 struct ScreenshotsSection: View {
     var urls: [URL]
     
     var body: some View {
-        VStack {
-            Text("Screenshots").font(.headline).padding(.top)
-            
+        Section(header: Text("Screenshots")) {
             if urls.isEmpty {
                 Text("No screenshots available.").foregroundColor(.secondary)
             } else {
@@ -261,15 +277,12 @@ struct ScreenshotCarouselView: View {
         VStack {
             TabView(selection: $selectedPage) {
                 ForEach(urls.indices, id: \.self) { index in
-                    NavigationLink(destination: FullScreenImageView(url: urls[index])) {
-                        ScreenshotImageView(url: urls[index])
-                    }
+                    ScreenshotImageView(url: urls[index])
                 }
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             .frame(height: 200)
             
-            // Custom page dots below the image carousel
             HStack {
                 Spacer()
                 ForEach(urls.indices, id: \.self) { index in
@@ -285,6 +298,9 @@ struct ScreenshotCarouselView: View {
                 Spacer()
             }
         }
+        .onTapGesture {
+            
+        }
     }
 }
 
@@ -294,7 +310,7 @@ struct ScreenshotImageView: View {
     var body: some View {
         AsyncImage(url: url) { phase in
             switch phase {
-            case .success(let image):
+            case let .success(image):
                 image.resizable()
                     .aspectRatio(contentMode: .fit)
                     .cornerRadius(10)
@@ -308,29 +324,6 @@ struct ScreenshotImageView: View {
         }
     }
 }
-
-struct FullScreenImageView: View {
-    var url: URL
-    
-    var body: some View {
-        AsyncImage(url: url) { phase in
-            switch phase {
-            case .success(let image):
-                image.resizable().aspectRatio(contentMode: .fit)
-                    .background(Color.black)
-                    .edgesIgnoringSafeArea(.all)
-            case .failure:
-                Image(systemName: "photo").resizable().aspectRatio(contentMode: .fit).background(Color.black)
-            case .empty:
-                ProgressView()
-            @unknown default:
-                ProgressView()
-            }
-        }
-    }
-}
-
-
 
 
 struct VideosSection: View {
@@ -369,9 +362,6 @@ struct VideosSection: View {
     }
 }
 
-
-struct GameDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        GameDetailView(gameID: 1009) // The Last of Us
-    }
+#Preview {
+    GameDetailView(gameID: 1009) // The Last of Us
 }

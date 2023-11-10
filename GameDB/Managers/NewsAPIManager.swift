@@ -6,3 +6,36 @@
 //
 
 import Foundation
+
+class NewsAPIManager {
+    static let shared = NewsAPIManager()
+    
+    func fetchFeedNames() async throws -> [String] {
+        guard let url = URL(string: "https://gamingnewsapi.onrender.com/get-feed-names") else {
+            throw NSError(domain: "Invalid URL", code: 400, userInfo: nil)
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        let (data, _) = try await URLSession.shared.data(for: request)
+        let feedNames = try JSONDecoder().decode([String].self, from: data)
+        return feedNames
+    }
+    
+    func fetchNewsFeed(page: Int, perPage: Int) async throws -> [RSSItem] {
+        let urlString = "https://gamingnewsapi.onrender.com/get-all-feeds?page=\(page)&per_page=\(perPage)"
+        guard let url = URL(string: urlString) else {
+            throw NSError(domain: "Invalid URL", code: 400, userInfo: nil)
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        let (data, _) = try await URLSession.shared.data(for: request)
+        let feedItems = try JSONDecoder().decode([RSSItem].self, from: data)
+        return feedItems
+    }
+}

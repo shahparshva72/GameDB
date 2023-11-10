@@ -11,6 +11,7 @@ enum SettingsModel: String, Hashable, CaseIterable, Identifiable, View {
     case appearance = "Appearance"
     case credits = "Credits"
     case about = "About"
+    case feed = "Feed"
     
     var id: String {
         self.rawValue
@@ -24,6 +25,8 @@ enum SettingsModel: String, Hashable, CaseIterable, Identifiable, View {
             CreditsView()
         case .about:
             AboutView()
+        case .feed:
+            FeedSelectionView()
         }
     }
 }

@@ -12,7 +12,7 @@ struct NavigationItem: Hashable, Identifiable {
     var title: String
     var icon: String
     var category: ExploreCategory
-
+    
     init(category: ExploreCategory, icon: String) {
         self.title = category.description
         self.icon = icon
@@ -31,7 +31,7 @@ struct ExploreView: View {
         NavigationItem(category: .themes, icon: "paintbrush"),
         NavigationItem(category: .playerPerspective, icon: "person.crop.circle"),
         NavigationItem(category: .modes, icon: "person.3"),
-        NavigationItem(category: .ageRatings, icon: "face.smiling")
+        NavigationItem(category: .ageRatings, icon: "face.smiling"),
     ]
     
     var body: some View {
@@ -55,7 +55,7 @@ struct ExploreView: View {
 struct ExploreCategoryView: View {
     var category: String
     var icon: String
-
+    
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 15, style: .continuous)

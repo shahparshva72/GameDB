@@ -22,6 +22,7 @@ struct GameModel {
     let genres: [String]
     let company: String
     let videoIDs: [String]
+    let platforms: [String]
     
     var isSaved: Bool = false
     
@@ -42,6 +43,9 @@ struct GameModel {
         return screenshotURLsString.compactMap { URL(string: $0) }
     }
     
+    var platformsText: String {
+        return platforms.joined(separator: ", ")
+    }
 }
 
 // MARK: - GameModel Identifiable Extension

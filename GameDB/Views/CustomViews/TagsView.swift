@@ -7,12 +7,38 @@
 
 import SwiftUI
 
-struct TagsView: View {
+struct TagsGridView: View {
+    var tagNames: [String]
+    var tagColor: Color
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 20) {
+            ForEach(tagNames, id: \.self) { tagName in
+                TagsView(name: tagName, color: tagColor)
+            }
+        }
     }
 }
 
+struct TagsView: View {
+    var name: String
+    var color: Color
+
+    var body: some View {
+        Text(name)
+            .font(.callout)
+            .lineLimit(1)
+            .truncationMode(.tail)
+            .padding(.horizontal, 5)
+            .padding(.vertical, 5)
+            .frame(minWidth: 75, idealWidth: 100, maxWidth: .infinity, alignment: .center)
+            .background(color)
+            .foregroundColor(.white)
+            .cornerRadius(15)
+    }
+}
+
+
 #Preview {
-    TagsView()
+    TagsView(name: "Tag", color: .blue)
 }

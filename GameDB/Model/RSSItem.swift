@@ -7,23 +7,30 @@
 
 import Foundation
 
-// Define your data model for the News Item.
-struct RSSItem: Identifiable {
-    var id: String
+struct RSSItem: Identifiable, Codable {
+    let id = UUID()
     var title: String
     var link: String
-    var content: String
-    var pubDate: Date
-    var author: String
-    var imageURL: String?
+    var published: String
+    var summary: String
+    var image: String
     
-    init(id: String, title: String, link: String, content: String, pubDate: Date, author: String, imageURL: String? = nil) {
-        self.id = id
-        self.title = title
-        self.link = link
-        self.content = content
-        self.pubDate = pubDate
-        self.author = author
-        self.imageURL = imageURL
+    var linkURL: URL? {
+        return URL(string: link)
+    }
+    
+    var imageURL: URL? {
+        return URL(string: image)
+    }
+    
+    var publishedDate: Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "E, dd MMM yyyy HH:mm:ss z"
+        return formatter.date(from: published)
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case title, link, published, summary, image
     }
 }
+
