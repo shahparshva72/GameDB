@@ -6,7 +6,8 @@
 //
 
 import SwiftUI
-import QuickLook
+
+// TODO: - Implement Quicklook to show images in future.
 
 struct GameDetailView: View {
     @StateObject private var viewModel = GameDetailViewModel()
@@ -173,6 +174,14 @@ struct GameDetailsSection: View {
                         .fontWeight(.medium)
                 }
                 
+                // Critics Rating
+                HStack {
+                    Image(systemName: "star.circle.fill")
+                        .foregroundColor(.red)
+                    Text(" Critics Rating: \(String(format: "%.1f", game.aggregated_rating))")
+                        .fontWeight(.medium)
+                }
+                
                 // Platforms
                 HStack {
                     Image(systemName: "gamecontroller")
@@ -271,7 +280,6 @@ struct ScreenshotsSection: View {
 struct ScreenshotCarouselView: View {
     var urls: [URL]
     @State private var selectedPage: Int = 0
-    @State private var showFullScreenImage: Bool = false
     
     var body: some View {
         VStack {
@@ -297,9 +305,6 @@ struct ScreenshotCarouselView: View {
                 }
                 Spacer()
             }
-        }
-        .onTapGesture {
-            
         }
     }
 }

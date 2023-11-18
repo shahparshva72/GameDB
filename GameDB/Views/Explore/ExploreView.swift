@@ -31,7 +31,6 @@ struct ExploreView: View {
         NavigationItem(category: .themes, icon: "paintbrush"),
         NavigationItem(category: .playerPerspective, icon: "person.crop.circle"),
         NavigationItem(category: .modes, icon: "person.3"),
-        NavigationItem(category: .ageRatings, icon: "face.smiling"),
     ]
     
     var body: some View {

@@ -31,18 +31,15 @@ class GameList: ObservableObject {
 
     private func fetchGames() {
         isLoading = true
-        platform.fetchGames(for: category)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
-                guard let self = self else { return }
-                self.isLoading = false
-                if case .failure(let error) = completion {
-                    print(error.localizedDescription)
-                }
-            } receiveValue: { [weak self] games in
-                guard let self = self else { return }
+        APIManager.shared.getGamesByCategory(for: category, platform: platform) { [weak self] result in
+            guard let self = self else { return }
+            self.isLoading = false
+            switch result {
+            case .success(let games):
                 self.games = games
+            case .failure(let error):
+                print(error.localizedDescription)
             }
-            .store(in: &cancellables)
+        }
     }
 }

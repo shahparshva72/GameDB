@@ -41,18 +41,4 @@ enum PlatformModel: Int, CaseIterable {
             return "macOS"
         }
     }
-
-    func fetchGames(for category: GameCategory) -> Future<[GameModel], Error> {
-        return Future { promise in
-            APIManager.shared.getGames(for: category, platform: self) { result in
-                switch result {
-                case .success(let games):
-                    promise(.success(games))
-                case .failure(let error):
-                    promise(.failure(error))
-                }
-            }
-        }
-    }
-
 }

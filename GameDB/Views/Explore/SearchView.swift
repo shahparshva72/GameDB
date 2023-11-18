@@ -59,30 +59,6 @@ struct SearchView: View {
     }
 }
 
-
-
-
-// MARK: - EmptyStateView
-struct EmptyStateView: View {
-    var iconName: String
-    var title: String
-    var message: String
-    
-    var body: some View {
-        VStack(spacing: 16) {
-            Image(systemName: iconName)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 60, height: 60)
-            Text(title)
-                .font(.headline)
-            Text(message)
-                .font(.subheadline)
-        }
-        .padding()
-    }
-}
-
 // MARK: - SearchViewModel
 class SearchViewModel: ObservableObject {
     enum State {

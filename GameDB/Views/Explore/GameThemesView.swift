@@ -22,44 +22,74 @@ struct GameThemesView: View {
 struct GameThemeDetailView: View {
     let theme: GameTheme
     @State private var games: [GameModel] = []
-    @State private var isLoading: Bool = false
+    @State private var isLoading: Bool = true
     @State private var showError: Bool = false
+    @State private var currentOffset: Int = 0
+    @State private var areGamesAvailable: Bool = true
+    
+    private let columns: [GridItem] = [
+        GridItem(.flexible(), spacing: 16),
+        GridItem(.flexible(), spacing: 16)
+    ]
     
     var body: some View {
-        List(games, id: \.id) { game in
-            NavigationLink(destination: GameDetailView(gameID: game.id)) {
-                Text(game.name)
+        ScrollViewReader { scrollViewProxy in
+            ScrollView {
+                LazyVGrid(columns: columns, spacing: 20) {
+                    ForEach(games) { game in
+                        NavigationLink(destination: GameDetailView(gameID: game.id)) {
+                            GameThumbnail(url: game.coverURL, name: game.name)
+                                .frame(width: 155)
+                        }
+                    }
+                    
+                    if isLoading && areGamesAvailable {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .blue))
+                            .scaleEffect(2.0)
+                    } else if areGamesAvailable {
+                        Text("Load More")
+                            .onAppear {
+                                loadMoreContent()
+                            }
+                    }
+                }
+                .padding()
             }
-        }
-        .onAppear(perform: loadData)
-        .alert(isPresented: $showError) {
-            Alert(title: Text("Error"), message: Text("There was an error fetching the games for this theme."), dismissButton: .default(Text("OK")))
-        }
-        .navigationBarTitle(Text(theme.description), displayMode: .inline)
-        .overlay(
-            Group {
-                if isLoading {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .blue))
-                        .scaleEffect(2.0, anchor: .center)
+            .navigationBarTitle(Text(theme.description), displayMode: .inline)
+            .onAppear {
+                if games.isEmpty {
+                    fetchGames(offset: currentOffset)
                 }
             }
-        )
+            .alert(isPresented: $showError) {
+                Alert(title: Text("Error"), message: Text("There was an error fetching the games for this theme."), dismissButton: .default(Text("OK")))
+            }
+        }
     }
     
-    func loadData() {
-        isLoading = true
-        APIManager.shared.gamesByThemes(for: theme) { result in
+    private func loadMoreContent() {
+        currentOffset += 30
+        fetchGames(offset: currentOffset)
+    }
+    
+    private func fetchGames(offset: Int) {
+        APIManager.shared.gamesByThemes(for: theme, currentOffset: offset) { result in
             isLoading = false
             switch result {
             case .success(let fetchedGames):
-                games = fetchedGames
+                if fetchedGames.isEmpty {
+                    areGamesAvailable = true
+                } else {
+                    games.append(contentsOf: fetchedGames)
+                }
             case .failure:
                 showError = true
             }
         }
     }
 }
+
 
 struct GameThemesView_Previews: PreviewProvider {
     static var previews: some View {

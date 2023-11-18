@@ -6,7 +6,6 @@ enum ExploreCategory: String, CaseIterable {
     case themes = "Themes"
     case playerPerspective = "Player Perspective"
     case modes = "Modes"
-    case ageRatings = "Age Ratings"
     
     var description: String {
         return self.rawValue
@@ -25,8 +24,6 @@ enum ExploreCategory: String, CaseIterable {
             PlayerPersceptiveView()
         case .modes:
             GameModesView()
-        case .ageRatings:
-            AgeRatingsView()
         }
     }
 }

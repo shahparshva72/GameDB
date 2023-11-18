@@ -9,7 +9,7 @@ import IGDB_SWIFT_API
 import SwiftUI
 
 struct HomeView: View {
-    @State private var selectedCategory: GameCategory = .popular
+    @State private var selectedCategory: GameCategory = .CriticallyAcclaimed
 
     var body: some View {
         NavigationStack {

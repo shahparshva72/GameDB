@@ -23,6 +23,7 @@ struct GameModel {
     let company: String
     let videoIDs: [String]
     let platforms: [String]
+    let aggregated_rating: Double
     
     var isSaved: Bool = false
     

@@ -20,59 +20,65 @@ struct GenresView: View {
 }
 
 struct GenreDetailView: View {
-    
     let genre: GameGenre
-    @State private var games = [GameModel]()
-    @State private var loading = true
+    @State private var games: [GameModel] = []
+    @State private var isLoading = true
     @State private var error: Error?
     @State private var currentOffset = 0
+    @State private var areGamesAvailable: Bool = true
+    
+    
+    private let columns: [GridItem] = [
+        GridItem(.flexible(), spacing: 16),
+        GridItem(.flexible(), spacing: 16)
+    ]
     
     var body: some View {
-        List {
-            if loading {
-                HStack {
-                    Spacer()
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle())
-                    Spacer()
-                }
-            } else if let error = error {
-                Text("Error: \(error.localizedDescription)")
-                    .foregroundColor(.red)
-                
-            } else {
-                ForEach(games, id: \.id) { game in
-                    NavigationLink(destination: GameDetailView(gameID: game.id)) {
-                        Text(game.name)
+        ScrollViewReader { scrollViewProxy in
+            ScrollView {
+                LazyVGrid(columns: columns, spacing: 20) {
+                    ForEach(games) { game in
+                        NavigationLink(destination: GameDetailView(gameID: game.id)) {
+                            GameThumbnail(url: game.coverURL, name: game.name)
+                                .frame(width: 155)
+                        }
+                    }
+                    
+                    if isLoading && areGamesAvailable {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .blue))
+                            .scaleEffect(2.0)
+                    } else if areGamesAvailable {
+                        Text("Load More")
+                            .onAppear {
+                                loadMoreContent()
+                            }
                     }
                 }
-                if !loading {
-                    Text("Load More")
-                        .onAppear(perform: {
-                            self.currentOffset += 30
-                            self.fetchGames(offset: currentOffset)
-                        })
-                }
+                .padding()
+            }
+            .navigationTitle(genre.description)
+            .onAppear {
+                fetchGames(offset: currentOffset)
             }
         }
-        .navigationTitle(genre.description)
-        .onAppear(perform: {
-            self.fetchGames(offset: currentOffset)
-        })
+    }
+    
+    private func loadMoreContent() {
+        currentOffset += 30
+        fetchGames(offset: currentOffset)
     }
     
     func fetchGames(offset: Int) {
-        loading = true
+        isLoading = true
         APIManager.shared.gamesByGenre(for: genre, currentOffset: offset) { result in
             switch result {
             case .success(let fetchedGames):
-                self.games.append(contentsOf: fetchedGames)
-                self.loading = false
-                
+                games.append(contentsOf: fetchedGames)
+                isLoading = false
             case .failure(let error):
                 self.error = error
-                self.loading = false
-                
+                isLoading = false
             }
         }
     }

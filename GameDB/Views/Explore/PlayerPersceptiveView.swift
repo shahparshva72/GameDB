@@ -20,51 +20,74 @@ struct PlayerPersceptiveView: View {
 }
 
 struct PerspectiveDetailView: View {
-        
     let perspective: PlayerPerspective
     @State private var games = [GameModel]()
-    @State private var loading = true
+    @State private var isLoading = false
     @State private var error: Error?
+    @State private var currentOffset: Int = 0
+    @State private var areGamesAvailable: Bool = true
+    
+    private let columns: [GridItem] = [
+        GridItem(.flexible(), spacing: 16),
+        GridItem(.flexible(), spacing: 16)
+    ]
     
     var body: some View {
-        List {
-            if loading {
-                HStack {
-                    Spacer()
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle())
-                    Spacer()
-                }
-            } else if let error = error {
-                Text("Error: \(error.localizedDescription)")
-                    .foregroundColor(.red)
-                
-            } else {
-                ForEach(games) { game in
-                    NavigationLink(destination: GameDetailView(gameID: game.id)) {
-                        Text(game.name)
+        ScrollViewReader { scrollViewProxy in
+            ScrollView {
+                LazyVGrid(columns: columns, spacing: 20) {
+                    ForEach(games) { game in
+                        NavigationLink(destination: GameDetailView(gameID: game.id)) {
+                            GameThumbnail(url: game.coverURL, name: game.name)
+                                .frame(width: 155)
+                        }
                     }
+                    
+                    if isLoading && areGamesAvailable {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .blue))
+                            .scaleEffect(2.0)
+                    } else if areGamesAvailable {
+                        Text("Load More")
+                            .onAppear {
+                                loadMoreContent()
+                            }
+                    }
+                }
+                .padding()
+            }
+            .navigationTitle(perspective.description)
+            .onAppear {
+                if games.isEmpty {
+                    fetchGames(offset: currentOffset)
                 }
             }
         }
-        .navigationTitle(perspective.description)
-        .onAppear(perform: fetchGames)
     }
     
-    func fetchGames() {
-        APIManager.shared.gamesByPlayerPerspective(for: perspective) { result in
+    private func loadMoreContent() {
+        currentOffset += 30
+        fetchGames(offset: currentOffset)
+    }
+    
+    private func fetchGames(offset: Int) {
+        isLoading = true
+        APIManager.shared.gamesByPlayerPerspective(for: perspective, currentOffset: offset) { result in
+            isLoading = false
             switch result {
             case .success(let fetchedGames):
-                self.games = fetchedGames
-                self.loading = false
-                
+                if fetchedGames.isEmpty {
+                    areGamesAvailable = false
+                } else {
+                    games.append(contentsOf: fetchedGames)
+                }
             case .failure(let error):
                 self.error = error
-                self.loading = false
             }
         }
     }
 }
+
 
 struct PlayerPersceptiveView_Previews: PreviewProvider {
     static var previews: some View {

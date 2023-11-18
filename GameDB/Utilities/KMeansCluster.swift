@@ -5,7 +5,7 @@
 //  Created by Parshva Shah on 5/26/23.
 //
 
-// TODO: - Add Ref: https://github.com/neriusv/dominant-color-swift-sample/blob/master/kmeans/KMeansClusterer.swift
+// Ref: https://github.com/neriusv/dominant-color-swift-sample/blob/master/kmeans/KMeansClusterer.swift
 
 import Foundation
 import UIKit

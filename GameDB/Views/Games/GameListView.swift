@@ -39,6 +39,6 @@ struct GameListView: View {
 
  struct GameListView_Previews: PreviewProvider {
     static var previews: some View {
-        GameListView(gamesList: .init(platform: .nswitch, category: .popular))
+        GameListView(gamesList: .init(platform: .nswitch, category: .CriticallyAcclaimed))
     }
  }
