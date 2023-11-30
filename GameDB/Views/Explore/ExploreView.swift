@@ -26,13 +26,13 @@ struct ExploreView: View {
     ]
     
     let navigationItems: [NavigationItem] = [
-        NavigationItem(category: .genres, icon: "music.note.list"),
-        NavigationItem(category: .platforms, icon: "gamecontroller"),
-        NavigationItem(category: .themes, icon: "paintbrush"),
-        NavigationItem(category: .playerPerspective, icon: "person.crop.circle"),
-        NavigationItem(category: .modes, icon: "person.3"),
+        NavigationItem(category: .genres, icon: "gamecontroller"),
+        NavigationItem(category: .platforms, icon: "desktopcomputer"),
+        NavigationItem(category: .themes, icon: "sparkles"),
+        NavigationItem(category: .playerPerspective, icon: "eyeglasses"),
+        NavigationItem(category: .modes, icon: "network"),
     ]
-    
+
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 20) {
@@ -58,24 +58,28 @@ struct ExploreCategoryView: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 15, style: .continuous)
-                .fill(LinearGradient(colors: [Color.red.opacity(0.8), Color.blue.opacity(0.8)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                .shadow(color: .gray, radius: 5, x: 0, y: 5)
+                .fill(LinearGradient(colors: [Color.purple.opacity(0.8), Color.pink.opacity(0.8)], startPoint: .topLeading, endPoint: .bottomTrailing))
                 .frame(width: 150, height: 150)
-            
-            VStack {
+                .shadow(color: .black.opacity(0.5), radius: 10, x: 0, y: 5)
+
+            VStack(spacing: 20) {
                 Image(systemName: icon)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 40, height: 40)
+                    .frame(width: 60, height: 60)
                     .foregroundColor(.white)
+                    .shadow(color: .black.opacity(0.7), radius: 5, x: 0, y: 2)
+
                 Text(category)
-                    .font(.title2)
+                    .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(.white)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
+                    .shadow(color: .black.opacity(0.7), radius: 5, x: 0, y: 2)
             }
         }
+
     }
 }
 

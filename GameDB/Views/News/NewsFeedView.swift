@@ -44,10 +44,10 @@ struct NewsFeedView: View {
                             await viewModel.loadNextPage()
                         }
                     }
-                    .disabled(viewModel.items.isEmpty)
+                    .disabled(!viewModel.hasMoreNews)
                 }
                 .padding()
-                .background(.thinMaterial)
+                .background(.ultraThinMaterial)
             }
         }
         .onAppear {

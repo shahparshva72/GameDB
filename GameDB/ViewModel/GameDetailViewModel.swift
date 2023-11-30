@@ -18,12 +18,13 @@ class GameDetailViewModel: ObservableObject {
     func fetchGame(id: Int) {
         isLoading = true
         apiManager.fetchGame(id: id) { [weak self] result in
-            self?.isLoading = false
+            guard let self = self else { return }
+            self.isLoading = false
             switch result {
             case let .success(game):
-                self?.game = game
+                self.game = game
             case let .failure(error):
-                self?.error = error
+                self.error = error
             }
         }
     }

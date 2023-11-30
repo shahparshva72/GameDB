@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import Kingfisher
+import AlertToast
 
 // TODO: - Implement Quicklook to show images in future.
 
@@ -17,15 +19,23 @@ struct GameDetailView: View {
     @State private var showStorylineWarning = false
     
     @State private var showAlert = false
-    @State private var alertMessage = ""
     @State private var alertTitle = ""
+    @State private var alertType: AlertToast.AlertType = .regular
     
     var body: some View {
         Group {
             if let game = viewModel.game {
                 GameDetailContent(game: game, showSpoilerWarning: $showSpoilerWarning, showStorylineWarning: $showStorylineWarning)
             } else if let error = viewModel.error {
-                Text(error.localizedDescription)
+                VStack {
+                    Text("Error fetching game")
+                    Button {
+                        viewModel.fetchGame(id: gameID)
+                    } label: {
+                        Text("Click to retry \(Image(systemName: "arrow.clockwise"))")
+                    }
+
+                }
             } else {
                 ProgressView("Loading...")
             }
@@ -34,21 +44,31 @@ struct GameDetailView: View {
             viewModel.fetchGame(id: gameID)
         }
         .toolbar {
-            Menu {
-                Section {
-                    Text("Save to")
-                    ForEach(SaveGamesCategory.allCases, id: \.self) { category in
-                        Button(category.description) {
-                            saveGame(inCategory: category)
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Section {
+                        Text("Save to")
+                        ForEach(SaveGamesCategory.allCases, id: \.self) { category in
+                            Button(action: {
+                                saveGame(inCategory: category)
+                            }) {
+                                HStack {
+                                    Text(category.description)
+                                    if isCategoryActive(category, for: gameID) {
+                                        Spacer()
+                                        Image(systemName: "checkmark")
+                                    }
+                                }
+                            }
                         }
                     }
+                } label: {
+                    Image(systemName: "plus.app")
                 }
-            } label: {
-                Label("Save to", systemImage: "plus.app")
             }
         }
-        .alert(isPresented: $showAlert) {
-            Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+        .toast(isPresenting: $showAlert) {
+            AlertToast(displayMode: .alert, type: alertType, title: alertTitle)
         }
     }
     
@@ -56,8 +76,8 @@ struct GameDetailView: View {
         guard let game = viewModel.game else { return }
         
         if category == .upcoming && game.releaseDate <= Date() {
-            alertMessage = "Cannot save \(game.name) as upcoming games as release date has already passed"
-            alertTitle = "Cannot add game"
+            alertTitle = "Cannot add game. Game already released"
+            alertType = .error(.red)
             showAlert = true
         } else {
             GameDataProvider.shared.saveOrUpdateGame(
@@ -67,6 +87,33 @@ struct GameDetailView: View {
                 coverURLString: game.coverURLString,
                 category: category
             )
+            
+            if isCategoryActive(category, for: gameID) {
+                alertTitle = "Game Added"
+                alertType = .complete(.green)
+                showAlert = true
+            } else {
+                alertTitle = "Game Removed"
+                alertType = .complete(.green)
+                showAlert = true
+            }
+        }
+    }
+    
+    private func isCategoryActive(_ category: SaveGamesCategory, for gameID: Int) -> Bool {
+        guard let gameDataModel = GameDataProvider.shared.fetchGameById(gameID) else { return false }
+        
+        switch category {
+        case .played:
+            return gameDataModel.isPlayed
+        case .toPlay:
+            return gameDataModel.isToPlay
+        case .upcoming:
+            return gameDataModel.isUpcoming
+        case .favorite:
+            return gameDataModel.isFavorite
+        case .playing:
+            return gameDataModel.isPlaying
         }
     }
 }
@@ -79,11 +126,20 @@ struct GameDetailContent: View {
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack {
-                CoverImageView(url: game.coverURL)
+                ZStack {
+                    CoverImageView(url: game.coverURL)
+                        .blur(radius: 10)
+                    
+                    CoverImageView(url: game.coverURL)
+                        .scaleEffect(0.95)
+                        .frame(alignment: .center)
+                        .animation(.easeInOut, value: true)
+                }
+                
+                
                 GameInformationView(game: game, showSpoilerWarning: $showSpoilerWarning, showStorylineWarning: $showStorylineWarning)
                     .padding([.horizontal], 20)
             }
-            Spacer()
         }
     }
 }
@@ -92,24 +148,16 @@ struct CoverImageView: View {
     var url: URL?
     
     var body: some View {
-        ZStack(alignment: .topTrailing) {
-            AsyncImage(url: url) { phase in
-                switch phase {
-                case let .success(image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .overlay(LinearGradient(gradient: Gradient(colors: [Color.clear, Color.black.opacity(0.2)]), startPoint: .center, endPoint: .bottom))
-                default:
-                    Image(systemName: "photo")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                }
+        KFImage(url)
+            .placeholder {
+                PlaceholderImage()
             }
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .overlay(LinearGradient(gradient: Gradient(colors: [Color.clear, Color.black.opacity(0.2)]), startPoint: .center, endPoint: .bottom))
             .frame(maxWidth: .infinity)
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .shadow(color: Color.black.opacity(0.25), radius: 10, x: 0, y: 10)
-        }
     }
 }
 
@@ -313,20 +361,13 @@ struct ScreenshotImageView: View {
     var url: URL
     
     var body: some View {
-        AsyncImage(url: url) { phase in
-            switch phase {
-            case let .success(image):
-                image.resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .cornerRadius(10)
-            case .failure:
-                Image(systemName: "photo").resizable().aspectRatio(contentMode: .fit)
-            case .empty:
-                ProgressView()
-            @unknown default:
-                ProgressView()
+        KFImage(url)
+            .placeholder {
+               PlaceholderImage()
             }
-        }
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .cornerRadius(10)
     }
 }
 

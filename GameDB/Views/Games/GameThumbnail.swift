@@ -19,6 +19,9 @@ struct GameThumbnail: View {
             if let safeURL = url {
                 KFImage.url(safeURL)
                     .resizable()
+                    .placeholder({
+                        PlaceholderImage()
+                    })
                     .aspectRatio(contentMode: .fill)
                     .frame(width: thumbnailWidth, height: thumbnailHeight)
                     .clipped()

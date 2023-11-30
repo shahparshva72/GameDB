@@ -39,6 +39,8 @@ class SavedGamesViewModel: ObservableObject {
             fetchRequest.predicate = NSPredicate(format: "isToPlay == %@", NSNumber(value: true))
         case .upcoming:
             fetchRequest.predicate = NSPredicate(format: "isUpcoming == %@", NSNumber(value: true))
+        case .playing:
+            fetchRequest.predicate = NSPredicate(format: "isPlaying == %@", NSNumber(value: true))
         }
         
         do {

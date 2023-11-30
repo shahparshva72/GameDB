@@ -34,7 +34,6 @@ struct BoxView: View {
                     .fontWeight(.bold)
                     .foregroundColor(.white)
             }
-
             
             Spacer()
             

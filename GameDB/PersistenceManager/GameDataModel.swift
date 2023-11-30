@@ -17,6 +17,7 @@ final class GameDataModel: NSManagedObject, Identifiable {
     @NSManaged var isPlayed: Bool
     @NSManaged var isToPlay: Bool
     @NSManaged var isUpcoming: Bool
+    @NSManaged var isPlaying: Bool
     
     override func awakeFromInsert() {
         super.awakeFromInsert()
@@ -25,6 +26,7 @@ final class GameDataModel: NSManagedObject, Identifiable {
         setPrimitiveValue(false, forKey: "isPlayed")
         setPrimitiveValue(false, forKey: "isToPlay")
         setPrimitiveValue(false, forKey: "isUpcoming")
+        setPrimitiveValue(false, forKey: "isPlaying")
     }
 }
 

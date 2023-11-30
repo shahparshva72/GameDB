@@ -12,6 +12,7 @@ enum SaveGamesCategory: String, CaseIterable {
     case toPlay = "Games to Play"
     case upcoming = "Upcoming Games"
     case favorite = "Favorite Games"
+    case playing = "Currently Playing"
     
     var description: String {
         return self.rawValue
@@ -31,6 +32,8 @@ enum SaveGamesCategory: String, CaseIterable {
         case .favorite:
             // Celtic Blue
             return Color(red: 46 / 255.0, green: 109 / 255.0, blue: 180 / 255.0)
+        case .playing:
+            return Color.draculaPurple
         }
     }
 }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     
-    // TODO: - Add Appearances
+    // TODO: - Complete Settings View
     
     var body: some View {
         NavigationStack {

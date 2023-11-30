@@ -14,12 +14,22 @@ struct GameListView: View {
         VStack(alignment: .leading) {
             Text(gamesList.platformDescription)
                 .font(.title3.bold())
-                .padding(.leading, 15)
-                .padding(.top, 5)
 
             if gamesList.isLoading {
-                ProgressView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                VStack {
+                    Text("Loading games...")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .scaleEffect(1.5)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if gamesList.games.isEmpty {
+                Text("No games found.")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(alignment: .top, spacing: 20) {
@@ -30,10 +40,12 @@ struct GameListView: View {
                             }
                         }
                     }
-                    .padding(.leading, 15)
                 }
+                .transition(AnyTransition.opacity.combined(with: .move(edge: .trailing)).animation(.easeInOut(duration: 0.8)))
             }
         }
+        .padding(.leading, 15)
+        .padding(.top, 5)
     }
 }
 

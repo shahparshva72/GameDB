@@ -14,28 +14,38 @@ struct BoxItem {
 }
 
 struct SummaryView: View {
-    @ObservedObject var viewModel = SummaryViewModel()
+    @ObservedObject var summaryVM = SummaryViewModel()
+    @ObservedObject var savedGamesVM = SavedGamesViewModel(category: .upcoming)
     
     let layout: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 10), count: 2)
     
     var body: some View {
         NavigationStack {
-            VStack {
+            ScrollView {
                 LazyVGrid(columns: layout, spacing: 10) {
-                    ForEach(viewModel.gameCounts.sorted(by: { $0.key.rawValue < $1.key.rawValue }), id: \.key.rawValue) { category, count in
+                    ForEach(summaryVM.gameCounts.sorted(by: { $0.key.rawValue < $1.key.rawValue }), id: \.key.rawValue) { category, count in
                         let item = boxItem(for: category)
                         NavigationLink(destination: destinationView(for: category)) {
                             BoxView(symbolName: item.symbolName, title: item.title, count: count, categoryColor: category.color)
                         }
                     }
                 }
-                .padding()
+                
                 Spacer()
+                
+                VStack(alignment: .leading) {
+                    Text("Upcoming Games")
+                        .font(.title3.bold())
+                    
+                    ForEach(savedGamesVM.savedGames) { game in
+                        GameCountdownView(game: game)
+                    }
+                }
             }
-            .padding(.vertical)
+            .padding()
             .navigationTitle("Summary")
             .onAppear {
-                viewModel.fetchAllCounts()
+                summaryVM.fetchAllCounts()
             }
         }
     }
@@ -50,15 +60,17 @@ struct SummaryView: View {
             return BoxItem(symbolName: "xmark", title: "Upcoming Games", category: .upcoming) // Represents PlayStation's cross button; there's no exact match in SF Symbols
         case .favorite:
             return BoxItem(symbolName: "square", title: "Favorites", category: .favorite) // PlayStation's square button
+        case .playing:
+            return BoxItem(symbolName: "dpad", title: "Currently Playing", category: .playing)
         }
     }
-
+    
     
     func destinationView(for category: SaveGamesCategory) -> some View {
         let viewModel = SavedGamesViewModel(category: category)
         switch category {
-        case .played, .toPlay, .upcoming, .favorite:
-            return AnyView(SavedGamesView(viewModel: viewModel))
+        case .played, .toPlay, .upcoming, .favorite, .playing:
+            return SavedGamesView(viewModel: viewModel)
         }
     }
 }
@@ -66,9 +78,9 @@ struct SummaryView: View {
 
 struct SavedGamesView: View {
     @ObservedObject var viewModel: SavedGamesViewModel
-
+    
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
-
+    
     var body: some View {
         Group {
             if viewModel.savedGames.isEmpty {
@@ -88,7 +100,7 @@ struct SavedGamesView: View {
                     VStack {
                         Spacer()
                             .frame(height: 20)
-
+                        
                         LazyVGrid(columns: columns, spacing: 20) {
                             ForEach(viewModel.savedGames, id: \.id) { game in
                                 NavigationLink(destination: GameDetailView(gameID: game.id)) {

@@ -5,6 +5,8 @@
 //  Created by Parshva Shah on 4/26/22.
 //
 
+// TODO: - Add Network Connection error handling
+
 import IGDB_SWIFT_API
 import SwiftUI
 

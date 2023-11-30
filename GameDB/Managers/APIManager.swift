@@ -18,43 +18,46 @@ class APIManager {
     
     lazy var wrapper: IGDBWrapper = IGDBWrapper(clientID: Constants.clientID, accessToken: Constants.accessToken)
     
+    private func performRequest(endpoint: Endpoint, query: String, completion: @escaping GameFetchCompletion) {
+        wrapper.apiProtoRequest(endpoint: endpoint, apicalypseQuery: query) { bytes in
+            guard let gameResults = try? Proto_GameResult(serializedData: bytes) else {
+                DispatchQueue.main.async {
+                    completion(.failure(NSError(domain: "APIManager", code: 1001, userInfo: [NSLocalizedDescriptionKey : "Data serialization failed"])))
+                }
+                return
+            }
+            let games = gameResults.games.map { GameModel(game: $0, coverSize: .COVER_BIG) }
+            DispatchQueue.main.async {
+                completion(.success(games))
+            }
+        } errorResponse: { error in
+            DispatchQueue.main.async {
+                completion(.failure(error))
+            }
+        }
+    }
+    
     /// Fetches games for a given platform
     /// - Parameters:
     ///   - platform: pass in a platform model
     ///   - completion: returns an array of GameModels
-    func getGamesByPlatform(for platform: GamePlatformModel, currentOffset: Int, completion: @escaping (Result<[GameModel], Error>) -> Void) {
-        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, first_release_date, id, rating, aggregated_rating, involved_companies.company.name, cover.image_id; where (platforms = (\(platform.id)) & themes != (42)); sort first_release_date desc; limit 30; offset \(currentOffset);") { bytes in
-            guard let gameResults = try? Proto_GameResult(serializedData: bytes) else {
-                return
-            }
-            let games = gameResults.games.map { GameModel(game: $0, coverSize: .COVER_BIG) }
-            DispatchQueue.main.async {
-                completion(.success(games))
-            }
-            
-        } errorResponse: { error in
-            DispatchQueue.main.async {
-                completion(.failure(error))
-            }
-        }
+    func getGamesByPlatform(for platform: GamePlatformModel, currentOffset: Int, completion: @escaping GameFetchCompletion) {
+        let query = """
+            fields name, first_release_date, id, rating, aggregated_rating, involved_companies.company.name, cover.image_id;
+            where (platforms = (\(platform.id)) & themes != (42));
+            sort first_release_date desc;
+            limit 30;
+            offset \(currentOffset);
+            """
         
+        performRequest(endpoint: .GAMES, query: query, completion: completion)
     }
     
-    func getGamesByCategory(for category: GameCategory, platform: PlatformModel, completion: @escaping (Result<[GameModel], Error>) -> Void) {
+    // Fetches games for a platform by GameCategory for HomeView
+    func getGamesByCategory(for category: GameCategory, platform: PlatformModel, completion: @escaping GameFetchCompletion) {
         let query = category.getQuery(for: platform)
-        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: query) { bytes in
-            guard let gameResults = try? Proto_GameResult(serializedData: bytes) else {
-                return
-            }
-            let games = gameResults.games.map { GameModel(game: $0, coverSize: .COVER_BIG) }
-            DispatchQueue.main.async {
-                completion(.success(games))
-            }
-        } errorResponse: { error in
-            DispatchQueue.main.async {
-                completion(.failure(error))
-            }
-        }
+        
+        performRequest(endpoint: .GAMES, query: query, completion: completion)
     }
     
     
@@ -81,7 +84,7 @@ class APIManager {
     /// - Parameters:
     ///   - query: pass in a string to search for
     ///   - completion: returns an array of GameModels
-    func searchGames(for query: String, completion: @escaping (Result<[GameModel], Error>) -> Void) {
+    func searchGames(for query: String, completion: @escaping GameFetchCompletion) {
         let apicalypseQuery = """
         fields name, first_release_date, id, rating, cover.image_id, themes;
         where (themes != (42));
@@ -90,7 +93,7 @@ class APIManager {
         
         wrapper.apiJsonRequest(endpoint: .GAMES, apicalypseQuery: apicalypseQuery) { jsonString in
             guard let jsonData = jsonString.data(using: .utf8),
-                  let gameResponses = try? JSONDecoder().decode([GameResponse].self, from: jsonData)
+                  let gameResponses = try? JSONDecoder().decode([GameSearchResponse].self, from: jsonData)
             else {
                 print("Failed to load data")
                 return
@@ -119,88 +122,51 @@ class APIManager {
             offset \(currentOffset);
         """
         
-        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: query) { bytes in
-            guard let gameResults = try? Proto_GameResult(serializedData: bytes) else {
-                return
-            }
-            
-            let games = gameResults.games.map { GameModel(game: $0, coverSize: .HD) }
-            
-            DispatchQueue.main.async {
-                completion(.success(games))
-            }
-            
-        } errorResponse: { error in
-            DispatchQueue.main.async {
-                completion(.failure(error))
-            }
-        }
+        performRequest(endpoint: .GAMES, query: query, completion: completion)
     }
-    
-    
     
     // function with an apicalypse query to show games as per the theme selected by the user, pass theme as a parameter
     func gamesByThemes(for theme: GameTheme, currentOffset: Int, completion: @escaping GameFetchCompletion) {
-        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, first_release_date, id, rating, aggregated_rating, involved_companies.company.name, cover.image_id; where (themes = (\(theme.rawValue)) & rating >= 85); sort first_release_date desc; limit 10; offset \(currentOffset);") { bytes in
-            guard let gameResults = try? Proto_GameResult(serializedData: bytes) else {
-                return
-            }
-            
-            let games = gameResults.games.map { GameModel(game: $0, coverSize: .HD) }
-            
-            DispatchQueue.main.async {
-                completion(.success(games))
-            }
-            
-        } errorResponse: { error in
-            DispatchQueue.main.async {
-                completion(.failure(error))
-            }
-        }
+        let query = """
+        fields name, first_release_date, id, rating, aggregated_rating, involved_companies.company.name, cover.image_id;
+        where (themes = (\(theme.rawValue)) & rating >= 85);
+        sort first_release_date desc;
+        limit 10;
+        offset \(currentOffset);
+        """
+        
+        performRequest(endpoint: .GAMES, query: query, completion: completion)
     }
     
     // function with an apicalypse query to show games as per the player perspective selected by the user, pass player perspective as a parameter
     func gamesByPlayerPerspective(for playerPerspective: PlayerPerspective, currentOffset: Int, completion: @escaping GameFetchCompletion) {
-        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, first_release_date, id, rating, aggregated_rating, involved_companies.company.name, cover.image_id; where (player_perspectives = (\(playerPerspective.rawValue)) & rating >= 85); sort first_release_date desc; limit 10; offset \(currentOffset);") { bytes in
-            guard let gameResults = try? Proto_GameResult(serializedData: bytes) else {
-                return
-            }
-            
-            let games = gameResults.games.map { GameModel(game: $0, coverSize: .HD) }
-            
-            DispatchQueue.main.async {
-                completion(.success(games))
-            }
-            
-        } errorResponse: { error in
-            DispatchQueue.main.async {
-                completion(.failure(error))
-            }
-        }
+        let query = """
+        fields name, first_release_date, id, rating, aggregated_rating, involved_companies.company.name, cover.image_id;
+        where (player_perspectives = (\(playerPerspective.rawValue)) & rating >= 85);
+        sort first_release_date desc;
+        limit 10;
+        offset \(currentOffset);
+        """
+        
+        performRequest(endpoint: .GAMES, query: query, completion: completion)
     }
     
+    // function with an apicalypse query to show games by Game Modes selected by the user, pass GameMode as a parameter
     func gamesByModes(for mode: GameMode, currentOffset: Int, completion: @escaping GameFetchCompletion) {
-        wrapper.apiProtoRequest(endpoint: .GAMES, apicalypseQuery: "fields name, first_release_date, id, rating, aggregated_rating, involved_companies.company.name, cover.image_id; where (game_modes = (\(mode.rawValue)) & rating >= 85); sort first_release_date desc; limit 10; offset \(currentOffset);") { bytes in
-            guard let gameResults = try? Proto_GameResult(serializedData: bytes) else {
-                return
-            }
-            
-            let games = gameResults.games.map { GameModel(game: $0, coverSize: .HD) }
-            
-            DispatchQueue.main.async {
-                completion(.success(games))
-            }
-            
-        } errorResponse: { error in
-            DispatchQueue.main.async {
-                completion(.failure(error))
-            }
-        }
+        let query = """
+        fields name, first_release_date, id, rating, aggregated_rating, involved_companies.company.name, cover.image_id;
+        where (game_modes = (\(mode.rawValue)) & rating >= 85);
+        sort first_release_date desc;
+        limit 10;
+        offset \(currentOffset);
+        """
+        
+        performRequest(endpoint: .GAMES, query: query, completion: completion)
     }
     
 }
 
-struct GameResponse: Decodable {
+struct GameSearchResponse: Decodable {
     let id: Int
     let name: String
     let first_release_date: Double?
@@ -215,7 +181,7 @@ struct GameResponse: Decodable {
 
 
 fileprivate extension GameModel {
-    init(from response: GameResponse) {
+    init(from response: GameSearchResponse) {
         self.id = response.id
         self.name = response.name
         self.releaseDate = Date(timeIntervalSince1970: response.first_release_date ?? 0)
