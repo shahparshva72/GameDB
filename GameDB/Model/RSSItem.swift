@@ -34,3 +34,15 @@ struct RSSItem: Identifiable, Codable {
     }
 }
 
+struct RSSResponse: Codable {
+    var name: String
+    var total: Int
+    var page: Int
+    var perPage: Int
+    var data: [RSSItem]
+
+    enum CodingKeys: String, CodingKey {
+        case name, total, page, data
+        case perPage = "per_page"
+    }
+}

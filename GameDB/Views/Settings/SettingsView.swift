@@ -8,13 +8,17 @@
 import SwiftUI
 
 struct SettingsView: View {
-    
-    // TODO: - Complete Settings View
-    
     var body: some View {
         NavigationStack {
             List(SettingsModel.allCases, id: \.self) { setting in
-                NavigationLink(setting.rawValue, value: setting)
+                NavigationLink(destination: setting) {
+                    HStack {
+                        Image(systemName: setting.icons)
+                            .foregroundColor(setting.iconColor)
+                        Text(setting.rawValue)
+                    }
+                    .font(.headline)
+                }
             }
             .buttonStyle(.bordered)
             .navigationDestination(for: SettingsModel.self) { $0 }

@@ -1,0 +1,6 @@
+project: GameDB.xcodeproj
+schemes:
+- AlertToast
+- GameDB
+targets:
+- GameDB

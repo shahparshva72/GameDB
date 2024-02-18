@@ -38,4 +38,21 @@ class NewsAPIManager {
         let feedItems = try JSONDecoder().decode([RSSItem].self, from: data)
         return feedItems
     }
+    
+    func fetchNewsByName(feedName: String, page: Int, perPage: Int) async throws -> RSSResponse {
+        let urlString = "https://gamingnewsapi.onrender.com/get-feed?feed_name=\(feedName)&page=\(page)&per_page=\(perPage)"
+        
+        guard let url = URL(string: urlString) else {
+            throw NSError(domain: "Invalid URL", code: 400, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "accept")
+
+        let (data, _) = try await URLSession.shared.data(for: request)
+
+        let rssResponse = try JSONDecoder().decode(RSSResponse.self, from: data)
+        return rssResponse
+    }
 }

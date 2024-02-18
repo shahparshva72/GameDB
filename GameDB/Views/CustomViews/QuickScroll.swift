@@ -21,13 +21,12 @@ struct QuickScroll<T: Hashable, Content: View>: View {
                 ForEach(sectionIdentifiers, id: \.self) { identifier in
                     Button {
                         withAnimation {
-                            value.scrollTo(identifier)
+                            value.scrollTo(identifier, anchor: .top)
                             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                         }
                     } label: {
                         content(identifier)
                     }
-                    .contentShape(Rectangle()) 
                 }
             }
         }

@@ -9,14 +9,10 @@ import SwiftUI
 import Kingfisher
 import AlertToast
 
-// TODO: - Implement Quicklook to show images in future.
-
 struct GameDetailView: View {
     @StateObject private var viewModel = GameDetailViewModel()
     var gameID: Int
-    
-    @State private var showSpoilerWarning = false
-    @State private var showStorylineWarning = false
+    @State private var showSpoilers: Bool = false
     
     @State private var showAlert = false
     @State private var alertTitle = ""
@@ -25,8 +21,9 @@ struct GameDetailView: View {
     var body: some View {
         Group {
             if let game = viewModel.game {
-                GameDetailContent(game: game, showSpoilerWarning: $showSpoilerWarning, showStorylineWarning: $showStorylineWarning)
-            } else if let error = viewModel.error {
+                GameDetailContent(game: game, showSpoilers: $showSpoilers)
+                    .background(ignoresSafeAreaEdges: .top)
+            } else if viewModel.error != nil {
                 VStack {
                     Text("Error fetching game")
                     Button {
@@ -34,7 +31,7 @@ struct GameDetailView: View {
                     } label: {
                         Text("Click to retry \(Image(systemName: "arrow.clockwise"))")
                     }
-
+                    
                 }
             } else {
                 ProgressView("Loading...")
@@ -44,6 +41,16 @@ struct GameDetailView: View {
             viewModel.fetchGame(id: gameID)
         }
         .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    withAnimation {
+                        showSpoilers.toggle()
+                    }
+                } label: {
+                    Image(systemName: showSpoilers ? "eye.slash" : "eye")
+                }
+            }
+            
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
                     Section {
@@ -120,15 +127,14 @@ struct GameDetailView: View {
 
 struct GameDetailContent: View {
     var game: GameModel
-    @Binding var showSpoilerWarning: Bool
-    @Binding var showStorylineWarning: Bool
+    @Binding var showSpoilers: Bool
     
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack {
                 ZStack {
                     CoverImageView(url: game.coverURL)
-                        .blur(radius: 10)
+                        .blur(radius: 5)
                     
                     CoverImageView(url: game.coverURL)
                         .scaleEffect(0.95)
@@ -136,9 +142,8 @@ struct GameDetailContent: View {
                         .animation(.easeInOut, value: true)
                 }
                 
-                
-                GameInformationView(game: game, showSpoilerWarning: $showSpoilerWarning, showStorylineWarning: $showStorylineWarning)
-                    .padding([.horizontal], 20)
+                GameInformationView(game: game, showSpoilers: $showSpoilers)
+                    .padding([.horizontal], 10)
             }
         }
     }
@@ -163,15 +168,14 @@ struct CoverImageView: View {
 
 struct GameInformationView: View {
     var game: GameModel
-    @Binding var showSpoilerWarning: Bool
-    @Binding var showStorylineWarning: Bool
+    @Binding var showSpoilers: Bool
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             Text(game.name).font(.title2).padding(.top, 20)
             GameDetailsSection(game: game)
-            SummarySection(summary: game.summary, showSpoilerWarning: $showSpoilerWarning)
-            StorylineSection(storyline: game.storyline, showStorylineSpoiler: $showStorylineWarning)
+            SummarySection(summary: game.summary, showSpoilers: $showSpoilers)
+            StorylineSection(storyline: game.storyline, showSpoilers: $showSpoilers)
             ScreenshotsSection(urls: game.screenshootURLs)
             VideosSection(videoIDs: game.videoIDs)
         }
@@ -205,15 +209,6 @@ struct GameDetailsSection: View {
                         .fontWeight(.medium)
                 }
                 
-                // Genres
-                HStack {
-                    Image(systemName: "star.fill")
-                        .foregroundColor(.yellow)
-                    
-                    TagsGridView(tagNames: game.genres, tagColor: .green)
-                        .padding()
-                }
-                
                 // Rating
                 HStack {
                     Image(systemName: "star.circle.fill")
@@ -226,16 +221,25 @@ struct GameDetailsSection: View {
                 HStack {
                     Image(systemName: "star.circle.fill")
                         .foregroundColor(.red)
-                    Text(" Critics Rating: \(String(format: "%.1f", game.aggregated_rating))")
+                    Text("Critics Rating: \(String(format: "%.1f", game.aggregated_rating))")
                         .fontWeight(.medium)
                 }
                 
+                // Genres
+                HStack(spacing: 0) {
+                    Image(systemName: "tag.fill")
+                        .foregroundColor(.yellow)
+                    
+                    TagsGridView(tagNames: game.genres, tagColor: .green)
+                        .padding(.horizontal)
+                }
+                
                 // Platforms
-                HStack {
+                HStack(spacing: 0) {
                     Image(systemName: "gamecontroller")
                         .foregroundColor(.purple)
                     TagsGridView(tagNames: game.platforms, tagColor: .purple)
-                        .padding()
+                        .padding(.horizontal)
                 }
             }
             .font(.subheadline)
@@ -247,7 +251,7 @@ struct GameDetailsSection: View {
 
 struct SummarySection: View {
     var summary: String
-    @Binding var showSpoilerWarning: Bool
+    @Binding var showSpoilers: Bool
     
     var body: some View {
         GroupBox(label: Text("Summary")) {
@@ -259,18 +263,13 @@ struct SummarySection: View {
                     Text(summary)
                         .font(.body)
                         .lineLimit(nil)
-                        .opacity(showSpoilerWarning ? 1 : 0.02)
+                        .opacity(showSpoilers ? 1 : 0.02)
                     
-                    // Tap to reveal message
-                    if !showSpoilerWarning {
-                        Text("Tap to reveal summary")
+                    // Tap to reveal spoilers
+                    if !showSpoilers {
+                        Text("Tap on \(Image(systemName: "eye")) to show spoilers")
                             .font(.caption)
                             .foregroundColor(.secondary)
-                            .onTapGesture {
-                                withAnimation {
-                                    showSpoilerWarning = true
-                                }
-                            }
                     }
                 }
             }
@@ -280,7 +279,7 @@ struct SummarySection: View {
 
 struct StorylineSection: View {
     var storyline: String
-    @Binding var showStorylineSpoiler: Bool
+    @Binding var showSpoilers: Bool
     
     var body: some View {
         GroupBox(label: Text("Storyline")) {
@@ -292,18 +291,13 @@ struct StorylineSection: View {
                     Text(storyline)
                         .font(.body)
                         .lineLimit(nil)
-                        .opacity(showStorylineSpoiler ? 1 : 0.02)
+                        .opacity(showSpoilers ? 1 : 0.02)
                     
-                    // Tap to reveal message
-                    if !showStorylineSpoiler {
-                        Text("Tap to reveal storyline")
+                    // Tap to reveal spoilers
+                    if !showSpoilers {
+                        Text("Tap on \(Image(systemName: "eye")) to show spoilers")
                             .font(.caption)
                             .foregroundColor(.secondary)
-                            .onTapGesture {
-                                withAnimation {
-                                    showStorylineSpoiler = true
-                                }
-                            }
                     }
                 }
             }
@@ -334,16 +328,18 @@ struct ScreenshotCarouselView: View {
             TabView(selection: $selectedPage) {
                 ForEach(urls.indices, id: \.self) { index in
                     ScreenshotImageView(url: urls[index])
+                        .padding(.horizontal, 8)
+                        .tag(index)
                 }
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             .frame(height: 200)
             
+            // Custom dots
             HStack {
-                Spacer()
                 ForEach(urls.indices, id: \.self) { index in
                     Circle()
-                        .fill(selectedPage == index ? Color.blue : Color.gray)
+                        .fill(selectedPage == index ? .accentColor : Color.gray)
                         .frame(width: 8, height: 8)
                         .onTapGesture {
                             withAnimation {
@@ -351,7 +347,6 @@ struct ScreenshotCarouselView: View {
                             }
                         }
                 }
-                Spacer()
             }
         }
     }
@@ -363,7 +358,7 @@ struct ScreenshotImageView: View {
     var body: some View {
         KFImage(url)
             .placeholder {
-               PlaceholderImage()
+                PlaceholderImage()
             }
             .resizable()
             .aspectRatio(contentMode: .fit)
@@ -384,26 +379,50 @@ struct VideosSection: View {
                 VStack(spacing: 16) {
                     TabView(selection: $selectedVideoIndex) {
                         ForEach(videoIDs.indices, id: \.self) { index in
-                            YoutubePlayerView(youtubeVideoID: videoIDs[index])
-                                .frame(width: UIScreen.main.bounds.width - (2 * 20), height: 200)
+                            VideoThumbnailButton(videoID: videoIDs[index])
                                 .tag(index)
                         }
                     }
                     .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-                    .frame(height: 220)
+                    .frame(height: 200)
                     
-                    // Custom page dots below the video player
                     HStack {
-                        Spacer()
                         ForEach(videoIDs.indices, id: \.self) { index in
                             Circle()
-                                .fill(selectedVideoIndex == index ? Color.blue : Color.gray)
+                                .fill(selectedVideoIndex == index ? .accentColor : Color.gray)
                                 .frame(width: 8, height: 8)
                         }
-                        Spacer()
                     }
                 }
             }
+        }
+    }
+}
+
+struct VideoThumbnailButton: View {
+    var videoID: String
+    
+    var body: some View {
+        Button(action: {
+            // Open the video in Safari
+            if let url = URL(string: "https://www.youtube.com/watch?v=\(videoID)") {
+                UIApplication.shared.open(url)
+            }
+        }) {
+            KFImage.url(URL(string: "https://img.youtube.com/vi/\(videoID)/maxresdefault.jpg")!)
+                .placeholder {
+                    PlaceholderImage()
+                }
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .cornerRadius(10)
+                .overlay(
+                    Image(systemName: "play.circle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 64, height: 64)
+                        .foregroundColor(.red)
+                )
         }
     }
 }

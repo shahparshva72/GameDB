@@ -12,7 +12,6 @@ struct NewsFeedItemView: View {
     let newsItem: RSSItem
     
     @State private var dominantColor: Color = Color.white
-    @State private var dominantUIColor: UIColor = UIColor.white
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -27,9 +26,8 @@ struct NewsFeedItemView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .onAppear {
-                        ImageProcessing.getDominantColor(imageURLString: newsItem.image) { color, uiColor in
+                        ImageProcessing.getDominantColor(imageURLString: newsItem.image) { color, _ in
                             dominantColor = color
-                            dominantUIColor = uiColor
                         }
                     }
                 

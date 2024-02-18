@@ -3,8 +3,7 @@ GameDB is an iOS application designed for video game enthusiasts to track and or
 
 ## Demo (of working app so far)
 
-[GameDB Video Demo](assets/GameDB-Demo.mp4)
-
+https://github.com/shahparshva72/GameDB/assets/36695274/6ec51b4e-e291-4529-be90-71010ebe533d
 
 
 ## Installation

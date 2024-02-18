@@ -6,13 +6,12 @@
 //
 
 import SwiftUI
-import Combine
 
 struct NewsFeedView: View {
     @StateObject private var viewModel = NewsFeedViewModel()
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List(viewModel.items, id: \.id) { newsItem in
                 ZStack {
                     NewsFeedItemView(newsItem: newsItem)
@@ -36,9 +35,9 @@ struct NewsFeedView: View {
                         }
                     }
                     .disabled(viewModel.currentPage == 1)
-
+                    
                     Spacer()
-
+                    
                     Button("Next") {
                         Task {
                             await viewModel.loadNextPage()

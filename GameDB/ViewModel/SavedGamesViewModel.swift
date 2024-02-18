@@ -21,8 +21,9 @@ class SavedGamesViewModel: ObservableObject {
         
         NotificationCenter.default.publisher(for: .NSManagedObjectContextObjectsDidChange, object: GameDataProvider.shared.viewContext)
             .sink { [weak self] _ in
+                guard let self = self else { return }
                 if GameDataProvider.shared.viewContext.hasChanges {
-                    self?.fetchData(for: category)
+                    self.fetchData(for: category)
                 }
             }
             .store(in: &cancellables)

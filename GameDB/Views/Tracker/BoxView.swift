@@ -13,9 +13,6 @@ struct BoxView: View {
     var count: Int
     var categoryColor: Color
     
-    @State private var boxWidth: CGFloat = 160
-    @State private var boxHeight: CGFloat = 120
-    
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
@@ -45,7 +42,7 @@ struct BoxView: View {
                 .lineLimit(1)
         }
         .padding(12)
-        .frame(width: boxWidth, height: boxHeight)
+        .frame(width: 160, height: 100)
         .background(LinearGradient(gradient: Gradient(colors: [categoryColor, categoryColor.opacity(0.7)]), startPoint: .top, endPoint: .bottom))
         .cornerRadius(20)
         .overlay(

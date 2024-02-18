@@ -33,7 +33,8 @@ enum SaveGamesCategory: String, CaseIterable {
             // Celtic Blue
             return Color(red: 46 / 255.0, green: 109 / 255.0, blue: 180 / 255.0)
         case .playing:
-            return Color.draculaPurple
+            // Dracula Purple
+            return Color(red: 189 / 255, green: 147 / 255, blue: 249 / 255)
         }
     }
 }

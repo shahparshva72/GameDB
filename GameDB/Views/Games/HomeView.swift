@@ -12,17 +12,36 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var selectedCategory: GameCategory = .CriticallyAcclaimed
-
+    @State private var selectedPlatform: PlatformModel = .ps5
+    
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack {
-                    ForEach(PlatformModel.allCases, id: \.self) { platform in
-                        let gamesList = GameList(platform: platform, category: selectedCategory)
-                        GameListView(gamesList: gamesList)
+            VStack {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(PlatformModel.allCases, id: \.self) { platform in
+                            Button(action: {
+                                selectedPlatform = platform
+                            }) {
+                                Text(platform.description)
+                                    .font(.headline)
+                                    .fontWeight(.medium)
+                                    .padding(8)
+                                    .background(platform == selectedPlatform ? Color.accentColor.opacity(0.8) : Color.gray.opacity(0.3))
+                                    .foregroundColor(.white)
+                                    .cornerRadius(10)
+                            }
+                        }
                     }
                 }
+
+                
+                ScrollView(.vertical) {
+                    let gamesList = GameList(platform: selectedPlatform, category: selectedCategory)
+                    GameListView(gamesList: gamesList)
+                }
             }
+            .padding(.leading, 15)
             .navigationBarTitle("Home")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -31,7 +50,7 @@ struct HomeView: View {
                             Button(action: {
                                 selectedCategory = category
                             }) {
-                                Text(category.rawValue)
+                                Text(category == selectedCategory ? "✔️ \(category.rawValue)" : category.rawValue)
                             }
                         }
                     } label: {

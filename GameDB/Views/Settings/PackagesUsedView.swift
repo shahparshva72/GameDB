@@ -17,14 +17,16 @@ struct PackagesUsedView: View {
     var body: some View {
             List(packages, id: \.0) { package in
                 Button(action: {
-                    openURL(URL(string: package.name)!)
+                    if let url = URL(string: package.url) {
+                        openURL(url)
+                    }
                 }) {
                     VStack(alignment: .leading) {
                         Text(package.name)
                             .font(.headline)
                         Text(package.url)
                             .font(.subheadline)
-                            .foregroundColor(.blue)
+                            .foregroundColor(SettingsModel.packages.iconColor)
                     }
                 }
             }

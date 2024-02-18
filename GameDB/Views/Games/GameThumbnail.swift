@@ -11,31 +11,39 @@ import SwiftUI
 struct GameThumbnail: View {
     var url: URL?
     var name: String
-    let thumbnailHeight: CGFloat = 200
-    let thumbnailWidth: CGFloat = 155
-
+    
+    @State private var dominantColor: Color = .clear
+    @State private var dominantUIColor: UIColor = .clear
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            if let safeURL = url {
-                KFImage.url(safeURL)
-                    .resizable()
-                    .placeholder({
-                        PlaceholderImage()
-                    })
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: thumbnailWidth, height: thumbnailHeight)
-                    .clipped()
-                    .cornerRadius(10)
-                    .shadow(radius: 5)
-            }
+        VStack(alignment: .center) {
+            KFImage.url(url)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .clipped()
+                .cornerRadius(20)
+                .shadow(color: Color.black.opacity(0.3), radius: 20, x: 0.0, y: 0.0)
+                .onAppear {
+                    ImageProcessing.getDominantColor(imageURLString: url!.absoluteString) { color, uiColor in
+                        dominantColor = color
+                        dominantUIColor = uiColor
+                    }
+                }
+            
             Text(name)
                 .font(.headline)
-                .lineLimit(1)
-                .truncationMode(.tail)
-                .padding(.horizontal, 5)
-                .frame(width: thumbnailWidth, alignment: .leading)
+                .foregroundColor(dominantUIColor.perceivedBrightness < 0.5 ? Color.white : Color.black)
+                .padding(EdgeInsets.init(top: 16, leading: 8, bottom: 16, trailing: 16))
+                .background(
+                    Rectangle()
+                    .foregroundColor(dominantColor)
+                    .opacity(0.6)
+                    .blur(radius: 2.5)
+                )
         }
-        .cornerRadius(10)
-        .shadow(radius: 5)
+        .padding(10)
+        .background(dominantColor)
+        .cornerRadius(20)
+        .shadow(color: dominantColor.opacity(0.3), radius: 20, x: 0.0, y: 0.0)
     }
 }

@@ -46,7 +46,7 @@ struct GenreDetailView: View {
                     
                     if isLoading && areGamesAvailable {
                         ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: .blue))
+                            .progressViewStyle(CircularProgressViewStyle(tint: .accentColor))
                             .scaleEffect(2.0)
                     } else if areGamesAvailable {
                         Text("Load More")

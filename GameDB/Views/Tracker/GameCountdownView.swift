@@ -14,7 +14,7 @@ struct GameCountdownView: View {
     private var daysLeft: Int {
         Calendar.current.dateComponents([.day], from: Date(), to: game.releaseDate).day ?? 0
     }
-
+    
     var body: some View {
         HStack(alignment: .center) {
             KFImage(URL(string: game.coverURLString))

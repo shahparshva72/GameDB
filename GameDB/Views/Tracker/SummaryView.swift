@@ -21,7 +21,7 @@ struct SummaryView: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
+            VStack {
                 LazyVGrid(columns: layout, spacing: 10) {
                     ForEach(summaryVM.gameCounts.sorted(by: { $0.key.rawValue < $1.key.rawValue }), id: \.key.rawValue) { category, count in
                         let item = boxItem(for: category)
@@ -32,15 +32,6 @@ struct SummaryView: View {
                 }
                 
                 Spacer()
-                
-                VStack(alignment: .leading) {
-                    Text("Upcoming Games")
-                        .font(.title3.bold())
-                    
-                    ForEach(savedGamesVM.savedGames) { game in
-                        GameCountdownView(game: game)
-                    }
-                }
             }
             .padding()
             .navigationTitle("Summary")
@@ -53,13 +44,13 @@ struct SummaryView: View {
     func boxItem(for category: SaveGamesCategory) -> BoxItem {
         switch category {
         case .played:
-            return BoxItem(symbolName: "triangle", title: "Games Played", category: .played) // PlayStation's triangle button
+            return BoxItem(symbolName: "triangle", title: "Games Played", category: .played)
         case .toPlay:
-            return BoxItem(symbolName: "circle", title: "Games to Play", category: .toPlay) // PlayStation's circle button
+            return BoxItem(symbolName: "circle", title: "Games to Play", category: .toPlay)
         case .upcoming:
-            return BoxItem(symbolName: "xmark", title: "Upcoming Games", category: .upcoming) // Represents PlayStation's cross button; there's no exact match in SF Symbols
+            return BoxItem(symbolName: "xmark", title: "Upcoming Games", category: .upcoming)
         case .favorite:
-            return BoxItem(symbolName: "square", title: "Favorites", category: .favorite) // PlayStation's square button
+            return BoxItem(symbolName: "square", title: "Favorites", category: .favorite)
         case .playing:
             return BoxItem(symbolName: "dpad", title: "Currently Playing", category: .playing)
         }
@@ -104,9 +95,26 @@ struct SavedGamesView: View {
                         LazyVGrid(columns: columns, spacing: 20) {
                             ForEach(viewModel.savedGames, id: \.id) { game in
                                 NavigationLink(destination: GameDetailView(gameID: game.id)) {
-                                    if let url = URL(string: game.coverURLString) {
-                                        GameThumbnail(url: url, name: game.name)
-                                            .aspectRatio(1, contentMode: .fit)
+                                    VStack {
+                                        if let url = URL(string: game.coverURLString) {
+                                            GameThumbnailCell(url: url, name: game.name)
+                                                .aspectRatio(1, contentMode: .fit)
+                                        }
+                                        
+                                        if game.isUpcoming {
+                                            var daysLeft: Int {
+                                                Calendar.current.dateComponents([.day], from: Date(), to: game.releaseDate).day ?? 0
+                                            }
+                                            
+                                            Text("\(daysLeft) days left")
+                                                .font(.subheadline)
+                                                .foregroundStyle(Color.white)
+                                        }
+                                    }
+                                    .onAppear {
+                                        if viewModel.category == .upcoming {
+                                            checkDateStatus(for: viewModel.savedGames)
+                                        }
                                     }
                                 }
                             }
@@ -117,6 +125,12 @@ struct SavedGamesView: View {
             }
         }
         .navigationTitle(viewModel.category.description)
+    }
+    
+    func checkDateStatus(for games: [GameDataModel]) {
+        for game in games {
+            GameDataProvider.shared.updateGameStatus(for: game)
+        }
     }
 }
 

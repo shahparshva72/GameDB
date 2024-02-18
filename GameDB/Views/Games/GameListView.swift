@@ -9,12 +9,12 @@ import SwiftUI
 
 struct GameListView: View {
     @ObservedObject var gamesList: GameList
-
+    
     var body: some View {
         VStack(alignment: .leading) {
-            Text(gamesList.platformDescription)
-                .font(.title3.bold())
-
+            //            Text(gamesList.platformDescription)
+            //                .font(.title3.bold())
+            
             if gamesList.isLoading {
                 VStack {
                     Text("Loading games...")
@@ -26,17 +26,17 @@ struct GameListView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if gamesList.games.isEmpty {
-                Text("No games found.")
+                Text("No games found. Refresh to retry if an error.")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             } else {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(alignment: .top, spacing: 20) {
-                        ForEach(gamesList.games) { game in
+                ScrollView(.vertical, showsIndicators: false) {
+                    LazyVStack(alignment: .center) {
+                        ForEach(gamesList.games, id: \.id) { game in
                             NavigationLink(destination: GameDetailView(gameID: game.id)) {
                                 GameThumbnail(url: game.coverURL, name: game.name)
-                                    .frame(width: 155)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         }
                     }
@@ -44,13 +44,12 @@ struct GameListView: View {
                 .transition(AnyTransition.opacity.combined(with: .move(edge: .trailing)).animation(.easeInOut(duration: 0.8)))
             }
         }
-        .padding(.leading, 15)
         .padding(.top, 5)
     }
 }
 
- struct GameListView_Previews: PreviewProvider {
+struct GameListView_Previews: PreviewProvider {
     static var previews: some View {
         GameListView(gamesList: .init(platform: .nswitch, category: .CriticallyAcclaimed))
     }
- }
+}

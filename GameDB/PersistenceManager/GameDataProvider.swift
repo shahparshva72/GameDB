@@ -38,9 +38,9 @@ extension GameDataProvider {
     func saveOrUpdateGame(id: Int, name: String, releaseDate: Date, coverURLString: String, category: SaveGamesCategory) {
         let fetchRequest: NSFetchRequest<GameDataModel> = GameDataModel.fetchRequest() as! NSFetchRequest<GameDataModel>
         fetchRequest.predicate = NSPredicate(format: "id == %d", id)
-
+        
         let game: GameDataModel
-
+        
         if let existingGame = try? viewContext.fetch(fetchRequest).first {
             game = existingGame
         } else {
@@ -50,7 +50,7 @@ extension GameDataProvider {
             game.releaseDate = releaseDate
             game.coverURLString = coverURLString
         }
-
+        
         // Toggle the category
         switch category {
         case .played:
@@ -64,7 +64,7 @@ extension GameDataProvider {
         case .playing:
             game.isPlaying.toggle()
         }
-
+        
         if viewContext.hasChanges {
             do {
                 try viewContext.save()
@@ -80,7 +80,7 @@ extension GameDataProvider {
     func removeGame(withId id: Int) {
         let fetchRequest: NSFetchRequest<GameDataModel> = GameDataModel.fetchRequest() as! NSFetchRequest<GameDataModel>
         fetchRequest.predicate = NSPredicate(format: "id == %d", id)
-
+        
         do {
             let games = try viewContext.fetch(fetchRequest)
             if let gameToRemove = games.first {
@@ -99,13 +99,34 @@ extension GameDataProvider {
     func fetchGameById(_ id: Int) -> GameDataModel? {
         let fetchRequest: NSFetchRequest<GameDataModel> = GameDataModel.fetchRequest() as! NSFetchRequest<GameDataModel>
         fetchRequest.predicate = NSPredicate(format: "id == %d", id)
-
+        
         do {
             let results = try viewContext.fetch(fetchRequest)
             return results.first
         } catch {
             print("Error fetching game by id: \(error.localizedDescription)")
             return nil
+        }
+    }
+}
+
+extension GameDataProvider {
+    func updateGameStatus(for game: GameDataModel) {
+        let currentDate = Date()
+        
+        let twoDaysFromNow = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
+        
+        if game.releaseDate < twoDaysFromNow {
+            game.isUpcoming = false
+            game.isToPlay = true
+        }
+        
+        if viewContext.hasChanges {
+            do {
+                try viewContext.save()
+            } catch {
+                print("Error updating game status: \(error.localizedDescription)")
+            }
         }
     }
 }

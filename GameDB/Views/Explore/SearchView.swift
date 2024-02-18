@@ -8,15 +8,18 @@
 import SwiftUI
 import IGDB_SWIFT_API
 import Combine
+import AlertToast
+import Kingfisher
 
 // MARK: - SearchView
 struct SearchView: View {
     @StateObject private var viewModel = SearchViewModel()
+    @Environment(\.isSearching) private var isSearching
 
     var body: some View {
         NavigationStack {
             Group {
-                if viewModel.searchQuery.isEmpty {
+                if viewModel.searchQuery.isEmpty && !isSearching {
                     ExploreView()
                 } else {
                     searchResultsList
@@ -40,7 +43,7 @@ struct SearchView: View {
             case .loaded(let results):
                 ForEach(results) { game in
                     NavigationLink(destination: GameDetailView(gameID: game.id)) {
-                        GameThumbnailCell(url: game.coverURL, name: game.name)
+                        SearchCell(url: game.coverURL, name: game.name)
                     }
                 }
             case .error(let message):
@@ -93,6 +96,36 @@ class SearchViewModel: ObservableObject {
         }
     }
 }
+
+struct SearchCell: View {
+    var url: URL?
+    var name: String
+    let thumbnailHeight: CGFloat = 50
+    let thumbnailWidth: CGFloat = 50
+
+    var body: some View {
+        HStack(alignment: .center) {
+            if let safeURL = url {
+                KFImage.url(safeURL)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: thumbnailWidth, height: thumbnailHeight)
+                    .clipped()
+                    .cornerRadius(10)
+                    .shadow(radius: 5)
+            }
+            VStack(alignment: .leading, spacing: 10) {
+                Text(name)
+                    .font(.headline)
+                    .padding(.horizontal, 5)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+        .cornerRadius(10)
+        .shadow(radius: 5)
+    }
+}
+
 
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {

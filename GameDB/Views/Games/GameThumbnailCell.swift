@@ -11,11 +11,11 @@ import SwiftUI
 struct GameThumbnailCell: View {
     var url: URL?
     var name: String
-    let thumbnailHeight: CGFloat = 50
-    let thumbnailWidth: CGFloat = 50
+    let thumbnailHeight: CGFloat = 200
+    let thumbnailWidth: CGFloat = 155
 
     var body: some View {
-        HStack(alignment: .center) {
+        VStack(alignment: .leading) {
             if let safeURL = url {
                 KFImage.url(safeURL)
                     .resizable()

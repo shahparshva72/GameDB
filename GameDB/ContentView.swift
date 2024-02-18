@@ -9,31 +9,9 @@ import SwiftUI
 
 struct ContentView: View {
     
-    init() {
-        let appearance = UITabBar.appearance()
-        appearance.standardAppearance.backgroundEffect = UIBlurEffect(style: .systemMaterialDark)
-        appearance.tintColor = .blue
-
-        appearance.standardAppearance.stackedLayoutAppearance.normal.titleTextAttributes = [
-            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10, weight: .regular),
-            NSAttributedString.Key.foregroundColor: UIColor.lightGray
-        ]
-
-        appearance.standardAppearance.stackedLayoutAppearance.selected.titleTextAttributes = [
-            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10, weight: .semibold),
-            NSAttributedString.Key.foregroundColor: UIColor.blue
-        ]
-    }
-
-
-    
     var body: some View {
         TabView {
-            ZStack {
-                Color.red
-                
-                HomeView()
-            }
+            HomeView()
                 .tabItem {
                     VStack {
                         Image(systemName: "gamecontroller")
@@ -63,15 +41,7 @@ struct ContentView: View {
                 }
                 .tag(2)
             
-            SettingsView()
-                .tabItem {
-                    VStack {
-                        Image(systemName: "gear")
-                            .imageScale(.large)
-                        Text("Settings")
-                    }
-                }
-                .tag(3)
+            
             SummaryView()
                 .tabItem {
                     VStack {
@@ -79,7 +49,7 @@ struct ContentView: View {
                         Text("Summary")
                     }
                 }
-                .tag(4)
+                .tag(3)
         }
     }
 }

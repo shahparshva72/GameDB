@@ -12,7 +12,7 @@ struct TagsGridView: View {
     var tagColor: Color
 
     var body: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 20) {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))]) {
             ForEach(tagNames, id: \.self) { tagName in
                 TagsView(name: tagName, color: tagColor)
             }

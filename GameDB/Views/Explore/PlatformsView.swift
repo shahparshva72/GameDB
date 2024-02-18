@@ -28,15 +28,17 @@ struct PlatformsView: View {
                                     Text(platform.name)
                                 }
                             }
+                            .id(id)
                         } header: {
                             Text(id)
                         }
-                        .id(id)
                     }
+                    .listStyle(.inset)
                     .overlay(alignment: .trailing) {
                         QuickScroll(sectionIdentifiers: sectionIdentifiers, value: value) { item in
                             Text(item)
                         }
+                        .scaleEffect(0.8)
                     }
                 } else {
                     List(viewModel.platforms, id: \.id) { platform in
@@ -83,7 +85,7 @@ struct PlatformGamesView: View {
                     
                     if isLoading && areGamesAvailable {
                         ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: .blue))
+                            .progressViewStyle(CircularProgressViewStyle(tint: .accentColor))
                             .scaleEffect(2.0)
                     } else if areGamesAvailable {
                         Text("Load More")
