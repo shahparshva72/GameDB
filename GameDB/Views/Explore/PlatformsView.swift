@@ -18,7 +18,7 @@ struct PlatformsView: View {
     }
     
     var body: some View {
-        ScrollViewReader { value in
+        ScrollViewReader { proxy in
             VStack {
                 if viewModel.searchText.isEmpty {
                     List(sectionIdentifiers, id: \.self) { id in
@@ -33,17 +33,18 @@ struct PlatformsView: View {
                             Text(id)
                         }
                     }
-                    .listStyle(.inset)
+                    .padding(.trailing, 5)
+                    .listStyle(.insetGrouped)
                     .overlay(alignment: .trailing) {
-                        QuickScroll(sectionIdentifiers: sectionIdentifiers, value: value) { item in
+                        QuickScroll(sectionIdentifiers: sectionIdentifiers, proxy: proxy) { item in
                             Text(item)
                         }
-                        .scaleEffect(0.8)
                     }
                 } else {
                     List(viewModel.platforms, id: \.id) { platform in
                         NavigationLink(destination: PlatformGamesView(platform: platform)) {
                             Text(platform.name)
+                                .font(.footnote)
                         }
                     }
                 }
@@ -78,8 +79,7 @@ struct PlatformGamesView: View {
                 LazyVGrid(columns: columns, spacing: 20) {
                     ForEach(games) { game in
                         NavigationLink(destination: GameDetailView(gameID: game.id)) {
-                            GameThumbnail(url: game.coverURL, name: game.name)
-                                .frame(width: 155)
+                            GameThumbnailCell(url: game.coverURL, name: game.name)
                         }
                     }
                     

@@ -618,5 +618,13 @@
     {
         "id": 167,
         "name": "Playstation 5"
+    },
+    {
+        "id": 169,
+        "name": "Xbox Series X"
+    },
+    {
+        "id": 170,
+        "name": "Xbox Series S"
     }
 ]

@@ -11,17 +11,18 @@ import SwiftUI
 
 struct QuickScroll<T: Hashable, Content: View>: View {
     let sectionIdentifiers: [T]
-    let value: ScrollViewProxy
+    let proxy: ScrollViewProxy
     let content: (T) -> Content
-
+    
     var body: some View {
         HStack {
             Spacer()
+            
             VStack(alignment: .center, spacing: 0) {
                 ForEach(sectionIdentifiers, id: \.self) { identifier in
                     Button {
                         withAnimation {
-                            value.scrollTo(identifier, anchor: .top)
+                            proxy.scrollTo(identifier, anchor: .top)
                             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                         }
                     } label: {
@@ -30,5 +31,6 @@ struct QuickScroll<T: Hashable, Content: View>: View {
                 }
             }
         }
+        .clipShape(Rectangle())
     }
 }

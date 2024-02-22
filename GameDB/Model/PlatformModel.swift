@@ -41,4 +41,27 @@ enum PlatformModel: Int, CaseIterable {
             return "macOS"
         }
     }
+    
+    var assetName: String {
+        switch self {
+        case .ps5:
+            return "ps5"
+        case .xboxSeriesX:
+            return "xbox"
+        case .xboxSeriesS:
+            return "xbox"
+        case .nswitch:
+            return "switch"
+        case .pc:
+            return "pc"
+        case .ios:
+            return "ios"
+        case .android:
+            return "android"
+        case .ps4:
+            return "ps4"
+        case .mac:
+            return "mac"
+        }
+    }
 }
