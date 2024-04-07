@@ -23,6 +23,7 @@
 		93290E262B190E6F00B263C9 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 93290E252B190E6F00B263C9 /* AlertToast */; };
 		932E2D672A1C70D9006DBB93 /* GameDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932E2D662A1C70D9006DBB93 /* GameDetailView.swift */; };
 		932E2D692A1C70F2006DBB93 /* GameThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932E2D682A1C70F2006DBB93 /* GameThumbnail.swift */; };
+		933284822BB813180031BFC8 /* Color+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933284812BB813180031BFC8 /* Color+Ext.swift */; };
 		9332B5CF2B02D27A00564F9C /* QuickScroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9332B5CE2B02D27A00564F9C /* QuickScroll.swift */; };
 		9337F8982A2A81E500295265 /* Shape+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9337F8972A2A81E500295265 /* Shape+Ext.swift */; };
 		9343667E2A2857E80073E513 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9343667D2A2857E80073E513 /* SettingsView.swift */; };
@@ -32,7 +33,6 @@
 		935F0AB72A8D28BB0022DE41 /* GameThemesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EB2C382A8BA0D700388BD8 /* GameThemesView.swift */; };
 		936CFBDC2A1EA411005F0092 /* RSSItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936CFBDB2A1EA411005F0092 /* RSSItem.swift */; };
 		936CFBDE2A1EA52E005F0092 /* NewsFeedItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936CFBDD2A1EA52E005F0092 /* NewsFeedItemView.swift */; };
-		938250E02A28FE54003EC876 /* AppearanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938250DF2A28FE54003EC876 /* AppearanceView.swift */; };
 		938250E42A28FE76003EC876 /* PackagesUsedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938250E32A28FE76003EC876 /* PackagesUsedView.swift */; };
 		938250E62A28FE85003EC876 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938250E52A28FE85003EC876 /* AboutView.swift */; };
 		938DF63F2AFD5F0A0047FB63 /* GameThumbnailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938DF63E2AFD5F0A0047FB63 /* GameThumbnailCell.swift */; };
@@ -89,6 +89,7 @@
 		93273D7A2A1DA35300156840 /* NewsFeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedViewModel.swift; sourceTree = "<group>"; };
 		932E2D662A1C70D9006DBB93 /* GameDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDetailView.swift; sourceTree = "<group>"; };
 		932E2D682A1C70F2006DBB93 /* GameThumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameThumbnail.swift; sourceTree = "<group>"; };
+		933284812BB813180031BFC8 /* Color+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Ext.swift"; sourceTree = "<group>"; };
 		9332B5CE2B02D27A00564F9C /* QuickScroll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickScroll.swift; sourceTree = "<group>"; };
 		9337F8972A2A81E500295265 /* Shape+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shape+Ext.swift"; sourceTree = "<group>"; };
 		9343667D2A2857E80073E513 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -97,7 +98,6 @@
 		935A035B2AD4694500504BFC /* SavedGamesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedGamesViewModel.swift; sourceTree = "<group>"; };
 		936CFBDB2A1EA411005F0092 /* RSSItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSItem.swift; sourceTree = "<group>"; };
 		936CFBDD2A1EA52E005F0092 /* NewsFeedItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedItemView.swift; sourceTree = "<group>"; };
-		938250DF2A28FE54003EC876 /* AppearanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceView.swift; sourceTree = "<group>"; };
 		938250E32A28FE76003EC876 /* PackagesUsedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackagesUsedView.swift; sourceTree = "<group>"; };
 		938250E52A28FE85003EC876 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		938DF63E2AFD5F0A0047FB63 /* GameThumbnailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameThumbnailCell.swift; sourceTree = "<group>"; };
@@ -218,7 +218,6 @@
 			isa = PBXGroup;
 			children = (
 				9343667D2A2857E80073E513 /* SettingsView.swift */,
-				938250DF2A28FE54003EC876 /* AppearanceView.swift */,
 				938250E32A28FE76003EC876 /* PackagesUsedView.swift */,
 				938250E52A28FE85003EC876 /* AboutView.swift */,
 				935359DA2AEF26D900B3F999 /* FeedSelectionView.swift */,
@@ -290,6 +289,7 @@
 				93BD788F2A200CC2003CC6FE /* UIImage+Ext.swift */,
 				93E888082A2126EB0039FDE8 /* UIColor+Ext.swift */,
 				9337F8972A2A81E500295265 /* Shape+Ext.swift */,
+				933284812BB813180031BFC8 /* Color+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -309,8 +309,8 @@
 			children = (
 				93EB2C1F2A8BA04E00388BD8 /* GameTheme.swift */,
 				93EB2C202A8BA04E00388BD8 /* GenresModel.swift */,
-				93EB2C222A8BA04E00388BD8 /* PlatformModel.swift */,
 				93EB2C252A8BA04E00388BD8 /* PlayerPerspective.swift */,
+				93AA81D02A3EC47100FE55F4 /* GamePlatformModel.swift */,
 				93EB2C262A8BA04E00388BD8 /* GameMode.swift */,
 				93EB2C272A8BA04E00388BD8 /* ExploreCategory.swift */,
 			);
@@ -346,7 +346,7 @@
 				939327F72AFC52FA00DB0CA6 /* Platforms.json */,
 				93EB2C1E2A8BA04E00388BD8 /* Explore */,
 				18D53D9B2817DD6B008A432D /* GameModel.swift */,
-				93AA81D02A3EC47100FE55F4 /* GamePlatformModel.swift */,
+				93EB2C222A8BA04E00388BD8 /* PlatformModel.swift */,
 				936CFBDB2A1EA411005F0092 /* RSSItem.swift */,
 				93DBB4C72A39063F00D96F66 /* SettingsModel.swift */,
 				93EB04672AD422F90077FFB8 /* SaveGamesCategory.swift */,
@@ -453,6 +453,7 @@
 				93E888072A21268F0039FDE8 /* KMeansCluster.swift in Sources */,
 				18D53D892817D81F008A432D /* HomeView.swift in Sources */,
 				938250E62A28FE85003EC876 /* AboutView.swift in Sources */,
+				933284822BB813180031BFC8 /* Color+Ext.swift in Sources */,
 				93EB04682AD422F90077FFB8 /* SaveGamesCategory.swift in Sources */,
 				93F4B8CC2AD1FCE40055FE70 /* GameDataModel.swift in Sources */,
 				932E2D672A1C70D9006DBB93 /* GameDetailView.swift in Sources */,
@@ -478,7 +479,6 @@
 				939EC3822A1D6B1C00658B09 /* NewsFeedView.swift in Sources */,
 				18D53D9A2817DD20008A432D /* GameList.swift in Sources */,
 				9332B5CF2B02D27A00564F9C /* QuickScroll.swift in Sources */,
-				938250E02A28FE54003EC876 /* AppearanceView.swift in Sources */,
 				93EB2C302A8BA04E00388BD8 /* GameMode.swift in Sources */,
 				9337F8982A2A81E500295265 /* Shape+Ext.swift in Sources */,
 				935359DB2AEF26D900B3F999 /* FeedSelectionView.swift in Sources */,
@@ -636,7 +636,6 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -670,7 +669,6 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -31,19 +31,18 @@ struct GameThumbnail: View {
                 }
             
             Text(name)
-                .font(.headline)
-                .foregroundColor(dominantUIColor.perceivedBrightness < 0.5 ? Color.white : Color.black)
+                .font(Font.system(size: 20, weight: .bold, design: .rounded))
+                .foregroundColor(dominantUIColor.perceivedBrightness < 0.5 ? Color(hex: "#FAFAFA") : Color(hex: "#121212"))
                 .padding(EdgeInsets.init(top: 16, leading: 8, bottom: 16, trailing: 16))
                 .background(
                     Rectangle()
-                    .foregroundColor(dominantColor)
-                    .opacity(0.6)
-                    .blur(radius: 2.5)
+                        .foregroundColor(dominantColor)
+                        .opacity(0.6)
+                        .blur(radius: 2.5)
                 )
         }
         .padding(10)
         .background(dominantColor)
         .cornerRadius(20)
-        .shadow(color: dominantColor.opacity(0.3), radius: 20, x: 0.0, y: 0.0)
     }
 }

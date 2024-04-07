@@ -41,8 +41,7 @@ struct GameModeDetailView: View {
                 LazyVGrid(columns: columns, spacing: 20) {
                     ForEach(games) { game in
                         NavigationLink(destination: GameDetailView(gameID: game.id)) {
-                            GameThumbnail(url: game.coverURL, name: game.name)
-                                .frame(width: 155)
+                            GameThumbnailCell(url: game.coverURL, name: game.name)
                         }
                     }
                     

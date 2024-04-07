@@ -11,37 +11,54 @@ import IGDB_SWIFT_API
 import SwiftUI
 
 struct HomeView: View {
-    @State private var selectedCategory: GameCategory = .CriticallyAcclaimed
+    @State private var selectedCategory: GameCategory = .criticallyAcclaimed
     @State private var selectedPlatform: PlatformModel = .ps5
+    @Namespace var namespace
     
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(spacing: 8) {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
                         ForEach(PlatformModel.allCases, id: \.self) { platform in
                             Button(action: {
                                 selectedPlatform = platform
                             }) {
-                                Text(platform.description)
-                                    .font(.headline)
-                                    .fontWeight(.medium)
-                                    .padding(8)
-                                    .background(platform == selectedPlatform ? Color.accentColor.opacity(0.8) : Color.gray.opacity(0.3))
-                                    .foregroundColor(.white)
-                                    .cornerRadius(10)
+                                VStack {
+                                    Image(platform.assetName)
+                                        .resizable()
+                                        .renderingMode(.template)
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 44, height: 44)
+                                        .padding(8)
+                                        .foregroundColor(
+                                            platform.assetColor
+                                        )
+                                        .clipShape(Circle())
+                                    
+                                    if selectedPlatform == platform {
+                                        Rectangle()
+                                            .frame(height: 2)
+                                            .foregroundColor(
+                                                platform == selectedPlatform ? platform.assetColor : .clear
+                                            )
+                                            .matchedGeometryEffect(id: "underline", in: namespace, properties: .frame, isSource: true)
+                                    }
+                                }
+                                .animation(.linear(duration: 0.3), value: selectedPlatform)
+                                .transition(.slide)
                             }
                         }
                     }
                 }
+                .padding(.vertical)
 
-                
                 ScrollView(.vertical) {
                     let gamesList = GameList(platform: selectedPlatform, category: selectedCategory)
                     GameListView(gamesList: gamesList)
                 }
             }
-            .padding(.leading, 15)
+            .padding(.horizontal, 15)
             .navigationBarTitle("Home")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -54,7 +71,7 @@ struct HomeView: View {
                             }
                         }
                     } label: {
-                        Label("Choose Category", systemImage: "list.bullet")
+                        Text(selectedCategory.rawValue)
                     }
                 }
             }

@@ -26,10 +26,13 @@ class APIManager {
                 }
                 return
             }
-            let games = gameResults.games.map { GameModel(game: $0, coverSize: .COVER_BIG) }
+            
+            let games = gameResults.games.map { GameModel(game: $0, coverSize: .HD) }
+            
             DispatchQueue.main.async {
                 completion(.success(games))
             }
+            
         } errorResponse: { error in
             DispatchQueue.main.async {
                 completion(.failure(error))

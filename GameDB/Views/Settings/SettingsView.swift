@@ -8,25 +8,33 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @AppStorage("isDarkMode") private var isDarkMode = false
+    
     var body: some View {
         NavigationStack {
-            List(SettingsModel.allCases, id: \.self) { setting in
-                NavigationLink(destination: setting) {
-                    HStack {
-                        Image(systemName: setting.icons)
-                            .foregroundColor(setting.iconColor)
-                        Text(setting.rawValue)
+            List {
+                Section(header: Text("Appearance")) {
+                    Toggle(isOn: $isDarkMode) {
+                        Label("Dark Mode", systemImage: isDarkMode ? "moon.fill" : "sun.max.fill")
                     }
                     .font(.headline)
                 }
+
+                Section(header: Text("General Settings")) {
+                    ForEach(SettingsModel.allCases, id: \.self) { setting in
+                        NavigationLink(destination: setting) {
+                            Label(setting.rawValue, systemImage: setting.icons)
+                        }
+                        .font(.headline)
+                    }
+                }
             }
-            .buttonStyle(.bordered)
-            .navigationDestination(for: SettingsModel.self) { $0 }
+            .listStyle(.insetGrouped)
             .navigationBarTitle("Settings")
         }
-        
     }
 }
+
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {

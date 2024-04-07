@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 enum PlatformModel: Int, CaseIterable {
     case ps5 = 167
@@ -64,4 +65,25 @@ enum PlatformModel: Int, CaseIterable {
             return "mac"
         }
     }
+    
+    var assetColor: Color {
+            switch self {
+            case .ps5:
+                return Color.blue
+            case .xboxSeriesX, .xboxSeriesS:
+                return Color.green
+            case .nswitch:
+                return Color.red
+            case .pc:
+                return Color.orange
+            case .ios:
+                return Color.purple
+            case .android:
+                return Color.green
+            case .ps4:
+                return Color.blue
+            case .mac:
+                return Color.gray
+            }
+        }
 }

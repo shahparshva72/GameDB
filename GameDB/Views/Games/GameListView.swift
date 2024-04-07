@@ -12,9 +12,6 @@ struct GameListView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            //            Text(gamesList.platformDescription)
-            //                .font(.title3.bold())
-            
             if gamesList.isLoading {
                 VStack {
                     Text("Loading games...")
@@ -36,7 +33,6 @@ struct GameListView: View {
                         ForEach(gamesList.games, id: \.id) { game in
                             NavigationLink(destination: GameDetailView(gameID: game.id)) {
                                 GameThumbnail(url: game.coverURL, name: game.name)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         }
                     }
@@ -50,6 +46,6 @@ struct GameListView: View {
 
 struct GameListView_Previews: PreviewProvider {
     static var previews: some View {
-        GameListView(gamesList: .init(platform: .nswitch, category: .CriticallyAcclaimed))
+        GameListView(gamesList: .init(platform: .nswitch, category: .criticallyAcclaimed))
     }
 }

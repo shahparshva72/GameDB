@@ -16,7 +16,7 @@ class ImageProcessing {
             return
         }
         
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .background).async {
             guard let url = URL(string: imageURLString),
                   let data = try? Data(contentsOf: url),
                   let uiImage = UIImage(data: data) else { return }

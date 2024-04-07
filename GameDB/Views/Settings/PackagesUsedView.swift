@@ -13,29 +13,19 @@ struct PackagesUsedView: View {
         (name: "Kingfisher", url: "https://github.com/onevcat/Kingfisher.git"),
         (name: "AlertToast", url: "https://github.com/elai950/AlertToast.git")
     ]
-
+    
     var body: some View {
-            List(packages, id: \.0) { package in
-                Button(action: {
-                    if let url = URL(string: package.url) {
-                        openURL(url)
-                    }
-                }) {
-                    VStack(alignment: .leading) {
-                        Text(package.name)
-                            .font(.headline)
-                        Text(package.url)
-                            .font(.subheadline)
-                            .foregroundColor(SettingsModel.packages.iconColor)
-                    }
-                }
-            }
-            .navigationTitle("Packages Used")
+        List(packages, id: \.0) { package in
+            Link(package.name, destination: URL(string: package.url)!)
+                .font(.headline)
+                .padding(.vertical, 5)
         }
-
-        private func openURL(_ url: URL) {
-            UIApplication.shared.open(url)
-        }
+        .navigationTitle("Packages Used")
+    }
+    
+    private func openURL(_ url: URL) {
+        UIApplication.shared.open(url)
+    }
 }
 
 struct CreditsView_Previews: PreviewProvider {

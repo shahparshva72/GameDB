@@ -8,10 +8,9 @@
 import SwiftUI
 
 enum SettingsModel: String, Hashable, CaseIterable, Identifiable, View {
-//    case appearance = "Appearance"
     case packages = "Packages Used"
-    case about = "About"
     case feed = "Feed"
+    case about = "About"
     
     var id: String {
         self.rawValue
@@ -19,8 +18,6 @@ enum SettingsModel: String, Hashable, CaseIterable, Identifiable, View {
     
     var body: some View {
         switch self {
-//        case .appearance:
-//            AppearanceView()
         case .packages:
             PackagesUsedView()
         case .about:
@@ -32,8 +29,6 @@ enum SettingsModel: String, Hashable, CaseIterable, Identifiable, View {
     
     var icons: String {
         switch self {
-//        case .appearance:
-//            return "paintbrush"
         case .packages:
             return "cube.box"
         case .about:
@@ -45,8 +40,6 @@ enum SettingsModel: String, Hashable, CaseIterable, Identifiable, View {
     
     var iconColor: Color {
         switch self {
-//        case .appearance:
-//            return .blue
         case .packages:
             return .green
         case .about:

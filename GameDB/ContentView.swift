@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ContentView: View {
-    
     var body: some View {
         TabView {
             HomeView()
@@ -50,6 +49,16 @@ struct ContentView: View {
                     }
                 }
                 .tag(3)
+            
+            SettingsView()
+                .tabItem {
+                    VStack {
+                        Image(systemName: "gearshape.fill")
+                            .imageScale(.large)
+                        Text("Settings")
+                    }
+                }
+                .tag(4)
         }
     }
 }
