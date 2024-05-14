@@ -58,7 +58,7 @@ struct ExploreCategoryView: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 15, style: .continuous)
-                .fill(LinearGradient(colors: [Color.purple.opacity(0.8), Color.pink.opacity(0.8)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                .fill(LinearGradient(colors: [Color.purple, Color.purple.opacity(0.8)], startPoint: .topLeading, endPoint: .bottomTrailing))
                 .frame(width: 150, height: 150)
                 .shadow(color: .black.opacity(0.5), radius: 10, x: 0, y: 5)
 
@@ -68,7 +68,6 @@ struct ExploreCategoryView: View {
                     .scaledToFit()
                     .frame(width: 60, height: 60)
                     .foregroundColor(.white)
-                    .shadow(color: .black.opacity(0.7), radius: 5, x: 0, y: 2)
 
                 Text(category)
                     .font(.headline)
@@ -76,8 +75,8 @@ struct ExploreCategoryView: View {
                     .foregroundColor(.white)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
-                    .shadow(color: .black.opacity(0.7), radius: 5, x: 0, y: 2)
             }
+            .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 10)
         }
 
     }

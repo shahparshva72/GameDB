@@ -12,6 +12,7 @@ struct NewsFeedItemView: View {
     let newsItem: RSSItem
     
     @State private var dominantColor: Color = Color.white
+    @State private var dominantUIColor: UIColor = .clear
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -26,12 +27,11 @@ struct NewsFeedItemView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .onAppear {
-                        ImageProcessing.getDominantColor(imageURLString: newsItem.image) { color, _ in
+                        ImageProcessing.getDominantColor(imageURLString: newsItem.image) { color, uiColor in
                             dominantColor = color
+                            dominantUIColor = uiColor
                         }
                     }
-                
-                LinearGradient(gradient: Gradient(colors: [Color.clear, dominantColor.opacity(0.8)]), startPoint: .center, endPoint: .bottom)
             }
             .frame(maxWidth: .infinity, maxHeight: 200)
             .clipShape(TopCornerRounded(radius: 10))
@@ -51,6 +51,7 @@ struct NewsFeedItemView: View {
                         .foregroundColor(.gray)
                 }
             }
+            .foregroundColor(dominantUIColor.perceivedBrightness < 0.5 ? Color(hex: "#FAFAFA") : Color(hex: "#121212"))
             .padding(.horizontal, 16)
         }
         .padding(.bottom, 8)

@@ -48,9 +48,9 @@ enum PlatformModel: Int, CaseIterable {
         case .ps5:
             return "ps5"
         case .xboxSeriesX:
-            return "xbox"
+            return "xboxX"
         case .xboxSeriesS:
-            return "xbox"
+            return "xboxS"
         case .nswitch:
             return "switch"
         case .pc:
@@ -75,9 +75,9 @@ enum PlatformModel: Int, CaseIterable {
             case .nswitch:
                 return Color.red
             case .pc:
-                return Color.orange
+                return Color.blue
             case .ios:
-                return Color.purple
+                return Color.gray
             case .android:
                 return Color.green
             case .ps4:

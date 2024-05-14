@@ -22,7 +22,6 @@ struct GameThumbnail: View {
                 .aspectRatio(contentMode: .fill)
                 .clipped()
                 .cornerRadius(20)
-                .shadow(color: Color.black.opacity(0.3), radius: 20, x: 0.0, y: 0.0)
                 .onAppear {
                     ImageProcessing.getDominantColor(imageURLString: url!.absoluteString) { color, uiColor in
                         dominantColor = color

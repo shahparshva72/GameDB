@@ -23,16 +23,15 @@ struct GameThumbnailCell: View {
                     .frame(width: thumbnailWidth, height: thumbnailHeight)
                     .clipped()
                     .cornerRadius(10)
-                    .shadow(radius: 5)
             }
             VStack(alignment: .leading, spacing: 10) {
                 Text(name)
                     .font(.headline)
+                    .lineLimit(1)
                     .padding(.horizontal, 5)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
         .cornerRadius(10)
-        .shadow(radius: 5)
     }
 }

@@ -43,7 +43,7 @@ struct BoxView: View {
         }
         .padding(12)
         .frame(width: 160, height: 100)
-        .background(LinearGradient(gradient: Gradient(colors: [categoryColor, categoryColor.opacity(0.7)]), startPoint: .top, endPoint: .bottom))
+        .background(LinearGradient(gradient: Gradient(colors: [categoryColor, categoryColor.opacity(0.8)]), startPoint: .topLeading, endPoint: .bottomTrailing))
         .cornerRadius(20)
         .overlay(
             RoundedRectangle(cornerRadius: 20)

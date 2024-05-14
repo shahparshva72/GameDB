@@ -52,29 +52,36 @@ struct HomeView: View {
                     }
                 }
                 .padding(.vertical)
-
+                
                 ScrollView(.vertical) {
                     let gamesList = GameList(platform: selectedPlatform, category: selectedCategory)
                     GameListView(gamesList: gamesList)
                 }
             }
             .padding(.horizontal, 15)
-            .navigationBarTitle("Home")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+            .toolbar(content: {
+                ToolbarItem(placement: .topBarLeading) {
+                    Text("Home")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .foregroundColor(.primary)
+                        .fontWidth(.standard)
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         ForEach(GameCategory.allCases, id: \.self) { category in
                             Button(action: {
                                 selectedCategory = category
                             }) {
-                                Text(category == selectedCategory ? "✔️ \(category.rawValue)" : category.rawValue)
+                                Text(category.rawValue)
                             }
                         }
                     } label: {
                         Text(selectedCategory.rawValue)
                     }
                 }
-            }
+            })
         }
     }
 }
