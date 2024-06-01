@@ -39,7 +39,7 @@ struct NewsFeedItemView: View {
             VStack(alignment: .leading, spacing: 8.0) {
                 Text(newsItem.title)
                     .font(.headline)
-                    .fontWeight(.medium)
+                    .fontWeight(.semibold)
                     .lineLimit(2)
                 
                 if let publishedDate = newsItem.publishedDate {
@@ -51,7 +51,7 @@ struct NewsFeedItemView: View {
                         .foregroundColor(.gray)
                 }
             }
-            .foregroundColor(dominantUIColor.perceivedBrightness < 0.5 ? Color(hex: "#FAFAFA") : Color(hex: "#121212"))
+            .foregroundColor(Color(hex: "#FAFAFA"))
             .padding(.horizontal, 16)
         }
         .padding(.bottom, 8)

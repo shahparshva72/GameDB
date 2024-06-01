@@ -11,10 +11,11 @@ import IGDB_SWIFT_API
 import SwiftUI
 
 struct HomeView: View {
-    @State private var selectedCategory: GameCategory = .criticallyAcclaimed
-    @State private var selectedPlatform: PlatformModel = .ps5
+    @ObservedObject var networkManager = NetworkManager()
+    @StateObject private var gameList = GameList(platform: .ps5, category: .criticallyAcclaimed)
     @Namespace var namespace
-    
+    @State private var isInitialLoad = true
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 8) {
@@ -22,7 +23,7 @@ struct HomeView: View {
                     HStack(spacing: 8) {
                         ForEach(PlatformModel.allCases, id: \.self) { platform in
                             Button(action: {
-                                selectedPlatform = platform
+                                gameList.updatePlatform(platform)
                             }) {
                                 VStack {
                                     Image(platform.assetName)
@@ -31,31 +32,36 @@ struct HomeView: View {
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 44, height: 44)
                                         .padding(8)
-                                        .foregroundColor(
-                                            platform.assetColor
-                                        )
+                                        .foregroundColor(platform.assetColor)
                                         .clipShape(Circle())
                                     
-                                    if selectedPlatform == platform {
+                                    if gameList.platformDescription == platform.description {
                                         Rectangle()
                                             .frame(height: 2)
-                                            .foregroundColor(
-                                                platform == selectedPlatform ? platform.assetColor : .clear
-                                            )
+                                            .foregroundColor(platform == gameList.platform ? platform.assetColor : .clear)
                                             .matchedGeometryEffect(id: "underline", in: namespace, properties: .frame, isSource: true)
                                     }
                                 }
-                                .animation(.linear(duration: 0.3), value: selectedPlatform)
+                                .animation(.linear(duration: 0.3), value: gameList.platformDescription)
                                 .transition(.slide)
                             }
                         }
                     }
                 }
                 .padding(.vertical)
-                
-                ScrollView(.vertical) {
-                    let gamesList = GameList(platform: selectedPlatform, category: selectedCategory)
-                    GameListView(gamesList: gamesList)
+
+                if networkManager.isConnected {
+                    ScrollView(.vertical) {
+                        GameListView(gamesList: gameList)
+                    }
+                } else {
+                    VStack {
+                        Spacer()
+                        Text("No connection found.\nConnect to the internet to load games.")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                    }
                 }
             }
             .padding(.horizontal, 15)
@@ -72,16 +78,22 @@ struct HomeView: View {
                     Menu {
                         ForEach(GameCategory.allCases, id: \.self) { category in
                             Button(action: {
-                                selectedCategory = category
+                                gameList.updateCategory(category)
                             }) {
                                 Text(category.rawValue)
                             }
                         }
                     } label: {
-                        Text(selectedCategory.rawValue)
+                        Text(gameList.category.rawValue)
                     }
                 }
             })
+        }
+        .onChange(of: networkManager.isConnected) { isConnected in
+            if isConnected && isInitialLoad {
+                gameList.fetchGames()
+                isInitialLoad = false
+            }
         }
     }
 }

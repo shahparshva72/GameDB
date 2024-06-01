@@ -18,7 +18,7 @@ struct SearchView: View {
 
     var body: some View {
         NavigationStack {
-            Group {
+            ScrollView {
                 if viewModel.searchQuery.isEmpty && !isSearching {
                     ExploreView()
                 } else {
@@ -63,6 +63,7 @@ struct SearchView: View {
 }
 
 // MARK: - SearchViewModel
+@MainActor
 class SearchViewModel: ObservableObject {
     enum State {
         case idle

@@ -182,7 +182,6 @@ struct GameSearchResponse: Decodable {
     }
 }
 
-
 fileprivate extension GameModel {
     init(from response: GameSearchResponse) {
         self.id = response.id
