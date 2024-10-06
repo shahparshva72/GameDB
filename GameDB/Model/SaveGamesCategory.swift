@@ -1,5 +1,5 @@
 //
-//  TrackCategory.swift
+//  SaveGamesCategory.swift
 //  GameDB
 //
 //  Created by Parshva Shah on 10/9/23.
@@ -13,11 +13,11 @@ enum SaveGamesCategory: String, CaseIterable {
     case upcoming = "Upcoming Games"
     case favorite = "Favorite Games"
     case playing = "Currently Playing"
-    
+
     var description: String {
-        return self.rawValue
+        return rawValue
     }
-    
+
     var color: Color {
         switch self {
         case .played:

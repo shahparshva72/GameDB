@@ -5,20 +5,21 @@
 //  Created by Parshva Shah on 7/6/23.
 //
 
-import SwiftUI
-import IGDB_SWIFT_API
-import Combine
 import AlertToast
+import Combine
+import IGDB_SWIFT_API
 import Kingfisher
+import SwiftUI
 
 // MARK: - SearchView
+
 struct SearchView: View {
     @StateObject private var viewModel = SearchViewModel()
     @Environment(\.isSearching) private var isSearching
 
     var body: some View {
         NavigationStack {
-            ScrollView {
+            VStack {
                 if viewModel.searchQuery.isEmpty && !isSearching {
                     ExploreView()
                 } else {
@@ -32,7 +33,7 @@ struct SearchView: View {
             .onChange(of: viewModel.searchQuery, perform: viewModel.fetchSearchResults)
         }
     }
-    
+
     private var searchResultsList: some View {
         List {
             switch viewModel.state {
@@ -40,19 +41,19 @@ struct SearchView: View {
                 EmptyView()
             case .loading:
                 loadingView
-            case .loaded(let results):
+            case let .loaded(results):
                 ForEach(results) { game in
                     NavigationLink(destination: GameDetailView(gameID: game.id)) {
                         SearchCell(url: game.coverURL, name: game.name)
                     }
                 }
-            case .error(let message):
+            case let .error(message):
                 Text(message)
             }
         }
         .listStyle(PlainListStyle())
     }
-    
+
     private var loadingView: some View {
         HStack {
             Spacer()
@@ -63,6 +64,7 @@ struct SearchView: View {
 }
 
 // MARK: - SearchViewModel
+
 @MainActor
 class SearchViewModel: ObservableObject {
     enum State {
@@ -74,7 +76,7 @@ class SearchViewModel: ObservableObject {
 
     @Published var searchQuery: String = ""
     @Published private(set) var state: State = .idle
-    
+
     private var manager = APIManager.shared
     private var cancellables: Set<AnyCancellable> = []
 
@@ -83,14 +85,14 @@ class SearchViewModel: ObservableObject {
             state = .idle
             return
         }
-        
+
         state = .loading
         manager.searchGames(for: query) { result in
             DispatchQueue.main.async {
                 switch result {
-                case .success(let games):
+                case let .success(games):
                     self.state = .loaded(games)
-                case .failure(let error):
+                case let .failure(error):
                     self.state = .error(error.localizedDescription)
                 }
             }
@@ -123,10 +125,8 @@ struct SearchCell: View {
             }
         }
         .cornerRadius(10)
-        .shadow(radius: 5)
     }
 }
-
 
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {

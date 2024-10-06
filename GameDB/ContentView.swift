@@ -19,7 +19,7 @@ struct ContentView: View {
                     }
                 }
                 .tag(0)
-            
+
             NewsFeedView()
                 .tabItem {
                     VStack {
@@ -29,7 +29,7 @@ struct ContentView: View {
                     }
                 }
                 .tag(1)
-            
+
             SearchView()
                 .tabItem {
                     VStack {
@@ -39,8 +39,7 @@ struct ContentView: View {
                     }
                 }
                 .tag(2)
-            
-            
+
             SummaryView()
                 .tabItem {
                     VStack {
@@ -49,7 +48,7 @@ struct ContentView: View {
                     }
                 }
                 .tag(3)
-            
+
             SettingsView()
                 .tabItem {
                     VStack {

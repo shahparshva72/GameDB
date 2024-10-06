@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @AppStorage("isDarkMode") private var isDarkMode = false
-    
+
     var body: some View {
         NavigationStack {
             List {
@@ -34,7 +34,6 @@ struct SettingsView: View {
         }
     }
 }
-
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {

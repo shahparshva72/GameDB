@@ -26,15 +26,15 @@ struct GenreDetailView: View {
     @State private var error: Error?
     @State private var currentOffset = 0
     @State private var areGamesAvailable: Bool = true
-    
-    
+    @EnvironmentObject var networkManager: NetworkManager
+
     private let columns: [GridItem] = [
         GridItem(.flexible(), spacing: 16),
-        GridItem(.flexible(), spacing: 16)
+        GridItem(.flexible(), spacing: 16),
     ]
-    
+
     var body: some View {
-        ScrollViewReader { scrollViewProxy in
+        ScrollViewReader { _ in
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 20) {
                     ForEach(games) { game in
@@ -42,7 +42,10 @@ struct GenreDetailView: View {
                             GameThumbnailCell(url: game.coverURL, name: game.name)
                         }
                     }
-                    
+                }
+                .padding()
+
+                if networkManager.isConnected {
                     if isLoading && areGamesAvailable {
                         ProgressView()
                             .progressViewStyle(CircularProgressViewStyle(tint: .accentColor))
@@ -53,8 +56,15 @@ struct GenreDetailView: View {
                                 loadMoreContent()
                             }
                     }
+                } else {
+                    VStack {
+                        Spacer()
+                        Text("No connection found.\nConnect to the internet to load games.")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                    }
                 }
-                .padding()
             }
             .navigationTitle(genre.description)
             .onAppear {
@@ -62,27 +72,26 @@ struct GenreDetailView: View {
             }
         }
     }
-    
+
     private func loadMoreContent() {
         currentOffset += 30
         fetchGames(offset: currentOffset)
     }
-    
+
     func fetchGames(offset: Int) {
         isLoading = true
         APIManager.shared.gamesByGenre(for: genre, currentOffset: offset) { result in
             switch result {
-            case .success(let fetchedGames):
+            case let .success(fetchedGames):
                 games.append(contentsOf: fetchedGames)
                 isLoading = false
-            case .failure(let error):
+            case let .failure(error):
                 self.error = error
                 isLoading = false
             }
         }
     }
 }
-
 
 struct GenresView_Previews: PreviewProvider {
     static var previews: some View {

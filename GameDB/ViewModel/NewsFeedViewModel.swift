@@ -15,8 +15,12 @@ class NewsFeedViewModel: ObservableObject {
     @Published var hasMoreNews: Bool = true
     let perPage: Int = 10
     private var manager = NewsAPIManager.shared
-    
+    @Published var isLoading: Bool = false
+
     func fetchNewsFeed() async {
+        DispatchQueue.main.async {
+            self.isLoading = true
+        }
         do {
             let feedItems = try await manager.fetchNewsFeed(page: currentPage, perPage: perPage)
             DispatchQueue.main.async {
@@ -26,15 +30,17 @@ class NewsFeedViewModel: ObservableObject {
                     self.items = feedItems
                     self.hasMoreNews = true
                 }
+                self.isLoading = false
             }
         } catch {
             print(error.localizedDescription)
             DispatchQueue.main.async {
                 self.hasMoreNews = false
+                self.isLoading = false
             }
         }
     }
-    
+
     func fetchFeedNames() async {
         do {
             let fetchedNames = try await manager.fetchFeedNames()
@@ -45,7 +51,7 @@ class NewsFeedViewModel: ObservableObject {
             print(error.localizedDescription)
         }
     }
-    
+
     func fetchNewsByName(feedName: String) async {
         do {
             let rssResponse = try await manager.fetchNewsByName(feedName: feedName, page: currentPage, perPage: perPage)
@@ -64,13 +70,13 @@ class NewsFeedViewModel: ObservableObject {
             }
         }
     }
-    
+
     func loadNextPage() async {
         guard hasMoreNews else { return }
         currentPage += 1
         await fetchNewsFeed()
     }
-    
+
     func loadPreviousPage() async {
         currentPage = max(currentPage - 1, 1)
         await fetchNewsFeed()

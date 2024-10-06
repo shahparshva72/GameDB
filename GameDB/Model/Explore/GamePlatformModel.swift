@@ -5,8 +5,8 @@
 //  Created by Parshva Shah on 6/18/23.
 //
 
-import SwiftUI
 import Combine
+import SwiftUI
 
 struct GamePlatformModel: Identifiable, Decodable {
     let id: Int
@@ -31,12 +31,12 @@ class GamePlatformViewModel: ObservableObject {
         }
 
         do {
-            let data = try Data(contentsOf: url)
+            let data = try Data(contentsOf: url, options: .dataReadingMapped)
             let decoder = JSONDecoder()
             allPlatforms = try decoder.decode([GamePlatformModel].self, from: data)
             platforms = allPlatforms
         } catch {
-            print("Error loading platforms: \(error)")
+            print("Error loading platforms: \(error.localizedDescription)")
         }
     }
 

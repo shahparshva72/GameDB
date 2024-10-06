@@ -8,6 +8,7 @@
 import Foundation
 
 // MARK: - Home Game Filter category
+
 enum GameCategory: String, CaseIterable {
     case criticallyAcclaimed = "Highly Rated"
     case newReleases = "New Releases"
@@ -16,7 +17,7 @@ enum GameCategory: String, CaseIterable {
 
     func getQuery(for platform: PlatformModel) -> String {
         let unixTimestamp = Int(Date().timeIntervalSince1970)
-        
+
         switch self {
         case .criticallyAcclaimed:
             return "fields name, first_release_date, id, rating, aggregated_rating, involved_companies.company.name, cover.image_id; where (platforms = (\(platform.rawValue)) & aggregated_rating >= 85 & themes != 42); sort rating desc; limit 15;"

@@ -5,15 +5,15 @@
 //  Created by Parshva Shah on 5/24/23.
 //
 
-import SwiftUI
 import Kingfisher
+import SwiftUI
 
 struct NewsFeedItemView: View {
     let newsItem: RSSItem
-    
-    @State private var dominantColor: Color = Color.white
+
+    @State private var dominantColor: Color = .white
     @State private var dominantUIColor: UIColor = .clear
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             ZStack {
@@ -35,13 +35,13 @@ struct NewsFeedItemView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: 200)
             .clipShape(TopCornerRounded(radius: 10))
-            
+
             VStack(alignment: .leading, spacing: 8.0) {
                 Text(newsItem.title)
                     .font(.headline)
                     .fontWeight(.semibold)
                     .lineLimit(2)
-                
+
                 if let publishedDate = newsItem.publishedDate {
                     Text(publishedDate, style: .date)
                         .font(.caption)

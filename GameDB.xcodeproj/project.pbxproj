@@ -48,6 +48,7 @@
 		93BD261E2B09245000DAC463 /* GameCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BD261D2B09245000DAC463 /* GameCategory.swift */; };
 		93BD78902A200CC2003CC6FE /* UIImage+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BD788F2A200CC2003CC6FE /* UIImage+Ext.swift */; };
 		93D5B8E92ACDBA600074325D /* GameDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 93D5B8E72ACDBA600074325D /* GameDataModel.xcdatamodeld */; };
+		93D855AF2CAC97B80078D7F4 /* ShimmerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D855AE2CAC97B40078D7F4 /* ShimmerView.swift */; };
 		93DBB4C82A39063F00D96F66 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DBB4C72A39063F00D96F66 /* SettingsModel.swift */; };
 		93E641E92A27A75500ED9FF9 /* DominantColorCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E641E82A27A75500ED9FF9 /* DominantColorCache.swift */; };
 		93E888072A21268F0039FDE8 /* KMeansCluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E888062A21268F0039FDE8 /* KMeansCluster.swift */; };
@@ -113,6 +114,7 @@
 		93BD261D2B09245000DAC463 /* GameCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCategory.swift; sourceTree = "<group>"; };
 		93BD788F2A200CC2003CC6FE /* UIImage+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Ext.swift"; sourceTree = "<group>"; };
 		93D5B8E82ACDBA600074325D /* GameDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GameDataModel.xcdatamodel; sourceTree = "<group>"; };
+		93D855AE2CAC97B40078D7F4 /* ShimmerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmerView.swift; sourceTree = "<group>"; };
 		93DBB4C72A39063F00D96F66 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
 		93E641E82A27A75500ED9FF9 /* DominantColorCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DominantColorCache.swift; sourceTree = "<group>"; };
 		93E888062A21268F0039FDE8 /* KMeansCluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMeansCluster.swift; sourceTree = "<group>"; };
@@ -209,6 +211,7 @@
 		9337F8942A2A782800295265 /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
+				93D855AE2CAC97B40078D7F4 /* ShimmerView.swift */,
 				93FDD9FA2AFD7A7B00B23CA1 /* TagsView.swift */,
 				9332B5CE2B02D27A00564F9C /* QuickScroll.swift */,
 				930332D32B0D458A00053F34 /* PlaceholderImage.swift */,
@@ -445,6 +448,7 @@
 				93E888092A2126EB0039FDE8 /* UIColor+Ext.swift in Sources */,
 				93EB2C3F2A8BA0FA00388BD8 /* PlatformsView.swift in Sources */,
 				18D53D9C2817DD6B008A432D /* GameModel.swift in Sources */,
+				93D855AF2CAC97B80078D7F4 /* ShimmerView.swift in Sources */,
 				93DBB4C82A39063F00D96F66 /* SettingsModel.swift in Sources */,
 				93EB2C312A8BA04E00388BD8 /* ExploreCategory.swift in Sources */,
 				93EAC14B2AFC1505003786AD /* GameCountdownView.swift in Sources */,
@@ -648,9 +652,13 @@
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = dev.sparshva72.GameDB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -680,9 +688,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.sparshva72.GameDB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

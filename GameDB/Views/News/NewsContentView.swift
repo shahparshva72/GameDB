@@ -10,12 +10,12 @@ import WebKit
 
 struct WebView: UIViewRepresentable {
     let urlString: String
-    
-    func makeUIView(context: Context) -> WKWebView {
+
+    func makeUIView(context _: Context) -> WKWebView {
         return WKWebView()
     }
-    
-    func updateUIView(_ uiView: WKWebView, context: Context) {
+
+    func updateUIView(_ uiView: WKWebView, context _: Context) {
         if let url = URL(string: urlString) {
             let request = URLRequest(url: url)
             uiView.load(request)
@@ -25,18 +25,18 @@ struct WebView: UIViewRepresentable {
 
 struct NewsContentView: View {
     let urlString: String
-    
+
     @State private var isLoading = true
-    
+
     var body: some View {
         ZStack {
             Color(.systemBackground)
                 .ignoresSafeArea(.all)
-            
+
             WebView(urlString: urlString)
                 .opacity(isLoading ? 0.0 : 1.0)
                 .transition(.opacity.animation(.easeInOut(duration: 1.0)))
-            
+
             if isLoading {
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle(tint: .blue))

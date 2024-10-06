@@ -7,9 +7,14 @@
 
 import SwiftUI
 
+// TODO: - Future plan to add tag to platform/genre detail view
+
 struct TagsGridView: View {
     var tagNames: [String]
     var tagColor: Color
+    var tagType: TagType
+
+    let viewModel = GamePlatformViewModel()
 
     var body: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))]) {
@@ -26,18 +31,22 @@ struct TagsView: View {
 
     var body: some View {
         Text(name)
-            .font(.callout)
+            .font(.subheadline)
             .lineLimit(1)
             .truncationMode(.tail)
-            .padding(.horizontal, 5)
             .padding(.vertical, 5)
+            .padding(.horizontal, 10)
             .frame(minWidth: 75, idealWidth: 100, maxWidth: .infinity, alignment: .center)
             .background(color)
             .foregroundColor(.white)
-            .cornerRadius(15)
+            .cornerRadius(10)
     }
 }
 
+enum TagType {
+    case genre
+    case platform
+}
 
 #Preview {
     TagsView(name: "Tag", color: .blue)

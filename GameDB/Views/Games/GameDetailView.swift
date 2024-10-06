@@ -5,19 +5,22 @@
 //  Created by Parshva Shah on 5/22/23.
 //
 
-import SwiftUI
-import Kingfisher
 import AlertToast
+import Kingfisher
+import QuickLook
+import SwiftUI
+
+// MARK: - GameDetailView
 
 struct GameDetailView: View {
     @StateObject private var viewModel = GameDetailViewModel()
     var gameID: Int
     @State private var showSpoilers: Bool = false
-    
+
     @State private var showAlert = false
     @State private var alertTitle = ""
     @State private var alertType: AlertToast.AlertType = .regular
-    
+
     var body: some View {
         Group {
             if let game = viewModel.game {
@@ -31,7 +34,6 @@ struct GameDetailView: View {
                     } label: {
                         Text("Click to retry \(Image(systemName: "arrow.clockwise"))")
                     }
-                    
                 }
             } else {
                 ProgressView("Loading...")
@@ -50,7 +52,7 @@ struct GameDetailView: View {
                     Image(systemName: showSpoilers ? "eye.slash" : "eye")
                 }
             }
-            
+
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
                     Section {
@@ -78,38 +80,49 @@ struct GameDetailView: View {
             AlertToast(displayMode: .alert, type: alertType, title: alertTitle)
         }
     }
-    
+
     func saveGame(inCategory category: SaveGamesCategory) {
-        guard let game = viewModel.game else { return }
-        
+        guard let game = viewModel.game else {
+            alertTitle = "Error: Game data not available"
+            alertType = .error(.red)
+            showAlert = true
+            return
+        }
+
         if category == .upcoming && game.releaseDate <= Date() {
             alertTitle = "Cannot add game. Game already released"
             alertType = .error(.red)
             showAlert = true
         } else {
-            GameDataProvider.shared.saveOrUpdateGame(
-                id: game.id,
-                name: game.name,
-                releaseDate: game.releaseDate,
-                coverURLString: game.coverURLString,
-                category: category
-            )
-            
-            if isCategoryActive(category, for: gameID) {
-                alertTitle = "Game Added"
-                alertType = .complete(.green)
-                showAlert = true
-            } else {
-                alertTitle = "Game Removed"
-                alertType = .complete(.green)
+            do {
+                try GameDataProvider.shared.saveOrUpdateGame(
+                    id: game.id,
+                    name: game.name,
+                    releaseDate: game.releaseDate,
+                    coverURLString: game.coverURLString,
+                    category: category
+                )
+
+                if isCategoryActive(category, for: game.id) {
+                    alertTitle = "Game Added"
+                    alertType = .complete(.green)
+                    showAlert = true
+                } else {
+                    alertTitle = "Game Removed"
+                    alertType = .complete(.blue)
+                    showAlert = true
+                }
+            } catch {
+                alertTitle = "Error saving game: \(error.localizedDescription)"
+                alertType = .error(.red)
                 showAlert = true
             }
         }
     }
-    
+
     private func isCategoryActive(_ category: SaveGamesCategory, for gameID: Int) -> Bool {
         guard let gameDataModel = GameDataProvider.shared.fetchGameById(gameID) else { return false }
-        
+
         switch category {
         case .played:
             return gameDataModel.isPlayed
@@ -125,23 +138,25 @@ struct GameDetailView: View {
     }
 }
 
+// MARK: - GameDetailContent
+
 struct GameDetailContent: View {
     var game: GameModel
     @Binding var showSpoilers: Bool
-    
+
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack {
                 ZStack {
                     CoverImageView(url: game.coverURL)
                         .blur(radius: 5)
-                    
+
                     CoverImageView(url: game.coverURL)
                         .scaleEffect(0.95)
                         .frame(alignment: .center)
                         .animation(.easeInOut, value: true)
                 }
-                
+
                 GameInformationView(game: game, showSpoilers: $showSpoilers)
                     .padding([.horizontal], 10)
             }
@@ -149,9 +164,11 @@ struct GameDetailContent: View {
     }
 }
 
+// MARK: - CoverImageView
+
 struct CoverImageView: View {
     var url: URL?
-    
+
     var body: some View {
         KFImage(url)
             .placeholder {
@@ -166,13 +183,17 @@ struct CoverImageView: View {
     }
 }
 
+// MARK: - GameInformationView
+
 struct GameInformationView: View {
     var game: GameModel
     @Binding var showSpoilers: Bool
-    
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Text(game.name).font(.title2).padding(.top, 20)
+        VStack(alignment: .leading, spacing: 10) {
+            Text(game.name).font(.title2).padding(.vertical, 20)
+            TagsGridView(tagNames: game.genres, tagColor: .accentColor, tagType: .genre)
+            TagsGridView(tagNames: game.platforms, tagColor: .accentColor, tagType: .platform)
             GameDetailsSection(game: game)
             SummarySection(summary: game.summary, showSpoilers: $showSpoilers)
             StorylineSection(storyline: game.storyline, showSpoilers: $showSpoilers)
@@ -182,77 +203,40 @@ struct GameInformationView: View {
     }
 }
 
+// MARK: - GameDetailsSection
+
 struct GameDetailsSection: View {
     var game: GameModel
-    
+
     var body: some View {
-        GroupBox(label: HStack {
-            Image(systemName: "info.circle.fill")
-                .foregroundColor(.blue)
-            Text("Game Details")
-                .font(.headline)
-        }) {
-            VStack(alignment: .leading, spacing: 8) {
+        GroupBox(label: Label("Game Detail", systemImage: "info.circle.fill")) {
+            VStack(alignment: .leading, spacing: 10) {
                 // Developed by
-                HStack {
-                    Image(systemName: "person.fill")
-                        .foregroundColor(.secondary)
-                    Text("By: \(game.company)")
-                        .fontWeight(.medium)
-                }
-                
+                Label("By \(game.company)", systemImage: "person.fill")
+
                 // Release Date
-                HStack {
-                    Image(systemName: "calendar")
-                        .foregroundColor(.secondary)
-                    Text("Release date: \(game.releaseDateText)")
-                        .fontWeight(.medium)
-                }
-                
+                Label("Release date: \(game.releaseDateText)", systemImage: "calendar")
+
                 // Rating
-                HStack {
-                    Image(systemName: "star.circle.fill")
-                        .foregroundColor(.orange)
-                    Text("Rating: \(String(format: "%.1f", game.rating))")
-                        .fontWeight(.medium)
-                }
-                
+                Label("Rating: \(String(format: "%.1f", game.rating))", systemImage: "star.circle.fill")
+
                 // Critics Rating
-                HStack {
-                    Image(systemName: "star.circle.fill")
-                        .foregroundColor(.red)
-                    Text("Critics Rating: \(String(format: "%.1f", game.aggregated_rating))")
-                        .fontWeight(.medium)
-                }
-                
-                // Genres
-                HStack(spacing: 0) {
-                    Image(systemName: "tag.fill")
-                        .foregroundColor(.yellow)
-                    
-                    TagsGridView(tagNames: game.genres, tagColor: .green)
-                        .padding(.horizontal)
-                }
-                
-                // Platforms
-                HStack(spacing: 0) {
-                    Image(systemName: "gamecontroller")
-                        .foregroundColor(.purple)
-                    TagsGridView(tagNames: game.platforms, tagColor: .purple)
-                        .padding(.horizontal)
-                }
+                Label("Critics Rating: \(String(format: "%.1f", game.aggregated_rating))", systemImage: "star.circle.fill")
             }
             .font(.subheadline)
+            .padding(.vertical)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .foregroundColor(.secondary)
-            .padding(.vertical, 5)
         }
     }
 }
 
+// MARK: - SummarySection
+
 struct SummarySection: View {
     var summary: String
     @Binding var showSpoilers: Bool
-    
+
     var body: some View {
         GroupBox(label: Text("Summary")) {
             if summary.isEmpty {
@@ -264,7 +248,7 @@ struct SummarySection: View {
                         .font(.body)
                         .lineLimit(nil)
                         .opacity(showSpoilers ? 1 : 0.02)
-                    
+
                     // Tap to reveal spoilers
                     if !showSpoilers {
                         Text("Tap on \(Image(systemName: "eye")) to show spoilers")
@@ -277,10 +261,12 @@ struct SummarySection: View {
     }
 }
 
+// MARK: - StorylineSection
+
 struct StorylineSection: View {
     var storyline: String
     @Binding var showSpoilers: Bool
-    
+
     var body: some View {
         GroupBox(label: Text("Storyline")) {
             if storyline.isEmpty {
@@ -292,7 +278,7 @@ struct StorylineSection: View {
                         .font(.body)
                         .lineLimit(nil)
                         .opacity(showSpoilers ? 1 : 0.02)
-                    
+
                     // Tap to reveal spoilers
                     if !showSpoilers {
                         Text("Tap on \(Image(systemName: "eye")) to show spoilers")
@@ -305,9 +291,11 @@ struct StorylineSection: View {
     }
 }
 
+// MARK: - ScreenshotsSection
+
 struct ScreenshotsSection: View {
     var urls: [URL]
-    
+
     var body: some View {
         Section(header: Text("Screenshots")) {
             if urls.isEmpty {
@@ -319,12 +307,14 @@ struct ScreenshotsSection: View {
     }
 }
 
+// MARK: - ScreenshotCarouselView
+
 struct ScreenshotCarouselView: View {
     var urls: [URL]
     @State private var selectedPage: Int = 0
-    
+
     var body: some View {
-        VStack {
+        VStack(spacing: 16) {
             TabView(selection: $selectedPage) {
                 ForEach(urls.indices, id: \.self) { index in
                     ScreenshotImageView(url: urls[index])
@@ -334,7 +324,7 @@ struct ScreenshotCarouselView: View {
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             .frame(height: 200)
-            
+
             // Custom dots
             HStack {
                 ForEach(urls.indices, id: \.self) { index in
@@ -352,25 +342,28 @@ struct ScreenshotCarouselView: View {
     }
 }
 
+// MARK: - ScreenshotImageView
+
 struct ScreenshotImageView: View {
     var url: URL
-    
+
     var body: some View {
         KFImage(url)
             .placeholder {
                 PlaceholderImage()
             }
             .resizable()
-            .aspectRatio(contentMode: .fit)
+            .aspectRatio(contentMode: .fill)
             .cornerRadius(10)
     }
 }
 
+// MARK: - VideosSection
 
 struct VideosSection: View {
     var videoIDs: [String]
     @State private var selectedVideoIndex: Int = 0
-    
+
     var body: some View {
         Section(header: Text("Videos")) {
             if videoIDs.isEmpty {
@@ -380,12 +373,13 @@ struct VideosSection: View {
                     TabView(selection: $selectedVideoIndex) {
                         ForEach(videoIDs.indices, id: \.self) { index in
                             VideoThumbnailButton(videoID: videoIDs[index])
+                                .padding(.horizontal, 8)
                                 .tag(index)
                         }
                     }
                     .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                     .frame(height: 200)
-                    
+
                     HStack {
                         ForEach(videoIDs.indices, id: \.self) { index in
                             Circle()
@@ -399,9 +393,11 @@ struct VideosSection: View {
     }
 }
 
+// MARK: - VideoThumbnailButton
+
 struct VideoThumbnailButton: View {
     var videoID: String
-    
+
     var body: some View {
         Button(action: {
             // Open the video in Safari

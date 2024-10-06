@@ -14,21 +14,21 @@ struct RSSItem: Identifiable, Codable {
     var published: String
     var summary: String
     var image: String
-    
+
     var linkURL: URL? {
         return URL(string: link)
     }
-    
+
     var imageURL: URL? {
         return URL(string: image)
     }
-    
+
     var publishedDate: Date? {
         let formatter = DateFormatter()
         formatter.dateFormat = "E, dd MMM yyyy HH:mm:ss z"
         return formatter.date(from: published)
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case title, link, published, summary, image
     }

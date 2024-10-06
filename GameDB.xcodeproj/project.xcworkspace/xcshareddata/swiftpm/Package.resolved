@@ -1,4 +1,5 @@
 {
+  "originHash" : "97df0dc4e7eb7e6ef7890c44c5c772865c007525cb82ab1da3ca32b68496ddd6",
   "pins" : [
     {
       "identity" : "alerttoast",
@@ -14,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/husnjak/IGDB-SWIFT-API.git",
       "state" : {
-        "revision" : "3ce2c09a0f55bd91b04ea8de413cca3b07474d39",
-        "version" : "0.4.4"
+        "revision" : "10e284bd927405dbcf9cb14484b151db70b075b5",
+        "version" : "0.4.5"
       }
     },
     {
@@ -32,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/onevcat/Kingfisher.git",
       "state" : {
-        "revision" : "5b92f029fab2cce44386d28588098b5be0824ef5",
-        "version" : "7.11.0"
+        "revision" : "2ef543ee21d63734e1c004ad6c870255e8716c50",
+        "version" : "7.12.0"
       }
     },
     {
@@ -41,10 +42,10 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-protobuf.git",
       "state" : {
-        "revision" : "65e8f29b2d63c4e38e736b25c27b83e012159be8",
-        "version" : "1.25.2"
+        "revision" : "edb6ed4919f7756157fe02f2552b7e3850a538e5",
+        "version" : "1.28.1"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

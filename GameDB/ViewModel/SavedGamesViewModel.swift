@@ -5,20 +5,20 @@
 //  Created by Parshva Shah on 10/9/23.
 //
 
-import SwiftUI
 import Combine
 import CoreData
+import SwiftUI
 
 class SavedGamesViewModel: ObservableObject {
     @Published var savedGames: [GameDataModel] = []
-    
+
     var category: SaveGamesCategory
     private var cancellables = Set<AnyCancellable>()
-    
+
     init(category: SaveGamesCategory) {
         self.category = category
         fetchData(for: category)
-        
+
         NotificationCenter.default.publisher(for: .NSManagedObjectContextObjectsDidChange, object: GameDataProvider.shared.viewContext)
             .sink { [weak self] _ in
                 guard let self = self else { return }
@@ -28,7 +28,7 @@ class SavedGamesViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
-    
+
     func fetchData(for category: SaveGamesCategory) {
         let fetchRequest: NSFetchRequest<GameDataModel> = GameDataModel.gamesFetchRequest
         switch category {
@@ -43,7 +43,7 @@ class SavedGamesViewModel: ObservableObject {
         case .playing:
             fetchRequest.predicate = NSPredicate(format: "isPlaying == %@", NSNumber(value: true))
         }
-        
+
         do {
             let games = try GameDataProvider.shared.viewContext.fetch(fetchRequest)
             DispatchQueue.main.async {
@@ -53,7 +53,7 @@ class SavedGamesViewModel: ObservableObject {
             print("Error fetching data for category \(category): \(error.localizedDescription)")
         }
     }
-    
+
     deinit {
         cancellables.forEach { $0.cancel() }
     }

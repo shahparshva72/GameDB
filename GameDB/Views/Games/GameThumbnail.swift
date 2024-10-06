@@ -11,10 +11,10 @@ import SwiftUI
 struct GameThumbnail: View {
     var url: URL?
     var name: String
-    
+
     @State private var dominantColor: Color = .clear
     @State private var dominantUIColor: UIColor = .clear
-    
+
     var body: some View {
         VStack(alignment: .center) {
             KFImage.url(url)
@@ -28,11 +28,11 @@ struct GameThumbnail: View {
                         dominantUIColor = uiColor
                     }
                 }
-            
+
             Text(name)
                 .font(Font.system(size: 20, weight: .bold, design: .rounded))
                 .foregroundColor(dominantUIColor.perceivedBrightness < 0.5 ? Color(hex: "#FAFAFA") : Color(hex: "#121212"))
-                .padding(EdgeInsets.init(top: 16, leading: 8, bottom: 16, trailing: 16))
+                .padding(EdgeInsets(top: 16, leading: 8, bottom: 16, trailing: 16))
                 .background(
                     Rectangle()
                         .foregroundColor(dominantColor)

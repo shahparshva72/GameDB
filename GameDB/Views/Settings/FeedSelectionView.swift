@@ -11,13 +11,13 @@ class FeedSelectionViewModel: ObservableObject {
     @Published var feedNames: [String] = []
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
-    
+
     func fetchFeedNames() async {
         DispatchQueue.main.async {
             self.isLoading = true
             self.errorMessage = nil
         }
-        
+
         do {
             let fetchedNames = try await NewsAPIManager.shared.fetchFeedNames()
             DispatchQueue.main.async {
@@ -33,10 +33,9 @@ class FeedSelectionViewModel: ObservableObject {
     }
 }
 
-
 struct FeedSelectionView: View {
     @StateObject var viewModel = FeedSelectionViewModel()
-    
+
     var body: some View {
         VStack {
             if viewModel.isLoading {
@@ -58,7 +57,6 @@ struct FeedSelectionView: View {
         }
     }
 }
-
 
 #Preview {
     FeedSelectionView()

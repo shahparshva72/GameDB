@@ -16,9 +16,9 @@ struct BoxItem {
 struct SummaryView: View {
     @ObservedObject var summaryVM = SummaryViewModel()
     @ObservedObject var savedGamesVM = SavedGamesViewModel(category: .upcoming)
-    
+
     let layout: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 10), count: 2)
-    
+
     var body: some View {
         NavigationStack {
             VStack {
@@ -30,7 +30,7 @@ struct SummaryView: View {
                         }
                     }
                 }
-                
+
                 Spacer()
             }
             .padding()
@@ -40,7 +40,7 @@ struct SummaryView: View {
             }
         }
     }
-    
+
     func boxItem(for category: SaveGamesCategory) -> BoxItem {
         switch category {
         case .played:
@@ -55,8 +55,7 @@ struct SummaryView: View {
             return BoxItem(symbolName: "dpad", title: "Currently Playing", category: .playing)
         }
     }
-    
-    
+
     func destinationView(for category: SaveGamesCategory) -> some View {
         let viewModel = SavedGamesViewModel(category: category)
         switch category {
@@ -66,12 +65,11 @@ struct SummaryView: View {
     }
 }
 
-
 struct SavedGamesView: View {
     @ObservedObject var viewModel: SavedGamesViewModel
-    
+
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
-    
+
     var body: some View {
         Group {
             if viewModel.savedGames.isEmpty {
@@ -91,21 +89,21 @@ struct SavedGamesView: View {
                     VStack {
                         Spacer()
                             .frame(height: 20)
-                        
+
                         LazyVGrid(columns: columns, spacing: 20) {
                             ForEach(viewModel.savedGames, id: \.id) { game in
                                 NavigationLink(destination: GameDetailView(gameID: game.id)) {
-                                    VStack {
+                                    VStack(alignment: .leading) {
                                         if let url = URL(string: game.coverURLString) {
                                             GameThumbnailCell(url: url, name: game.name)
                                                 .aspectRatio(1, contentMode: .fit)
                                         }
-                                        
+
                                         if game.isUpcoming {
                                             var daysLeft: Int {
                                                 Calendar.current.dateComponents([.day], from: Date(), to: game.releaseDate).day ?? 0
                                             }
-                                            
+
                                             Text("\(daysLeft) days left")
                                                 .font(.subheadline)
                                                 .foregroundStyle(Color.white)
@@ -126,14 +124,13 @@ struct SavedGamesView: View {
         }
         .navigationTitle(viewModel.category.description)
     }
-    
+
     func checkDateStatus(for games: [GameDataModel]) {
         for game in games {
             GameDataProvider.shared.updateGameStatus(for: game)
         }
     }
 }
-
 
 #Preview {
     SummaryView()

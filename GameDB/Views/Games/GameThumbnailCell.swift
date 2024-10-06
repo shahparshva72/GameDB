@@ -28,7 +28,6 @@ struct GameThumbnailCell: View {
                 Text(name)
                     .font(.headline)
                     .lineLimit(1)
-                    .padding(.horizontal, 5)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
         }

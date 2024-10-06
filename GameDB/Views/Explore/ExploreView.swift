@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct NavigationItem: Hashable, Identifiable {
-    var id: UUID = UUID()
+    var id: UUID = .init()
     var title: String
     var icon: String
     var category: ExploreCategory
-    
+
     init(category: ExploreCategory, icon: String) {
-        self.title = category.description
+        title = category.description
         self.icon = icon
         self.category = category
     }
@@ -22,9 +22,9 @@ struct NavigationItem: Hashable, Identifiable {
 
 struct ExploreView: View {
     let columns = [
-        GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 20)
+        GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 20),
     ]
-    
+
     let navigationItems: [NavigationItem] = [
         NavigationItem(category: .genres, icon: "gamecontroller"),
         NavigationItem(category: .platforms, icon: "desktopcomputer"),
@@ -54,7 +54,7 @@ struct ExploreView: View {
 struct ExploreCategoryView: View {
     var category: String
     var icon: String
-    
+
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 15, style: .continuous)
@@ -78,11 +78,8 @@ struct ExploreCategoryView: View {
             }
             .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 10)
         }
-
     }
 }
-
-
 
 struct ExploreView_Previews: PreviewProvider {
     static var previews: some View {

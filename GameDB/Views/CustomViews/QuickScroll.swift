@@ -13,11 +13,11 @@ struct QuickScroll<T: Hashable, Content: View>: View {
     let sectionIdentifiers: [T]
     let proxy: ScrollViewProxy
     let content: (T) -> Content
-    
+
     var body: some View {
         HStack {
             Spacer()
-            
+
             VStack(alignment: .center, spacing: 0) {
                 ForEach(sectionIdentifiers, id: \.self) { identifier in
                     Button {

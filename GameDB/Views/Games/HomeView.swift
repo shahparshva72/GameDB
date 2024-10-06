@@ -5,8 +5,6 @@
 //  Created by Parshva Shah on 4/26/22.
 //
 
-// TODO: - Add Network Connection error handling
-
 import IGDB_SWIFT_API
 import SwiftUI
 
@@ -34,7 +32,7 @@ struct HomeView: View {
                                         .padding(8)
                                         .foregroundColor(platform.assetColor)
                                         .clipShape(Circle())
-                                    
+
                                     if gameList.platformDescription == platform.description {
                                         Rectangle()
                                             .frame(height: 2)
@@ -53,6 +51,10 @@ struct HomeView: View {
                 if networkManager.isConnected {
                     ScrollView(.vertical) {
                         GameListView(gamesList: gameList)
+                    }
+
+                    .refreshable {
+                        await gameList.refreshGames()
                     }
                 } else {
                     VStack {
@@ -73,7 +75,7 @@ struct HomeView: View {
                         .foregroundColor(.primary)
                         .fontWidth(.standard)
                 }
-                
+
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         ForEach(GameCategory.allCases, id: \.self) { category in
@@ -94,6 +96,15 @@ struct HomeView: View {
                 gameList.fetchGames()
                 isInitialLoad = false
             }
+        }
+    }
+}
+
+extension GameList {
+    func refreshGames() async {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.games.removeAll()
+            self.fetchGames()
         }
     }
 }

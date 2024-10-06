@@ -5,8 +5,8 @@
 //  Created by Parshva Shah on 5/23/22.
 //
 
-import Foundation
 import Combine
+import Foundation
 import SwiftUI
 
 enum PlatformModel: Int, CaseIterable {
@@ -42,7 +42,7 @@ enum PlatformModel: Int, CaseIterable {
             return "macOS"
         }
     }
-    
+
     var assetName: String {
         switch self {
         case .ps5:
@@ -65,25 +65,25 @@ enum PlatformModel: Int, CaseIterable {
             return "mac"
         }
     }
-    
+
     var assetColor: Color {
-            switch self {
-            case .ps5:
-                return Color.blue
-            case .xboxSeriesX, .xboxSeriesS:
-                return Color.green
-            case .nswitch:
-                return Color.red
-            case .pc:
-                return Color.blue
-            case .ios:
-                return Color.gray
-            case .android:
-                return Color.green
-            case .ps4:
-                return Color.blue
-            case .mac:
-                return Color.gray
-            }
+        switch self {
+        case .ps5:
+            return Color.blue
+        case .xboxSeriesX, .xboxSeriesS:
+            return Color.green
+        case .nswitch:
+            return Color.red
+        case .pc:
+            return Color.blue
+        case .ios:
+            return Color.gray
+        case .android:
+            return Color.green
+        case .ps4:
+            return Color.blue
+        case .mac:
+            return Color.gray
         }
+    }
 }

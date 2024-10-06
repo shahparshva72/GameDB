@@ -12,17 +12,30 @@ struct NewsFeedView: View {
 
     var body: some View {
         NavigationStack {
-            List(viewModel.items, id: \.id) { newsItem in
-                ZStack {
-                    NewsFeedItemView(newsItem: newsItem)
-                    NavigationLink(destination: NewsContentView(urlString: newsItem.link)) {
-                        EmptyView()
+            ZStack {
+                if viewModel.isLoading {
+                    VStack(spacing: 10) {
+                        ForEach(viewModel.items, id: \.id) { _ in
+                            ShimmerView()
+                                .frame(height: 200)
+                                .cornerRadius(20)
+                        }
                     }
-                    .opacity(0)
+                    .padding()
+                } else {
+                    List(viewModel.items, id: \.id) { newsItem in
+                        ZStack {
+                            NewsFeedItemView(newsItem: newsItem)
+                            NavigationLink(destination: NewsContentView(urlString: newsItem.link)) {
+                                EmptyView()
+                            }
+                            .opacity(0)
+                        }
+                        .listRowSeparator(.hidden)
+                    }
+                    .listStyle(.inset)
                 }
-                .listRowSeparator(.hidden)
             }
-            .listStyle(.inset)
             .navigationTitle("News Feed")
             .refreshable {
                 await viewModel.fetchNewsFeed()
@@ -34,16 +47,16 @@ struct NewsFeedView: View {
                             await viewModel.loadPreviousPage()
                         }
                     }
-                    .disabled(viewModel.currentPage == 1)
-                    
+                    .disabled(viewModel.currentPage == 1 || viewModel.isLoading)
+
                     Spacer()
-                    
+
                     Button("Next") {
                         Task {
                             await viewModel.loadNextPage()
                         }
                     }
-                    .disabled(!viewModel.hasMoreNews)
+                    .disabled(!viewModel.hasMoreNews || viewModel.isLoading)
                 }
                 .padding()
                 .background(.ultraThinMaterial)
@@ -56,7 +69,6 @@ struct NewsFeedView: View {
         }
     }
 }
-
 
 struct NewsFeedView_Previews: PreviewProvider {
     static var previews: some View {

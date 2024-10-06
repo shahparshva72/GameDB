@@ -7,16 +7,16 @@
 
 // ref:-  https://stackoverflow.com/questions/65185161/swiftui-how-to-add-letters-sections-and-alphabet-jumper-in-a-form
 
-import SwiftUI
 import Combine
+import SwiftUI
 
 struct PlatformsView: View {
     @StateObject var viewModel = GamePlatformViewModel()
-    
+
     private var sectionIdentifiers: [String] {
         Set(viewModel.platforms.map { String($0.name.prefix(1)) }).sorted()
     }
-    
+
     var body: some View {
         ScrollViewReader { proxy in
             VStack {
@@ -54,27 +54,29 @@ struct PlatformsView: View {
         .navigationBarTitle("Platforms", displayMode: .inline)
         .scrollIndicators(.hidden)
     }
-    
+
     private func filteredPlatforms(for id: String) -> [GamePlatformModel] {
         viewModel.platforms.filter { $0.name.hasPrefix(id) }
     }
 }
 
 // MARK: - Platform Games View
+
 struct PlatformGamesView: View {
     var platform: GamePlatformModel
     @State private var games: [GameModel] = []
     @State private var currentOffset = 0
     @State private var isLoading = false
     @State private var areGamesAvailable: Bool = true
-    
+    @EnvironmentObject var networkManager: NetworkManager
+
     private let columns: [GridItem] = [
         GridItem(.flexible(), spacing: 16),
-        GridItem(.flexible(), spacing: 16)
+        GridItem(.flexible(), spacing: 16),
     ]
-    
+
     var body: some View {
-        ScrollViewReader { scrollViewProxy in
+        ScrollViewReader { _ in
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 20) {
                     ForEach(games) { game in
@@ -82,7 +84,10 @@ struct PlatformGamesView: View {
                             GameThumbnailCell(url: game.coverURL, name: game.name)
                         }
                     }
-                    
+                }
+                .padding()
+
+                if networkManager.isConnected {
                     if isLoading && areGamesAvailable {
                         ProgressView()
                             .progressViewStyle(CircularProgressViewStyle(tint: .accentColor))
@@ -93,8 +98,15 @@ struct PlatformGamesView: View {
                                 loadMoreContent()
                             }
                     }
+                } else {
+                    VStack {
+                        Spacer()
+                        Text("No connection found.\nConnect to the internet to load games.")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                    }
                 }
-                .padding()
             }
             .navigationBarTitle(platform.name, displayMode: .inline)
             .onAppear {
@@ -104,7 +116,7 @@ struct PlatformGamesView: View {
             }
         }
     }
-    
+
     private func loadMoreContent() {
         if !isLoading {
             isLoading = true
@@ -112,18 +124,18 @@ struct PlatformGamesView: View {
             fetchGames(offset: currentOffset)
         }
     }
-    
+
     private func fetchGames(offset: Int) {
         APIManager.shared.getGamesByPlatform(for: platform, currentOffset: offset) { result in
             isLoading = false
             switch result {
-            case .success(let popularGames):
+            case let .success(popularGames):
                 if popularGames.isEmpty {
                     areGamesAvailable = false
                 } else {
                     games.append(contentsOf: popularGames)
                 }
-            case .failure(let error):
+            case let .failure(error):
                 print("Failed to get popular games: \(error)")
             }
         }

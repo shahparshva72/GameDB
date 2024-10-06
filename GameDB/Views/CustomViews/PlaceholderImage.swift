@@ -16,7 +16,6 @@ struct PlaceholderImage: View {
     }
 }
 
-
 #Preview {
     PlaceholderImage()
 }

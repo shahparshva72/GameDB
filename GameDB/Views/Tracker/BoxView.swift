@@ -12,7 +12,7 @@ struct BoxView: View {
     var title: String
     var count: Int
     var categoryColor: Color
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
@@ -31,9 +31,9 @@ struct BoxView: View {
                     .fontWeight(.bold)
                     .foregroundColor(.white)
             }
-            
+
             Spacer()
-            
+
             Text(title)
                 .font(.subheadline)
                 .fontWeight(.semibold)

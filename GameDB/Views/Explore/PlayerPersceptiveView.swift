@@ -26,14 +26,15 @@ struct PerspectiveDetailView: View {
     @State private var error: Error?
     @State private var currentOffset: Int = 0
     @State private var areGamesAvailable: Bool = true
-    
+    @EnvironmentObject var networkManager: NetworkManager
+
     private let columns: [GridItem] = [
         GridItem(.flexible(), spacing: 16),
-        GridItem(.flexible(), spacing: 16)
+        GridItem(.flexible(), spacing: 16),
     ]
-    
+
     var body: some View {
-        ScrollViewReader { scrollViewProxy in
+        ScrollViewReader { _ in
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 20) {
                     ForEach(games) { game in
@@ -41,7 +42,10 @@ struct PerspectiveDetailView: View {
                             GameThumbnailCell(url: game.coverURL, name: game.name)
                         }
                     }
-                    
+                }
+                .padding()
+
+                if networkManager.isConnected {
                     if isLoading && areGamesAvailable {
                         ProgressView()
                             .progressViewStyle(CircularProgressViewStyle(tint: .accentColor))
@@ -52,8 +56,15 @@ struct PerspectiveDetailView: View {
                                 loadMoreContent()
                             }
                     }
+                } else {
+                    VStack {
+                        Spacer()
+                        Text("No connection found.\nConnect to the internet to load games.")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                    }
                 }
-                .padding()
             }
             .navigationTitle(perspective.description)
             .onAppear {
@@ -63,30 +74,29 @@ struct PerspectiveDetailView: View {
             }
         }
     }
-    
+
     private func loadMoreContent() {
         currentOffset += 30
         fetchGames(offset: currentOffset)
     }
-    
+
     private func fetchGames(offset: Int) {
         isLoading = true
         APIManager.shared.gamesByPlayerPerspective(for: perspective, currentOffset: offset) { result in
             isLoading = false
             switch result {
-            case .success(let fetchedGames):
+            case let .success(fetchedGames):
                 if fetchedGames.isEmpty {
                     areGamesAvailable = false
                 } else {
                     games.append(contentsOf: fetchedGames)
                 }
-            case .failure(let error):
+            case let .failure(error):
                 self.error = error
             }
         }
     }
 }
-
 
 struct PlayerPersceptiveView_Previews: PreviewProvider {
     static var previews: some View {

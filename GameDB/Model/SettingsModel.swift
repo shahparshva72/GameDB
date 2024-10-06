@@ -11,11 +11,11 @@ enum SettingsModel: String, Hashable, CaseIterable, Identifiable, View {
     case packages = "Packages Used"
     case feed = "Feed"
     case about = "About"
-    
+
     var id: String {
-        self.rawValue
+        rawValue
     }
-    
+
     var body: some View {
         switch self {
         case .packages:
@@ -26,7 +26,7 @@ enum SettingsModel: String, Hashable, CaseIterable, Identifiable, View {
             FeedSelectionView()
         }
     }
-    
+
     var icons: String {
         switch self {
         case .packages:
@@ -37,7 +37,7 @@ enum SettingsModel: String, Hashable, CaseIterable, Identifiable, View {
             return "newspaper"
         }
     }
-    
+
     var iconColor: Color {
         switch self {
         case .packages:

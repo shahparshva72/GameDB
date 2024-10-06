@@ -5,17 +5,17 @@
 //  Created by Parshva Shah on 10/10/23.
 //
 
-import Foundation
 import Combine
 import CoreData
+import Foundation
 
 class SummaryViewModel: ObservableObject {
     @Published var gameCounts: [SaveGamesCategory: Int] = [:]
     private var cancellables = Set<AnyCancellable>()
-    
+
     init() {
         fetchAllCounts()
-        
+
         // Observe context changes
         NotificationCenter.default.publisher(for: .NSManagedObjectContextObjectsDidChange, object: GameDataProvider.shared.viewContext)
             .sink { [weak self] _ in
@@ -27,7 +27,7 @@ class SummaryViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
-    
+
     func fetchAllCounts() {
         for category in SaveGamesCategory.allCases {
             fetchData(for: category)
@@ -36,7 +36,7 @@ class SummaryViewModel: ObservableObject {
 
     private func fetchData(for category: SaveGamesCategory) {
         let fetchRequest: NSFetchRequest<GameDataModel> = GameDataModel.gamesFetchRequest
-        
+
         switch category {
         case .favorite:
             fetchRequest.predicate = NSPredicate(format: "isFavorite == %@", NSNumber(value: true))
@@ -49,7 +49,7 @@ class SummaryViewModel: ObservableObject {
         case .playing:
             fetchRequest.predicate = NSPredicate(format: "isPlaying == %@", NSNumber(value: true))
         }
-        
+
         do {
             let count = try GameDataProvider.shared.viewContext.count(for: fetchRequest)
             DispatchQueue.main.async {
@@ -59,7 +59,7 @@ class SummaryViewModel: ObservableObject {
             print("Error fetching count for category \(category): \(error.localizedDescription)")
         }
     }
-    
+
     deinit {
         cancellables.forEach { $0.cancel() }
     }

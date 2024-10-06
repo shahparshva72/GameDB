@@ -6,11 +6,11 @@ enum ExploreCategory: String, CaseIterable {
     case themes = "Themes"
     case playerPerspective = "Player Perspective"
     case modes = "Modes"
-    
+
     var description: String {
-        return self.rawValue
+        return rawValue
     }
-    
+
     @ViewBuilder
     func showView() -> some View {
         switch self {

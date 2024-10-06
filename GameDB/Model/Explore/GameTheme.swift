@@ -17,7 +17,7 @@ enum GameTheme: Int, CaseIterable {
     case sandbox = 33
     case openWorld = 38
     case warfare = 39
-    case fourX = 41  // Represented as 4X (explore, expand, exploit, and exterminate)
+    case fourX = 41 // Represented as 4X (explore, expand, exploit, and exterminate)
     case educational = 34
     case mystery = 43
     case party = 40

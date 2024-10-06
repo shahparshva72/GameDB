@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GameListView: View {
     @ObservedObject var gamesList: GameList
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             if gamesList.isLoading {

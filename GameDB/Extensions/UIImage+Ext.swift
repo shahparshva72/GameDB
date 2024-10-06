@@ -7,28 +7,28 @@
 
 // Ref: https://medium.com/swlh/swiftui-read-the-average-color-of-an-image-c736adb43000
 
-import UIKit
 import SwiftUI
+import UIKit
 
 extension UIImage {
-
-    func resized(to size : CGSize) -> UIImage {
+    func resized(to size: CGSize) -> UIImage {
         let format = UIGraphicsImageRendererFormat()
         format.scale = 1
-        //disable HDR:
+        // disable HDR:
         format.preferredRange = .standard
         let renderer = UIGraphicsImageRenderer(size: size, format: format)
-        let result = renderer.image { (context) in
+        let result = renderer.image { _ in
             self.draw(in: CGRect(origin: CGPoint.zero, size: size))
         }
         return result
     }
+
     func getPixels() -> [UIColor] {
-        guard let cgImage = self.cgImage else {
+        guard let cgImage = cgImage else {
             return []
         }
         assert(cgImage.bitsPerPixel == 32, "only support 32 bit images")
-        assert(cgImage.bitsPerComponent == 8,  "only support 8 bit per channel")
+        assert(cgImage.bitsPerComponent == 8, "only support 8 bit per channel")
         guard let imageData = cgImage.dataProvider?.data as Data? else {
             return []
         }
@@ -38,9 +38,9 @@ extension UIImage {
         var result = [UIColor]()
         result.reserveCapacity(size)
         for pixel in buffer {
-            var r : UInt32 = 0
-            var g : UInt32 = 0
-            var b : UInt32 = 0
+            var r: UInt32 = 0
+            var g: UInt32 = 0
+            var b: UInt32 = 0
             if cgImage.byteOrderInfo == .orderDefault || cgImage.byteOrderInfo == .order32Big {
                 r = pixel & 255
                 g = (pixel >> 8) & 255
@@ -55,5 +55,4 @@ extension UIImage {
         }
         return result
     }
-
 }

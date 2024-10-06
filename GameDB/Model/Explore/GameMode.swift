@@ -7,7 +7,7 @@ enum GameMode: Int, CaseIterable {
     case splitScreen
     case mmo // Massively Multiplayer Online
     case battleRoyale
-    
+
     var name: String {
         switch self {
         case .singlePlayer:
@@ -24,7 +24,7 @@ enum GameMode: Int, CaseIterable {
             return "Battle Royale"
         }
     }
-    
+
     var url: URL? {
         switch self {
         case .singlePlayer:
@@ -41,7 +41,7 @@ enum GameMode: Int, CaseIterable {
             return URL(string: "https://www.igdb.com/game_modes/battle-royale")
         }
     }
-    
+
     func view() -> some View {
         VStack {
             Text(name)

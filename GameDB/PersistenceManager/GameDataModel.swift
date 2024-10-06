@@ -5,8 +5,8 @@
 //  Created by Parshva Shah on 10/7/23.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 final class GameDataModel: NSManagedObject, Identifiable {
     @NSManaged var id: Int
@@ -18,10 +18,10 @@ final class GameDataModel: NSManagedObject, Identifiable {
     @NSManaged var isToPlay: Bool
     @NSManaged var isUpcoming: Bool
     @NSManaged var isPlaying: Bool
-    
+
     override func awakeFromInsert() {
         super.awakeFromInsert()
-        
+
         setPrimitiveValue(false, forKey: "isFavorite")
         setPrimitiveValue(false, forKey: "isPlayed")
         setPrimitiveValue(false, forKey: "isToPlay")
