@@ -8,25 +8,26 @@
 import SwiftUI
 
 struct ShimmerView: View {
-    @State private var shimmerOffset: CGFloat = -200
+    @State private var isAnimating = false
 
     var body: some View {
-        ZStack {
-            Color.gray.opacity(0.3)
-            Color.white.opacity(0.2)
-                .mask(
-                    Rectangle()
-                        .fill(
-                            LinearGradient(gradient: Gradient(colors: [.clear, .white.opacity(0.5), .clear]), startPoint: .leading, endPoint: .trailing)
-                        )
-                        .rotationEffect(.degrees(70))
-                        .offset(x: shimmerOffset)
-                )
-        }
-        .onAppear {
-            withAnimation(Animation.linear(duration: 1.5).repeatForever(autoreverses: false)) {
-                shimmerOffset = 200
+        RoundedRectangle(cornerRadius: 10)
+            .fill(LinearGradient(
+                gradient: Gradient(colors: [.gray.opacity(0.3), .gray.opacity(0.1), .gray.opacity(0.3)]),
+                startPoint: .leading,
+                endPoint: .trailing
+            ))
+            .frame(height: 200)
+            .cornerRadius(10)
+            .shadow(radius: 5)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+            )
+            .onAppear {
+                withAnimation(Animation.linear(duration: 1.5).repeatForever(autoreverses: false)) {
+                    isAnimating.toggle()
+                }
             }
-        }
     }
 }

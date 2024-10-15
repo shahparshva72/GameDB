@@ -9,32 +9,31 @@ import SwiftUI
 
 struct NewsFeedView: View {
     @StateObject private var viewModel = NewsFeedViewModel()
+    private let shimmerCount = 10 // Fixed number of shimmer views to show
 
     var body: some View {
         NavigationStack {
-            ZStack {
-                if viewModel.isLoading {
-                    VStack(spacing: 10) {
-                        ForEach(viewModel.items, id: \.id) { _ in
+            ScrollView {
+                VStack(spacing: 10) {
+                    if viewModel.isLoading {
+                        ForEach(0..<shimmerCount, id: \.self) { _ in
                             ShimmerView()
                                 .frame(height: 200)
                                 .cornerRadius(20)
                         }
-                    }
-                    .padding()
-                } else {
-                    List(viewModel.items, id: \.id) { newsItem in
-                        ZStack {
-                            NewsFeedItemView(newsItem: newsItem)
-                            NavigationLink(destination: NewsContentView(urlString: newsItem.link)) {
-                                EmptyView()
+                    } else {
+                        ForEach(viewModel.items, id: \.id) { newsItem in
+                            ZStack {
+                                NewsFeedItemView(newsItem: newsItem)
+                                NavigationLink(destination: NewsContentView(urlString: newsItem.link)) {
+                                    EmptyView()
+                                }
+                                .opacity(0)
                             }
-                            .opacity(0)
                         }
-                        .listRowSeparator(.hidden)
                     }
-                    .listStyle(.inset)
                 }
+                .padding()
             }
             .navigationTitle("News Feed")
             .refreshable {

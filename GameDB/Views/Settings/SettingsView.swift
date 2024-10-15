@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @AppStorage("isDarkMode") private var isDarkMode = false
+    @AppStorage("isOnboardingComplete") private var isOnboardingComplete = true
 
     var body: some View {
         NavigationStack {
@@ -27,6 +28,11 @@ struct SettingsView: View {
                         }
                         .font(.headline)
                     }
+                    
+                    Label("Show Onboarding", systemImage: "arrow.clockwise.circle.fill")
+                        .onTapGesture {
+                            isOnboardingComplete.toggle()
+                        }
                 }
             }
             .listStyle(.insetGrouped)

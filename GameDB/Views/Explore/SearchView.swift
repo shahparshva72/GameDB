@@ -19,7 +19,7 @@ struct SearchView: View {
 
     var body: some View {
         NavigationStack {
-            VStack {
+            Group {
                 if viewModel.searchQuery.isEmpty && !isSearching {
                     ExploreView()
                 } else {

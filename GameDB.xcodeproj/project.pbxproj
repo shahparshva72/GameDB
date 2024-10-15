@@ -67,6 +67,8 @@
 		93EB2C3F2A8BA0FA00388BD8 /* PlatformsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EB2C3E2A8BA0FA00388BD8 /* PlatformsView.swift */; };
 		93EB2C472A8BA13200388BD8 /* GameModesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EB2C462A8BA13200388BD8 /* GameModesView.swift */; };
 		93EB2C492A8BA4EF00388BD8 /* PlayerPersceptiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EB2C482A8BA4EF00388BD8 /* PlayerPersceptiveView.swift */; };
+		93EC15502CBE07DA008CDEBD /* Tip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EC154F2CBE07D5008CDEBD /* Tip.swift */; };
+		93EC15522CBE0D11008CDEBD /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EC15512CBE0D11008CDEBD /* OnboardingView.swift */; };
 		93EE8A02283C1F5E00EDAE8E /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EE8A01283C1F5E00EDAE8E /* APIManager.swift */; };
 		93F4B8CA2AD1F3B40055FE70 /* GameDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F4B8C92AD1F3B40055FE70 /* GameDataProvider.swift */; };
 		93F4B8CC2AD1FCE40055FE70 /* GameDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F4B8CB2AD1FCE40055FE70 /* GameDataModel.swift */; };
@@ -134,6 +136,8 @@
 		93EB2C3E2A8BA0FA00388BD8 /* PlatformsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformsView.swift; sourceTree = "<group>"; };
 		93EB2C462A8BA13200388BD8 /* GameModesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModesView.swift; sourceTree = "<group>"; };
 		93EB2C482A8BA4EF00388BD8 /* PlayerPersceptiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerPersceptiveView.swift; sourceTree = "<group>"; };
+		93EC154F2CBE07D5008CDEBD /* Tip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tip.swift; sourceTree = "<group>"; };
+		93EC15512CBE0D11008CDEBD /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		93EE8A01283C1F5E00EDAE8E /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		93F4B8C92AD1F3B40055FE70 /* GameDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDataProvider.swift; sourceTree = "<group>"; };
 		93F4B8CB2AD1FCE40055FE70 /* GameDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDataModel.swift; sourceTree = "<group>"; };
@@ -174,6 +178,7 @@
 		18D53D852817D81F008A432D /* GameDB */ = {
 			isa = PBXGroup;
 			children = (
+				93EC154F2CBE07D5008CDEBD /* Tip.swift */,
 				930A0AF02AD5E88C000C8DC9 /* Info.plist */,
 				93D5B8E62ACDBA360074325D /* PersistenceManager */,
 				93BD788E2A200CAC003CC6FE /* Extensions */,
@@ -251,6 +256,7 @@
 				9343667C2A2857C50073E513 /* Settings */,
 				938250E92A290140003EC876 /* Games */,
 				939EC3802A1D6AA000658B09 /* News */,
+				93EC15512CBE0D11008CDEBD /* OnboardingView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -456,6 +462,7 @@
 				93E641E92A27A75500ED9FF9 /* DominantColorCache.swift in Sources */,
 				93EB2C2A2A8BA04E00388BD8 /* GenresModel.swift in Sources */,
 				93EB2C492A8BA4EF00388BD8 /* PlayerPersceptiveView.swift in Sources */,
+				93EC15522CBE0D11008CDEBD /* OnboardingView.swift in Sources */,
 				93AA81D12A3EC47100FE55F4 /* GamePlatformModel.swift in Sources */,
 				934DFAFB2BF54B5B00618CED /* NetworkManager.swift in Sources */,
 				93E888072A21268F0039FDE8 /* KMeansCluster.swift in Sources */,
@@ -499,6 +506,7 @@
 				93EE8A02283C1F5E00EDAE8E /* APIManager.swift in Sources */,
 				935359D92AEF252000B3F999 /* NewsAPIManager.swift in Sources */,
 				93EB2C472A8BA13200388BD8 /* GameModesView.swift in Sources */,
+				93EC15502CBE07DA008CDEBD /* Tip.swift in Sources */,
 				93273D7B2A1DA35300156840 /* NewsFeedViewModel.swift in Sources */,
 				93F4B8CA2AD1F3B40055FE70 /* GameDataProvider.swift in Sources */,
 			);

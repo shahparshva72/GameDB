@@ -18,22 +18,17 @@ struct AboutView: View {
                 Link("Twitter", destination: URL(string: "https://twitter.com/sparshva72")!)
                 Link("GitHub", destination: URL(string: "https://github.com/shahparshva72/")!)
             }
+            
+            // Just to be on safe side
+            Section(header: Text("Disclaimer").fontWeight(.bold)) {
+                Text("GameDB is not affiliated with or endorsed by any game companies, including but not limited to Apple, Sony, Microsoft, or Nintendo. All platform logos and trademarks are the property of their respective owners. Please note that the logos are used for identification purposes only, and no copyright infringement is intended.")
+                    .font(.footnote)
+                    .foregroundColor(.gray)
+                    .padding(.top)
+            }
         }
         .listStyle(.insetGrouped)
         .navigationTitle("About")
-    }
-}
-
-public extension Bundle {
-    var icon: UIImage? {
-        guard let icons = infoDictionary?["CFBundleIcons"] as? [String: Any],
-              let primaryIcon = icons["CFBundlePrimaryIcon"] as? [String: Any],
-              let iconFiles = primaryIcon["CFBundleIconFiles"] as? [String],
-              let lastIcon = iconFiles.last
-        else {
-            return nil
-        }
-        return UIImage(named: lastIcon)
     }
 }
 

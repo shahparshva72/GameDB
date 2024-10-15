@@ -7,16 +7,19 @@
 
 import IGDB_SWIFT_API
 import SwiftUI
+import TipKit
 
 struct HomeView: View {
     @ObservedObject var networkManager = NetworkManager()
     @StateObject private var gameList = GameList(platform: .ps5, category: .criticallyAcclaimed)
     @Namespace var namespace
     @State private var isInitialLoad = true
+    let switchCategory = SwitchGameCategoryTip()
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 8) {
+                TipView(switchCategory)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
                         ForEach(PlatformModel.allCases, id: \.self) { platform in

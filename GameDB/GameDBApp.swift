@@ -6,18 +6,42 @@
 //
 
 import SwiftUI
+import TipKit
 
 @main
 struct GameDBApp: App {
     @AppStorage("isDarkMode") private var isDarkMode = false
+    @AppStorage("isOnboardingComplete") private var isOnboardingComplete = false
     @StateObject var networkManager = NetworkManager()
-
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, GameDataProvider.shared.viewContext)
-                .environmentObject(networkManager)
-                .preferredColorScheme(isDarkMode ? .dark : .light)
+            Group {
+                if isOnboardingComplete {
+                    ContentView()
+                } else {
+                    OnboardingView(isOnboardingComplete: $isOnboardingComplete)
+                }
+            }
+            .environment(\.managedObjectContext, GameDataProvider.shared.viewContext)
+            .environmentObject(networkManager)
+            .preferredColorScheme(isDarkMode ? .dark : .light)
+            .onAppear {
+                setupTips()
+            }
+        }
+    }
+    
+    private func setupTips() {
+        Task {
+            do {
+                try Tips.configure([
+                    .displayFrequency(.immediate),
+                    .datastoreLocation(.applicationDefault)
+                ])
+            } catch {
+                print("Error configuring tips: \(error)")
+            }
         }
     }
 }

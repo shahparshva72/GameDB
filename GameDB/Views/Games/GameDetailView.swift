@@ -9,6 +9,7 @@ import AlertToast
 import Kingfisher
 import QuickLook
 import SwiftUI
+import TipKit
 
 // MARK: - GameDetailView
 
@@ -25,7 +26,6 @@ struct GameDetailView: View {
         Group {
             if let game = viewModel.game {
                 GameDetailContent(game: game, showSpoilers: $showSpoilers)
-                    .background(ignoresSafeAreaEdges: .top)
             } else if viewModel.error != nil {
                 VStack {
                     Text("Error fetching game")
@@ -146,7 +146,7 @@ struct GameDetailContent: View {
 
     var body: some View {
         ScrollView(showsIndicators: false) {
-            VStack {
+            VStack(spacing: 10) {
                 ZStack {
                     CoverImageView(url: game.coverURL)
                         .blur(radius: 5)

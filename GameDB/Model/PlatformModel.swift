@@ -12,7 +12,6 @@ import SwiftUI
 enum PlatformModel: Int, CaseIterable {
     case ps5 = 167
     case xboxSeriesX = 169
-    case xboxSeriesS = 170
     case nswitch = 130
     case pc = 6
     case ios = 39
@@ -26,8 +25,6 @@ enum PlatformModel: Int, CaseIterable {
             return "PS5"
         case .xboxSeriesX:
             return "Xbox Series X"
-        case .xboxSeriesS:
-            return "Xbox Series S"
         case .nswitch:
             return "Nintendo Switch"
         case .pc:
@@ -49,8 +46,6 @@ enum PlatformModel: Int, CaseIterable {
             return "ps5"
         case .xboxSeriesX:
             return "xboxX"
-        case .xboxSeriesS:
-            return "xboxS"
         case .nswitch:
             return "switch"
         case .pc:
@@ -70,7 +65,7 @@ enum PlatformModel: Int, CaseIterable {
         switch self {
         case .ps5:
             return Color.blue
-        case .xboxSeriesX, .xboxSeriesS:
+        case .xboxSeriesX:
             return Color.green
         case .nswitch:
             return Color.red
@@ -84,6 +79,27 @@ enum PlatformModel: Int, CaseIterable {
             return Color.blue
         case .mac:
             return Color.gray
+        }
+    }
+    
+    var image_id: String {
+        switch self {
+        case .ps5:
+            return "plos"
+        case .xboxSeriesX:
+            return "plfl"
+        case .nswitch:
+            return "plgu"
+        case .pc:
+            return "plim"
+        case .ios:
+            return "pl6f"
+        case .android:
+            return "pln3"
+        case .ps4:
+            return "pl6w"
+        case .mac:
+            return "plo3"
         }
     }
 }
