@@ -29,7 +29,7 @@ struct SettingsView: View {
                         .font(.headline)
                     }
                     
-                    Label("Show Onboarding", systemImage: "arrow.clockwise.circle.fill")
+                    Label("Show Onboarding", systemImage: "apps.iphone")
                         .onTapGesture {
                             isOnboardingComplete.toggle()
                         }

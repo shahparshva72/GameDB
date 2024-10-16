@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-// TODO: - Add view reload on network reconnection
-
 struct GameThemesView: View {
     var body: some View {
         List(GameTheme.allCases, id: \.self) { theme in

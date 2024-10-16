@@ -5,8 +5,8 @@
 //  Created by Parshva Shah on 11/9/23.
 //
 
-import Kingfisher
 import SwiftUI
+import Kingfisher
 
 struct GameThumbnailCell: View {
     var url: URL?
@@ -16,21 +16,27 @@ struct GameThumbnailCell: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            if let safeURL = url {
-                KFImage.url(safeURL)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: thumbnailWidth, height: thumbnailHeight)
-                    .clipped()
-                    .cornerRadius(10)
-            }
-            VStack(alignment: .leading, spacing: 10) {
-                Text(name)
-                    .font(.headline)
-                    .lineLimit(1)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
+            KFImage(url)
+                .placeholder {
+                    Image(systemName: "gamecontroller")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: thumbnailWidth * 0.5, height: thumbnailHeight * 0.5)
+                        .foregroundColor(.gray)
+                        .background(Color.gray.opacity(0.2))
+                }
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: thumbnailWidth, height: thumbnailHeight)
+                .clipped()
+                .cornerRadius(10)
+            
+            Text(name)
+                .font(.headline)
+                .lineLimit(1)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .frame(width: thumbnailWidth)
         .cornerRadius(10)
     }
 }

@@ -8,57 +8,48 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    init() {
+        let appearance = UITabBarAppearance()
+        appearance.configureWithDefaultBackground()
+        
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+        UITabBar.appearance().standardAppearance = appearance
+    }
+    
     var body: some View {
         TabView {
             HomeView()
                 .tabItem {
-                    VStack {
-                        Image(systemName: "gamecontroller")
-                            .imageScale(.large)
-                        Text("Home")
-                    }
+                    Label("Home", systemImage: "gamecontroller")
                 }
                 .tag(0)
-
+            
             NewsFeedView()
                 .tabItem {
-                    VStack {
-                        Image(systemName: "newspaper.fill")
-                            .imageScale(.large)
-                        Text("News")
-                    }
+                    Label("News", systemImage: "newspaper.fill")
                 }
                 .tag(1)
-
+            
             SearchView()
                 .tabItem {
-                    VStack {
-                        Image(systemName: "magnifyingglass")
-                            .imageScale(.large)
-                        Text("Search")
-                    }
+                    Label("Search", systemImage: "magnifyingglass")
                 }
                 .tag(2)
-
+            
             SummaryView()
                 .tabItem {
-                    VStack {
-                        Image(systemName: "chart.pie.fill")
-                        Text("Summary")
-                    }
+                    Label("Summary", systemImage: "chart.pie.fill")
                 }
                 .tag(3)
-
+            
             SettingsView()
                 .tabItem {
-                    VStack {
-                        Image(systemName: "gearshape.fill")
-                            .imageScale(.large)
-                        Text("Settings")
-                    }
+                    Label("Settings", systemImage: "gearshape.fill")
                 }
                 .tag(4)
         }
+        .tint(.accentColor)
     }
 }
 

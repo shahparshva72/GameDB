@@ -94,31 +94,26 @@ struct GameDetailView: View {
             alertType = .error(.red)
             showAlert = true
         } else {
-            do {
-                try GameDataProvider.shared.saveOrUpdateGame(
-                    id: game.id,
-                    name: game.name,
-                    releaseDate: game.releaseDate,
-                    coverURLString: game.coverURLString,
-                    category: category
-                )
+            GameDataProvider.shared.saveOrUpdateGame(
+                id: game.id,
+                name: game.name,
+                releaseDate: game.releaseDate,
+                coverURLString: game.coverURLString,
+                category: category
+            )
 
-                if isCategoryActive(category, for: game.id) {
-                    alertTitle = "Game Added"
-                    alertType = .complete(.green)
-                    showAlert = true
-                } else {
-                    alertTitle = "Game Removed"
-                    alertType = .complete(.blue)
-                    showAlert = true
-                }
-            } catch {
-                alertTitle = "Error saving game: \(error.localizedDescription)"
-                alertType = .error(.red)
+            if isCategoryActive(category, for: game.id) {
+                alertTitle = "Game Added"
+                alertType = .complete(.green)
+                showAlert = true
+            } else {
+                alertTitle = "Game Removed"
+                alertType = .complete(.blue)
                 showAlert = true
             }
         }
     }
+
 
     private func isCategoryActive(_ category: SaveGamesCategory, for gameID: Int) -> Bool {
         guard let gameDataModel = GameDataProvider.shared.fetchGameById(gameID) else { return false }

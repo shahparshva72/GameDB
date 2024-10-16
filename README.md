@@ -11,7 +11,3 @@ To install GameDB, follow these steps:
 2. Clone/download this repository.
 3. Open `GameDB.xcodeproj` in Xcode.
 4. Run the project on your preferred iOS simulator or real device.
-
-## Contact
-
-If you have any feedback or questions regarding the app, please contact me [@sparshva72](https://www.twitter.com/sparshva72)

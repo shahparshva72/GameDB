@@ -35,7 +35,7 @@ struct TagsView: View {
             .lineLimit(1)
             .truncationMode(.tail)
             .padding(.vertical, 5)
-            .padding(.horizontal, 10)
+            .padding(.horizontal, 5)
             .frame(minWidth: 75, idealWidth: 100, maxWidth: .infinity, alignment: .center)
             .background(color)
             .foregroundColor(.white)
