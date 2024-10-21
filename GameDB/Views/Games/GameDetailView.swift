@@ -114,7 +114,6 @@ struct GameDetailView: View {
         }
     }
 
-
     private func isCategoryActive(_ category: SaveGamesCategory, for gameID: Int) -> Bool {
         guard let gameDataModel = GameDataProvider.shared.fetchGameById(gameID) else { return false }
 
@@ -160,7 +159,6 @@ struct GameDetailContent: View {
 }
 
 // MARK: - CoverImageView
-
 struct CoverImageView: View {
     var url: URL?
 
@@ -186,7 +184,7 @@ struct GameInformationView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(game.name).font(.title2).padding(.vertical, 20)
+            Text(game.name).font(.title2)
             TagsGridView(tagNames: game.genres, tagColor: .accentColor, tagType: .genre)
             TagsGridView(tagNames: game.platforms, tagColor: .accentColor, tagType: .platform)
             GameDetailsSection(game: game)

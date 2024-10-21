@@ -94,7 +94,7 @@ struct HomeView: View {
                 }
             })
         }
-        .onChange(of: networkManager.isConnected) { oldValue, newValue in
+        .onChange(of: networkManager.isConnected) { _, newValue in
             if newValue && isInitialLoad {
                 gameList.fetchGames()
                 isInitialLoad = false

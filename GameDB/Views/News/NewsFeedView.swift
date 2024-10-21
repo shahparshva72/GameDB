@@ -16,7 +16,7 @@ struct NewsFeedView: View {
             ScrollView {
                 VStack(spacing: 10) {
                     if viewModel.isLoading {
-                        ForEach(0..<shimmerCount, id: \.self) { _ in
+                        ForEach(0 ..< shimmerCount, id: \.self) { _ in
                             ShimmerView()
                                 .frame(height: 200)
                                 .cornerRadius(20)

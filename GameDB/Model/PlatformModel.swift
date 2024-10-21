@@ -81,7 +81,7 @@ enum PlatformModel: Int, CaseIterable {
             return Color.gray
         }
     }
-    
+
     var image_id: String {
         switch self {
         case .ps5:

@@ -30,7 +30,7 @@ struct SearchView: View {
             .searchable(text: $viewModel.searchQuery,
                         placement: .navigationBarDrawer(displayMode: .always),
                         prompt: Text("Search for games"))
-            .onChange(of: viewModel.searchQuery) { oldValue, newValue in
+            .onChange(of: viewModel.searchQuery) { _, newValue in
                 viewModel.fetchSearchResults(for: newValue)
             }
         }

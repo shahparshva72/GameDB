@@ -12,23 +12,23 @@ struct OnboardingView: View {
     @Binding var isOnboardingComplete: Bool
     @State private var dragOffset: CGFloat = 0
     @State private var buttonOpacity: Double = 1
-    
+
     let pages: [OnboardingPage] = [
         OnboardingPage(title: "Welcome to GameDB", description: "Your personal video game tracker and explorer", imageName: "gamecontroller"),
         OnboardingPage(title: "Track Your Games", description: "Save games you've played, want to play, or are currently playing", imageName: "list.bullet.clipboard"),
         OnboardingPage(title: "Discover New Games", description: "Explore a vast library of games across different categories", imageName: "magnifyingglass"),
-        OnboardingPage(title: "Stay Updated", description: "Get the latest gaming news from popular feeds", imageName: "newspaper")
+        OnboardingPage(title: "Stay Updated", description: "Get the latest gaming news from popular feeds", imageName: "newspaper"),
     ]
-    
+
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 Color(.black).ignoresSafeArea(.all)
-                
-                VStack(spacing: 10) {
+
+                VStack(spacing: 20) {
                     Spacer()
                     ZStack {
-                        ForEach(0..<pages.count, id: \.self) { index in
+                        ForEach(0 ..< pages.count, id: \.self) { index in
                             OnboardingPageView(page: pages[index])
                                 .opacity(currentPage == index ? 1 : 0)
                                 .scaleEffect(currentPage == index ? 1 : 0.8)
@@ -42,12 +42,12 @@ struct OnboardingView: View {
                             }
                             .onEnded { value in
                                 let threshold = geometry.size.width * 0.2
-                                if value.translation.width > threshold && currentPage > 0 {
+                                if value.translation.width > threshold, currentPage > 0 {
                                     withAnimation(.spring()) {
                                         currentPage -= 1
                                         dragOffset = 0
                                     }
-                                } else if value.translation.width < -threshold && currentPage < pages.count - 1 {
+                                } else if value.translation.width < -threshold, currentPage < pages.count - 1 {
                                     withAnimation(.spring()) {
                                         currentPage += 1
                                         dragOffset = 0
@@ -59,12 +59,12 @@ struct OnboardingView: View {
                                 }
                             }
                     )
-                    
+
                     Spacer()
-                    
+
                     PageControl(numberOfPages: pages.count, currentPage: $currentPage)
                         .padding(.top)
-                                        
+
                     Button(action: {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                             if currentPage < pages.count - 1 {
@@ -101,7 +101,7 @@ struct OnboardingPage: Identifiable {
 struct OnboardingPageView: View {
     let page: OnboardingPage
     @State private var isAnimating = false
-    
+
     var body: some View {
         VStack(spacing: 20) {
             Image(systemName: page.imageName)
@@ -112,7 +112,7 @@ struct OnboardingPageView: View {
                 .scaleEffect(isAnimating ? 1.0 : 0.5)
                 .opacity(isAnimating ? 1.0 : 0.0)
                 .animation(.easeInOut(duration: 0.5).delay(0.2), value: isAnimating)
-            
+
             Text(page.title)
                 .font(.title)
                 .fontWeight(.bold)
@@ -120,7 +120,7 @@ struct OnboardingPageView: View {
                 .opacity(isAnimating ? 1.0 : 0.0)
                 .offset(y: isAnimating ? 0 : 20)
                 .animation(.easeInOut(duration: 0.5).delay(0.4), value: isAnimating)
-            
+
             Text(page.description)
                 .font(.body)
                 .multilineTextAlignment(.center)
@@ -142,10 +142,10 @@ struct OnboardingPageView: View {
 struct PageControl: View {
     let numberOfPages: Int
     @Binding var currentPage: Int
-    
+
     var body: some View {
         HStack(spacing: 8) {
-            ForEach(0..<numberOfPages, id: \.self) { page in
+            ForEach(0 ..< numberOfPages, id: \.self) { page in
                 Circle()
                     .fill(page == currentPage ? Color.white : Color.gray.opacity(0.5))
                     .frame(width: 8, height: 8)

@@ -13,7 +13,7 @@ struct GameDBApp: App {
     @AppStorage("isDarkMode") private var isDarkMode = false
     @AppStorage("isOnboardingComplete") private var isOnboardingComplete = false
     @StateObject var networkManager = NetworkManager()
-    
+
     var body: some Scene {
         WindowGroup {
             Group {
@@ -31,13 +31,13 @@ struct GameDBApp: App {
             }
         }
     }
-    
+
     private func setupTips() {
         Task {
             do {
                 try Tips.configure([
                     .displayFrequency(.immediate),
-                    .datastoreLocation(.applicationDefault)
+                    .datastoreLocation(.applicationDefault),
                 ])
             } catch {
                 print("Error configuring tips: \(error)")
