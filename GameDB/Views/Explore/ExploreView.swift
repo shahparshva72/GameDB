@@ -42,7 +42,6 @@ struct ExploreView: View {
                     }
                 }
             }
-            .padding(.horizontal)
         }
         .padding(.top)
         .navigationDestination(for: NavigationItem.self) { item in
