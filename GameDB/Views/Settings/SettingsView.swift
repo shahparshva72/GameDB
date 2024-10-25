@@ -18,7 +18,6 @@ struct SettingsView: View {
                     Toggle(isOn: $isDarkMode) {
                         Label("Dark Mode", systemImage: isDarkMode ? "moon.fill" : "sun.max.fill")
                     }
-                    .font(.headline)
                 }
 
                 Section(header: Text("General Settings")) {
@@ -26,7 +25,6 @@ struct SettingsView: View {
                         NavigationLink(destination: setting) {
                             Label(setting.rawValue, systemImage: setting.icons)
                         }
-                        .font(.headline)
                     }
 
                     Label("Show Onboarding", systemImage: "apps.iphone")
@@ -35,6 +33,7 @@ struct SettingsView: View {
                         }
                 }
             }
+            .font(.headline)
             .listStyle(.insetGrouped)
             .navigationBarTitle("Settings")
         }
