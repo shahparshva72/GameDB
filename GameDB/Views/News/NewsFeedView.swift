@@ -14,48 +14,62 @@ struct NewsFeedView: View {
     var body: some View {
         NavigationStack {
             GeometryReader { geometry in
-                ScrollView {
-                    if viewModel.items.isEmpty && !viewModel.isLoading {
-                        NewsErrorView(message: "No news found or network error.\nPlease try again later.") {
-                            await viewModel.fetchNewsFeed()
-                        }
-                        .frame(minHeight: geometry.size.height - 100) // Subtract some height for the navigation bar and tab bar
-                    } else {
-                        VStack(spacing: 10) {
-                            if viewModel.isLoading {
-                                ForEach(0 ..< shimmerCount, id: \.self) { _ in
-                                    ShimmerView()
-                                        .frame(height: 200)
-                                        .cornerRadius(20)
-                                }
-                            } else {
-                                ForEach(viewModel.items, id: \.id) { newsItem in
-                                    ZStack {
-                                        NewsFeedItemView(newsItem: newsItem)
-                                        NavigationLink(destination: NewsContentView(urlString: newsItem.link)) {
-                                            EmptyView()
-                                        }
-                                        .opacity(0)
-                                    }
-                                }
-                            }
-                        }
-                        .padding()
+                if viewModel.items.isEmpty && !viewModel.isLoading {
+                    NewsErrorView(message: "No news found or network error.\nPlease try again later.") {
+                        await viewModel.fetchNewsFeed()
                     }
+                    .frame(minHeight: geometry.size.height - 100) // Adjust for navigation and tab bars
+                } else {
+                    NewsContentListView(viewModel: viewModel, shimmerCount: shimmerCount)
                 }
             }
             .navigationTitle("News Feed")
             .refreshable {
                 await viewModel.fetchNewsFeed()
             }
-        }
-        .overlay(alignment: .bottom) {
-            PaginationControls(viewModel: viewModel)
-        }
-        .onAppear {
-            Task {
-                await viewModel.fetchNewsFeed()
+            .overlay(PaginationControls(viewModel: viewModel), alignment: .bottom)
+            .onAppear {
+                Task {
+                    await viewModel.fetchNewsFeed()
+                }
             }
+        }
+    }
+}
+
+struct NewsContentListView: View {
+    @ObservedObject var viewModel: NewsFeedViewModel
+    let shimmerCount: Int
+    
+    var body: some View {
+        VStack(spacing: 10) {
+            if viewModel.isLoading {
+                ShimmerListView(count: shimmerCount)
+            } else {
+                List(viewModel.items, id: \.id) { newsItem in
+                    ZStack {
+                        NewsFeedItemView(newsItem: newsItem)
+                        NavigationLink(destination: NewsContentView(urlString: newsItem.link)) {
+                            EmptyView()
+                        }
+                        .opacity(0)
+                    }
+                    .listRowSeparator(.hidden)
+                }
+                .listStyle(.inset)
+            }
+        }
+    }
+}
+
+struct ShimmerListView: View {
+    let count: Int
+    
+    var body: some View {
+        ForEach(0 ..< count, id: \.self) { _ in
+            ShimmerView()
+                .frame(height: 200)
+                .cornerRadius(20)
         }
     }
 }
@@ -109,7 +123,7 @@ struct NewsErrorView: View {
                     .foregroundColor(.white)
                     .padding(.horizontal, 24)
                     .padding(.vertical, 12)
-                    .background(Color.purple) // Match your app's accent color
+                    .background(Color.purple)
                     .cornerRadius(10)
             }
         }
