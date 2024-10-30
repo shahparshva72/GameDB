@@ -15,7 +15,6 @@ enum PlatformModel: Int, CaseIterable {
     case nswitch = 130
     case pc = 6
     case ios = 39
-    case android = 34
     case ps4 = 48
     case mac = 14
 
@@ -31,8 +30,6 @@ enum PlatformModel: Int, CaseIterable {
             return "PC"
         case .ios:
             return "iOS"
-        case .android:
-            return "Android"
         case .ps4:
             return "PS4"
         case .mac:
@@ -52,8 +49,6 @@ enum PlatformModel: Int, CaseIterable {
             return "pc"
         case .ios:
             return "ios"
-        case .android:
-            return "android"
         case .ps4:
             return "ps4"
         case .mac:
@@ -73,8 +68,6 @@ enum PlatformModel: Int, CaseIterable {
             return Color.blue
         case .ios:
             return Color.gray
-        case .android:
-            return Color.green
         case .ps4:
             return Color.blue
         case .mac:
@@ -94,8 +87,6 @@ enum PlatformModel: Int, CaseIterable {
             return "plim"
         case .ios:
             return "pl6f"
-        case .android:
-            return "pln3"
         case .ps4:
             return "pl6w"
         case .mac:
