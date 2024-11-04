@@ -38,7 +38,6 @@
 		938250E42A28FE76003EC876 /* PackagesUsedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938250E32A28FE76003EC876 /* PackagesUsedView.swift */; };
 		938250E62A28FE85003EC876 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938250E52A28FE85003EC876 /* AboutView.swift */; };
 		938DF63F2AFD5F0A0047FB63 /* GameThumbnailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938DF63E2AFD5F0A0047FB63 /* GameThumbnailCell.swift */; };
-		939327F82AFC52FA00DB0CA6 /* Platforms.json in Resources */ = {isa = PBXBuildFile; fileRef = 939327F72AFC52FA00DB0CA6 /* Platforms.json */; };
 		9395651F2A9E7E36001BBF56 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9395651E2A9E7E36001BBF56 /* SearchView.swift */; };
 		939BD51C2A550DF300421A99 /* GameListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939BD51B2A550DF300421A99 /* GameListView.swift */; };
 		939DF54D2881D2E80037F99A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939DF54C2881D2E80037F99A /* ContentView.swift */; };
@@ -108,7 +107,6 @@
 		938250E32A28FE76003EC876 /* PackagesUsedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackagesUsedView.swift; sourceTree = "<group>"; };
 		938250E52A28FE85003EC876 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		938DF63E2AFD5F0A0047FB63 /* GameThumbnailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameThumbnailCell.swift; sourceTree = "<group>"; };
-		939327F72AFC52FA00DB0CA6 /* Platforms.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Platforms.json; sourceTree = "<group>"; };
 		9395651E2A9E7E36001BBF56 /* SearchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		939BD51B2A550DF300421A99 /* GameListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameListView.swift; sourceTree = "<group>"; };
 		939DF54C2881D2E80037F99A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -358,7 +356,6 @@
 		93EE8A04283C1FF600EDAE8E /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				939327F72AFC52FA00DB0CA6 /* Platforms.json */,
 				93EB2C1E2A8BA04E00388BD8 /* Explore */,
 				18D53D9B2817DD6B008A432D /* GameModel.swift */,
 				93EB2C222A8BA04E00388BD8 /* PlatformModel.swift */,
@@ -439,7 +436,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				18D53D8E2817D823008A432D /* Preview Assets.xcassets in Resources */,
-				939327F82AFC52FA00DB0CA6 /* Platforms.json in Resources */,
 				9371231F2CC5CFE000873118 /* PrivacyInfo.xcprivacy in Resources */,
 				18D53D8B2817D823008A432D /* Assets.xcassets in Resources */,
 			);
@@ -662,7 +658,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = dev.thefourseas.GameDB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -701,7 +697,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.thefourseas.GameDB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

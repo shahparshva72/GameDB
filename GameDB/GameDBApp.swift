@@ -10,7 +10,7 @@ import TipKit
 
 @main
 struct GameDBApp: App {
-    @AppStorage("isDarkMode") private var isDarkMode = false
+    @AppStorage("isDarkMode") private var isDarkMode = true
     @AppStorage("isOnboardingComplete") private var isOnboardingComplete = false
     @StateObject var networkManager = NetworkManager()
 
