@@ -15,7 +15,7 @@ final class GameDataProvider {
     private let persistentContainer: NSPersistentContainer
 
     var viewContext: NSManagedObjectContext {
-        persistentContainer.viewContext
+        return persistentContainer.viewContext
     }
 
     var newContext: NSManagedObjectContext {
@@ -23,22 +23,35 @@ final class GameDataProvider {
     }
 
     private init() {
-        persistentContainer = NSPersistentContainer(name: "GameDataModel")
-        persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
+        let container = NSPersistentContainer(name: "GameDataModel")
+        
+        // Use App Group container directory
+        if let appGroupURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.dev.thefourseas.GameDB") {
+            let storeURL = appGroupURL.appendingPathComponent("GameDataModel.sqlite")
+            let description = NSPersistentStoreDescription(url: storeURL)
+            container.persistentStoreDescriptions = [description]
+        } else {
+            fatalError("Shared App Group container could not be created.")
+        }
 
-        let storeDescription = persistentContainer.persistentStoreDescriptions.first
-        storeDescription?.setOption(FileProtectionType.complete as NSObject, forKey: NSPersistentStoreFileProtectionKey)
-
-        persistentContainer.loadPersistentStores { _, error in
+        container.loadPersistentStores { (storeDescription, error) in
             if let error = error as NSError? {
-                fatalError("Failed to load store: \(error.localizedDescription)")
+                fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         }
+
+        self.persistentContainer = container
     }
 }
 
 extension GameDataProvider {
-    func saveOrUpdateGame(id: Int, name: String, releaseDate: Date, coverURLString: String, category: SaveGamesCategory) {
+    func saveOrUpdateGame(
+        id: Int,
+        name: String,
+        releaseDate: Date,
+        coverURLString: String,
+        category: SaveGamesCategory
+    ) {
         let fetchRequest: NSFetchRequest<GameDataModel> = GameDataModel.fetchRequest() as! NSFetchRequest<GameDataModel>
         fetchRequest.predicate = NSPredicate(format: "id == %d", id)
 

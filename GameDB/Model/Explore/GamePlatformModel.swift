@@ -25,19 +25,27 @@ class GamePlatformViewModel: ObservableObject {
     }
 
     private func loadPlatforms() {
-        guard let url = Bundle.main.url(forResource: "Platforms", withExtension: "json") else {
-            print("Platforms.json file not found")
+        guard let url = URL(string: "https://gist.githubusercontent.com/shahparshva72/17b5703e77be6f0db890a0b7d49e340f/raw/ffb3131fcb7e126bf4d276aa576906211b5283f9/platforms.json") else {
+            print("Invalid URL")
             return
         }
 
-        do {
-            let data = try Data(contentsOf: url, options: .dataReadingMapped)
-            let decoder = JSONDecoder()
-            allPlatforms = try decoder.decode([GamePlatformModel].self, from: data)
-            platforms = allPlatforms
-        } catch {
-            print("Error loading platforms: \(error.localizedDescription)")
-        }
+        URLSession.shared.dataTaskPublisher(for: url)
+            .map(\.data)
+            .decode(type: [GamePlatformModel].self, decoder: JSONDecoder())
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { completion in
+                    if case .failure(let error) = completion {
+                        print("Error loading platforms: \(error.localizedDescription)")
+                    }
+                },
+                receiveValue: { [weak self] platforms in
+                    self?.allPlatforms = platforms
+                    self?.platforms = platforms
+                }
+            )
+            .store(in: &cancellables)
     }
 
     private func setupSearch() {

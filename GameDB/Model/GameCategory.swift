@@ -17,16 +17,26 @@ enum GameCategory: String, CaseIterable {
 
     func getQuery(for platform: PlatformModel) -> String {
         let unixTimestamp = Int(Date().timeIntervalSince1970)
+        let baseFields = "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id"
+        let baseWhere = "platforms = \(platform.rawValue) & themes != 42"
+        var additionalConditions: String
+        var sortCriteria: String
 
         switch self {
         case .criticallyAcclaimed:
-            return "fields name, first_release_date, id, rating, aggregated_rating, involved_companies.company.name, cover.image_id; where (platforms = (\(platform.rawValue)) & aggregated_rating >= 85 & themes != 42); sort rating desc; limit 15;"
+            additionalConditions = "aggregated_rating >= 85"
+            sortCriteria = "rating desc"
         case .newReleases:
-            return "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (platforms = \(platform.rawValue) & first_release_date < \(unixTimestamp)  & themes != 42); sort first_release_date desc; limit 15;"
+            additionalConditions = "first_release_date < \(unixTimestamp)"
+            sortCriteria = "first_release_date desc"
         case .upcoming:
-            return "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (platforms = \(platform.rawValue) & first_release_date >= \(unixTimestamp) & themes != 42); sort first_release_date asc; limit 15;"
+            additionalConditions = "first_release_date >= \(unixTimestamp)"
+            sortCriteria = "first_release_date asc"
         case .favorites:
-            return "fields name, first_release_date, id, rating, involved_companies.company.name, cover.image_id; where (platforms = \(platform.rawValue) & themes != 42); sort follows desc; limit 15;"
+            additionalConditions = "rating > 70"
+            sortCriteria = "follows asc"
         }
+
+        return "\(baseFields); where (\(baseWhere) & \(additionalConditions)); sort \(sortCriteria); limit 15;"
     }
 }
