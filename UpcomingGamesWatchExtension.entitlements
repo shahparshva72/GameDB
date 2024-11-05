@@ -2,11 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>LSMinimumSystemVersion</key>
-	<string>15.0</string>
-    <key>UIAppFonts</key>
-    <array>
-        <string>PressStart2P-Regular.ttf</string>
-    </array>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.dev.thefourseas.GameDB</string>
+	</array>
 </dict>
 </plist>

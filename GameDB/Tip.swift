@@ -29,3 +29,14 @@ struct SwitchGameCategoryTip: Tip {
         Text("Tap to browse games by category, including highly rated, new releases, upcoming titles, and fan favorites.")
     }
 }
+
+struct UpcomingGamesWidgetTip: Tip {
+    var title: Text {
+        Text("Upcoming Games Widget")
+    }
+    
+    var message: Text? {
+        Text("Add the Upcoming Games widget to your home screen to see the latest upcoming games.")
+    }
+}
+
