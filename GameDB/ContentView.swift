@@ -14,6 +14,10 @@ struct ContentView: View {
 
         UITabBar.appearance().scrollEdgeAppearance = appearance
         UITabBar.appearance().standardAppearance = appearance
+        // Custom font for tab bar
+        UITabBarItem.appearance().setTitleTextAttributes([
+            NSAttributedString.Key.font: UIFont(name: "PressStart2P-Regular", size: 15)!,
+        ], for: .normal)
     }
 
     var body: some View {

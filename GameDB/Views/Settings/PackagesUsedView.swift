@@ -8,27 +8,36 @@
 import SwiftUI
 
 struct PackagesUsedView: View {
+    @AppStorage("isDarkMode") private var isDarkMode = true
+
     let packages = [
         (name: "IGBD-Swift-API", url: "https://github.com/husnjak/IGDB-SWIFT-API.git"),
         (name: "Kingfisher", url: "https://github.com/onevcat/Kingfisher.git"),
         (name: "AlertToast", url: "https://github.com/elai950/AlertToast.git"),
     ]
 
+    // Colors for Light and Dark modes
+    private var linkColor: Color {
+        isDarkMode ? .cyan : .green
+    }
+
+    private var backgroundColor: Color {
+        isDarkMode ? .black : .white
+    }
+
     var body: some View {
         List(packages, id: \.0) { package in
             Link(package.name, destination: URL(string: package.url)!)
-                .font(.headline)
+                .pixelatedFont(size: 12)
+                .foregroundColor(linkColor)
                 .padding(.vertical, 5)
         }
         .navigationTitle("Packages Used")
-    }
-
-    private func openURL(_ url: URL) {
-        UIApplication.shared.open(url)
+        .background(backgroundColor.edgesIgnoringSafeArea(.all))
     }
 }
 
-struct CreditsView_Previews: PreviewProvider {
+struct PackagesUsedView_Previews: PreviewProvider {
     static var previews: some View {
         PackagesUsedView()
     }

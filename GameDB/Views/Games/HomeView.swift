@@ -63,7 +63,6 @@ struct HomeView: View {
                     VStack {
                         Spacer()
                         Text("No connection found.\nConnect to the internet to load games.")
-                            .font(.headline)
                             .foregroundColor(.secondary)
                         Spacer()
                     }
@@ -73,7 +72,6 @@ struct HomeView: View {
             .toolbar(content: {
                 ToolbarItem(placement: .topBarLeading) {
                     Text("Home")
-                        .font(.title)
                         .fontWeight(.bold)
                         .foregroundColor(.primary)
                         .fontWidth(.standard)
@@ -94,6 +92,7 @@ struct HomeView: View {
                 }
             })
         }
+        .pixelatedFont(size: 16, color: .accentColor)
         .onChange(of: networkManager.isConnected) { _, newValue in
             if newValue && isInitialLoad {
                 gameList.fetchGames()

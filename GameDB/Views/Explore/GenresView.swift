@@ -10,9 +10,15 @@ import SwiftUI
 struct GenresView: View {
     var body: some View {
         List(GameGenre.allCases, id: \.self) { genre in
-            NavigationLink(destination: GenreDetailView(genre: genre)) {
-                Text(genre.description)
+            ZStack(alignment: .leading) {
+                NavigationLink(destination: GenreDetailView(genre: genre)) {
+                    Text(genre.description)
+                        .pixelatedFont(size: 14)
+                        .lineSpacing(4)
+                }
             }
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
         }
         .navigationTitle("Game Genres")
         .navigationBarTitleDisplayMode(.inline)
@@ -48,10 +54,16 @@ struct GenreDetailView: View {
                 if networkManager.isConnected {
                     if isLoading && areGamesAvailable {
                         ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: .accentColor))
+                            .progressViewStyle(CircularProgressViewStyle(tint: .green)) // Bright color for loading
                             .scaleEffect(2.0)
                     } else if areGamesAvailable {
                         Text("Load More")
+                            .pixelatedFont(size: 16)
+                            .padding(.vertical, 10)
+                            .padding(.horizontal, 20)
+                            .background(Color(hex: "#F43F5E"))
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
                             .onAppear {
                                 loadMoreContent()
                             }
@@ -60,12 +72,14 @@ struct GenreDetailView: View {
                     VStack {
                         Spacer()
                         Text("No connection found.\nConnect to the internet to load games.")
-                            .font(.headline)
-                            .foregroundColor(.secondary)
+                            .pixelatedFont(size: 12)
+                            .foregroundColor(.gray)
+                            .multilineTextAlignment(.center)
                         Spacer()
                     }
                 }
             }
+            .background(Color.black) // Keep background dark
             .navigationTitle(genre.description)
             .onAppear {
                 fetchGames(offset: currentOffset)

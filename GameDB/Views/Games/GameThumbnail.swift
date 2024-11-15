@@ -30,7 +30,9 @@ struct GameThumbnail: View {
                 }
 
             Text(name)
-                .font(Font.system(size: 20, weight: .bold, design: .rounded))
+                .pixelatedFont(size: 12)
+                .lineSpacing(4)
+                .multilineTextAlignment(.center)
                 .foregroundColor(dominantUIColor.perceivedBrightness < 0.5 ? Color(hex: "#FAFAFA") : Color(hex: "#121212"))
                 .padding(EdgeInsets(top: 16, leading: 8, bottom: 16, trailing: 16))
                 .background(

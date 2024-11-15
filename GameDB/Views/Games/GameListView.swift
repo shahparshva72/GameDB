@@ -24,7 +24,6 @@ struct GameListView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if gamesList.games.isEmpty {
                 Text("No games found. Refresh to retry if an error.")
-                    .font(.subheadline)
                     .foregroundColor(.secondary)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             } else {
@@ -40,6 +39,7 @@ struct GameListView: View {
                 .transition(AnyTransition.opacity.combined(with: .move(edge: .trailing)).animation(.easeInOut(duration: 0.8)))
             }
         }
+        .pixelatedFont(size: 12)
         .padding(.top, 5)
     }
 }

@@ -17,40 +17,50 @@ struct BoxView: View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
                 Image(systemName: symbolName)
-                    .font(.headline.weight(.bold))
+                    .font(.headline.weight(.bold).width(.expanded))
                     .padding(10)
-                    .background(Color.white.opacity(0.2))
+                    .background(Color.white.opacity(0.3))
                     .clipShape(Circle())
                     .foregroundColor(.white)
-                    .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 4)
+                    .shadow(color: categoryColor.opacity(0.8), radius: 10, x: 0, y: 5) // Neon-like glow
 
                 Spacer()
 
                 Text("\(count)")
-                    .font(.title3)
+                    .pixelatedFont(size: 16)
                     .fontWeight(.bold)
                     .foregroundColor(.white)
+                    .shadow(color: .black, radius: 1, x: 0, y: 2)
             }
 
             Spacer()
 
             Text(title)
-                .font(.subheadline)
+                .pixelatedFont(size: 12)
                 .fontWeight(.semibold)
                 .foregroundColor(.white)
-                .truncationMode(.tail)
-                .lineLimit(1)
+                .lineLimit(2)
+                .multilineTextAlignment(.leading)
+                .lineSpacing(4)
+                .shadow(color: .black, radius: 1, x: 0, y: 2)
         }
         .padding(12)
-        .frame(width: 180, height: 120)
-        .background(LinearGradient(gradient: Gradient(colors: [categoryColor, categoryColor.opacity(0.8)]), startPoint: .topLeading, endPoint: .bottomTrailing))
-        .cornerRadius(20)
-        .overlay(
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(Color.white.opacity(0.2), lineWidth: 1)
+        .aspectRatio(3 / 2, contentMode: .fill)
+        .background(
+            LinearGradient(
+                gradient: Gradient(colors: [categoryColor, categoryColor.opacity(0.7)]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
         )
-        .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 10)
+        .cornerRadius(15)
+        .overlay(
+            RoundedRectangle(cornerRadius: 15)
+                .stroke(Color.white.opacity(0.4), lineWidth: 2) // Pixelated border effect
+        )
+//        .shadow(color: categoryColor.opacity(0.6), radius: 10, x: 0, y: 8) // Deeper shadow for depth
         .accessibilityElement(children: .ignore)
         .accessibility(label: Text("\(title) \(count)"))
+        .scaleEffect(1.05) // Slight enlargement for emphasis
     }
 }

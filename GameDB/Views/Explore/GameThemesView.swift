@@ -12,7 +12,11 @@ struct GameThemesView: View {
         List(GameTheme.allCases, id: \.self) { theme in
             NavigationLink(destination: GameThemeDetailView(theme: theme)) {
                 Text(theme.description)
+                    .pixelatedFont(size: 16)
+                    .lineSpacing(4)
             }
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
         }
         .navigationTitle("Game Themes")
         .navigationBarTitleDisplayMode(.inline)

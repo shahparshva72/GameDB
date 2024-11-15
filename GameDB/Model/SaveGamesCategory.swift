@@ -38,3 +38,5 @@ enum SaveGamesCategory: String, CaseIterable {
         }
     }
 }
+
+extension SaveGamesCategory {}

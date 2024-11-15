@@ -24,7 +24,7 @@ final class GameDataProvider {
 
     private init() {
         let container = NSPersistentContainer(name: "GameDataModel")
-        
+
         // Use App Group container directory
         if let appGroupURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.dev.thefourseas.GameDB") {
             let storeURL = appGroupURL.appendingPathComponent("GameDataModel.sqlite")
@@ -34,13 +34,13 @@ final class GameDataProvider {
             fatalError("Shared App Group container could not be created.")
         }
 
-        container.loadPersistentStores { (storeDescription, error) in
+        container.loadPersistentStores { _, error in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         }
 
-        self.persistentContainer = container
+        persistentContainer = container
     }
 }
 

@@ -12,14 +12,17 @@ struct GameModesView: View {
         List(GameMode.allCases, id: \.self) { mode in
             NavigationLink(destination: GameModeDetailView(mode: mode)) {
                 Text(mode.name)
+                    .pixelatedFont(size: 14)
+                    .lineSpacing(4)
             }
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
         }
         .navigationTitle("Game Modes")
         .navigationBarTitleDisplayMode(.inline)
+        .pixelatedFont(size: 18)
     }
 }
-
-import SwiftUI
 
 struct GameModeDetailView: View {
     let mode: GameMode
@@ -42,6 +45,7 @@ struct GameModeDetailView: View {
                     ForEach(games) { game in
                         NavigationLink(destination: GameDetailView(gameID: game.id)) {
                             GameThumbnailCell(url: game.coverURL, name: game.name)
+                                .pixelatedFont(size: 12)
                         }
                     }
                 }
@@ -54,6 +58,7 @@ struct GameModeDetailView: View {
                             .scaleEffect(2.0)
                     } else if areGamesAvailable {
                         Text("Load More")
+                            .pixelatedFont(size: 12)
                             .onAppear {
                                 loadMoreContent()
                             }
@@ -69,6 +74,7 @@ struct GameModeDetailView: View {
                 }
             }
             .navigationTitle(mode.name)
+            .font(.custom("PressStart2P-Regular", size: 16)) // Applied custom font to navigation title
             .onAppear {
                 if games.isEmpty {
                     fetchGames(offset: currentOffset)

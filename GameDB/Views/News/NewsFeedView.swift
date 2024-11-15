@@ -9,8 +9,7 @@ import SwiftUI
 
 struct NewsFeedView: View {
     @StateObject private var viewModel = NewsFeedViewModel()
-    private let shimmerCount = 10
-    
+
     var body: some View {
         NavigationStack {
             GeometryReader { geometry in
@@ -20,10 +19,15 @@ struct NewsFeedView: View {
                     }
                     .frame(minHeight: geometry.size.height - 100) // Adjust for navigation and tab bars
                 } else {
-                    NewsContentListView(viewModel: viewModel, shimmerCount: shimmerCount)
+                    NewsContentListView(viewModel: viewModel)
                 }
             }
-            .navigationTitle("News Feed")
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Text("News Feed")
+                        .pixelatedFont(size: 20)
+                }
+            }
             .refreshable {
                 await viewModel.fetchNewsFeed()
             }
@@ -39,12 +43,12 @@ struct NewsFeedView: View {
 
 struct NewsContentListView: View {
     @ObservedObject var viewModel: NewsFeedViewModel
-    let shimmerCount: Int
-    
+
     var body: some View {
         VStack(spacing: 10) {
             if viewModel.isLoading {
-                ShimmerListView(count: shimmerCount)
+                ShimmerListView()
+                    .padding([.horizontal, .top])
             } else {
                 List(viewModel.items, id: \.id) { newsItem in
                     ZStack {
@@ -63,10 +67,8 @@ struct NewsContentListView: View {
 }
 
 struct ShimmerListView: View {
-    let count: Int
-    
     var body: some View {
-        ForEach(0 ..< count, id: \.self) { _ in
+        ForEach(0 ..< 10, id: \.self) { _ in
             ShimmerView()
                 .frame(height: 200)
                 .cornerRadius(20)
@@ -76,7 +78,7 @@ struct ShimmerListView: View {
 
 struct PaginationControls: View {
     @ObservedObject var viewModel: NewsFeedViewModel
-    
+
     var body: some View {
         HStack {
             Button("Previous") {
@@ -85,9 +87,9 @@ struct PaginationControls: View {
                 }
             }
             .disabled(viewModel.currentPage == 1 || viewModel.isLoading)
-            
+
             Spacer()
-            
+
             Button("Next") {
                 Task {
                     await viewModel.loadNextPage()
@@ -95,6 +97,7 @@ struct PaginationControls: View {
             }
             .disabled(!viewModel.hasMoreNews || viewModel.isLoading)
         }
+        .pixelatedFont(size: 14)
         .padding()
         .background(.ultraThinMaterial)
     }
@@ -103,16 +106,17 @@ struct PaginationControls: View {
 struct NewsErrorView: View {
     let message: String
     let retryAction: () async -> Void
-    
+
     var body: some View {
         VStack(spacing: 16) {
             Image(systemName: "newspaper.fill")
                 .font(.system(size: 50))
                 .foregroundColor(.gray)
-            
+
             Text(message)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.gray)
+                .pixelatedFont(size: 14)
             
             Button(action: {
                 Task {
@@ -125,12 +129,12 @@ struct NewsErrorView: View {
                     .padding(.vertical, 12)
                     .background(Color.purple)
                     .cornerRadius(10)
+                    .pixelatedFont(size: 14)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
 }
-
 
 struct NewsFeedView_Previews: PreviewProvider {
     static var previews: some View {

@@ -26,11 +26,15 @@ struct PlatformsView: View {
                             ForEach(filteredPlatforms(for: id), id: \.id) { platform in
                                 NavigationLink(destination: PlatformGamesView(platform: platform)) {
                                     Text(platform.name)
+                                        .pixelatedFont(size: 14)
+                                        .lineSpacing(4)
                                 }
+                                .listRowBackground(Color.clear)
                             }
                             .id(id)
                         } header: {
                             Text(id)
+                                .pixelatedFont(size: 14)
                         }
                     }
                     .padding(.trailing, 5)
@@ -38,13 +42,15 @@ struct PlatformsView: View {
                     .overlay(alignment: .trailing) {
                         QuickScroll(sectionIdentifiers: sectionIdentifiers, proxy: proxy) { item in
                             Text(item)
+                                .pixelatedFont(size: 14)
+                                .padding(.vertical, 5)
                         }
                     }
                 } else {
                     List(viewModel.platforms, id: \.id) { platform in
                         NavigationLink(destination: PlatformGamesView(platform: platform)) {
                             Text(platform.name)
-                                .font(.footnote)
+                                .pixelatedFont(size: 14)
                         }
                     }
                 }

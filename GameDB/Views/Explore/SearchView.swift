@@ -26,12 +26,17 @@ struct SearchView: View {
                     searchResultsList
                 }
             }
-            .navigationTitle("Search")
             .searchable(text: $viewModel.searchQuery,
                         placement: .navigationBarDrawer(displayMode: .always),
                         prompt: Text("Search for games"))
             .onChange(of: viewModel.searchQuery) { _, newValue in
                 viewModel.fetchSearchResults(for: newValue)
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Text("Search")
+                        .pixelatedFont(size: 20)
+                }
             }
         }
     }

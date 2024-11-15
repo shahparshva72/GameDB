@@ -11,7 +11,6 @@ struct OnboardingView: View {
     @State private var currentPage = 0
     @Binding var isOnboardingComplete: Bool
     @State private var dragOffset: CGFloat = 0
-    @State private var buttonOpacity: Double = 1
 
     let pages: [OnboardingPage] = [
         OnboardingPage(title: "Welcome to GamingQuest", description: "Your personal video game tracker and explorer", imageName: "gamecontroller"),
@@ -23,74 +22,90 @@ struct OnboardingView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Color(.black).ignoresSafeArea(.all)
+                LinearGradient(
+                    gradient: Gradient(colors: [.black, .black.opacity(0.8)]),
+                    startPoint: .topTrailing,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
 
                 VStack(spacing: 20) {
                     Spacer()
+
                     ZStack {
                         ForEach(0 ..< pages.count, id: \.self) { index in
-                            OnboardingPageView(page: pages[index])
-                                .opacity(currentPage == index ? 1 : 0)
-                                .scaleEffect(currentPage == index ? 1 : 0.8)
-                                .offset(x: CGFloat(index - currentPage) * geometry.size.width + dragOffset, y: 0)
+                            if currentPage == index {
+                                OnboardingPageView(page: pages[index])
+                                    .transition(.opacity.combined(with: .scale))
+                                    .scaleEffect(currentPage == index ? 1 : 0.8)
+                                    .offset(x: CGFloat(index - currentPage) * geometry.size.width + dragOffset)
+                            }
                         }
                     }
+                    .padding(.all)
                     .gesture(
                         DragGesture()
-                            .onChanged { value in
-                                dragOffset = value.translation.width
-                            }
+                            .onChanged { value in dragOffset = value.translation.width }
                             .onEnded { value in
                                 let threshold = geometry.size.width * 0.2
                                 if value.translation.width > threshold, currentPage > 0 {
-                                    withAnimation(.spring()) {
-                                        currentPage -= 1
-                                        dragOffset = 0
-                                    }
+                                    withAnimation(.spring()) { currentPage -= 1 }
                                 } else if value.translation.width < -threshold, currentPage < pages.count - 1 {
-                                    withAnimation(.spring()) {
-                                        currentPage += 1
-                                        dragOffset = 0
-                                    }
-                                } else {
-                                    withAnimation(.spring()) {
-                                        dragOffset = 0
-                                    }
+                                    withAnimation(.spring()) { currentPage += 1 }
                                 }
+                                dragOffset = 0
                             }
                     )
 
                     Spacer()
 
-                    PageControl(numberOfPages: pages.count, currentPage: $currentPage)
-                        .padding(.top)
+                    ProgressBar(progress: CGFloat(currentPage + 1) / CGFloat(pages.count))
+                        .frame(width: geometry.size.width * 0.6, height: 10)
+                        .padding(.bottom, 20)
 
-                    Button(action: {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            if currentPage < pages.count - 1 {
-                                withAnimation(.spring()) {
-                                    currentPage += 1
-                                }
-                            } else {
-                                isOnboardingComplete = true
-                            }
+                    if currentPage < pages.count - 1 {
+                        Button(action: {
+                            withAnimation(.spring()) { currentPage += 1 }
+                        }) {
+                            Text("Next")
+                                .pixelatedFont(size: 14)
+                                .foregroundColor(.white)
+                                .frame(width: 200, height: 50)
+                                .background(Color.purple)
+                                .cornerRadius(10)
                         }
-                    }) {
-                        Text(currentPage == pages.count - 1 ? "Get Started" : "Next")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .frame(width: 200, height: 50)
-                            .background(Color.accentColor)
-                            .cornerRadius(10)
+                        .padding(.bottom, 50)
+                    } else {
+                        Button(action: {
+                            isOnboardingComplete = true
+                        }) {
+                            Text("Get Started")
+                                .pixelatedFont(size: 14)
+                                .foregroundColor(.white)
+                                .frame(width: 200, height: 50)
+                                .background(
+                                    LinearGradient(
+                                        gradient: Gradient(
+                                            colors: [.purple, .purple.opacity(0.8)]
+                                        ),
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .cornerRadius(10)
+                                .scaleEffect(1.1)
+                        }
+                        .padding(.bottom, 50)
+                        .scaleEffect(1.05)
+                        .animation(Animation.easeInOut(duration: 0.8).repeatForever(autoreverses: true), value: currentPage)
                     }
-                    .padding(.bottom, 50)
-                    .opacity(buttonOpacity)
                 }
             }
         }
     }
 }
 
+// Onboarding Page model and OnboardingPageView
 struct OnboardingPage: Identifiable {
     let id = UUID()
     let title: String
@@ -108,50 +123,46 @@ struct OnboardingPageView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 100, height: 100)
+                .padding()
                 .foregroundColor(.white)
+                .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 4)
                 .scaleEffect(isAnimating ? 1.0 : 0.5)
-                .opacity(isAnimating ? 1.0 : 0.0)
-                .animation(.easeInOut(duration: 0.5).delay(0.2), value: isAnimating)
+                .animation(.easeInOut(duration: 0.6), value: isAnimating)
 
             Text(page.title)
-                .font(.title)
-                .fontWeight(.bold)
+                .pixelatedFont(size: 24)
                 .foregroundColor(.white)
                 .opacity(isAnimating ? 1.0 : 0.0)
-                .offset(y: isAnimating ? 0 : 20)
-                .animation(.easeInOut(duration: 0.5).delay(0.4), value: isAnimating)
+                .animation(.easeInOut(duration: 0.5).delay(0.3), value: isAnimating)
 
             Text(page.description)
-                .font(.body)
+                .pixelatedFont(size: 14)
                 .multilineTextAlignment(.center)
-                .foregroundColor(.gray)
+                .lineSpacing(4)
+                .foregroundColor(.white)
                 .padding(.horizontal)
                 .opacity(isAnimating ? 1.0 : 0.0)
-                .offset(y: isAnimating ? 0 : 20)
-                .animation(.easeInOut(duration: 0.5).delay(0.6), value: isAnimating)
+                .animation(.easeInOut(duration: 0.5).delay(0.4), value: isAnimating)
         }
-        .onAppear {
-            isAnimating = true
-        }
-        .onDisappear {
-            isAnimating = false
-        }
+        .onAppear { isAnimating = true }
+        .onDisappear { isAnimating = false }
     }
 }
 
-struct PageControl: View {
-    let numberOfPages: Int
-    @Binding var currentPage: Int
+// Custom Progress Bar View
+struct ProgressBar: View {
+    var progress: CGFloat
 
     var body: some View {
-        HStack(spacing: 8) {
-            ForEach(0 ..< numberOfPages, id: \.self) { page in
-                Circle()
-                    .fill(page == currentPage ? Color.white : Color.gray.opacity(0.5))
-                    .frame(width: 8, height: 8)
-                    .scaleEffect(page == currentPage ? 1.2 : 1.0)
-                    .animation(.spring(), value: currentPage)
-            }
+        ZStack(alignment: .leading) {
+            Capsule()
+                .fill(Color.gray.opacity(0.3))
+                .frame(height: 10)
+
+            Capsule()
+                .fill(Color.purple)
+                .frame(width: progress * 200, height: 10)
+                .animation(.easeInOut(duration: 0.6), value: progress)
         }
     }
 }

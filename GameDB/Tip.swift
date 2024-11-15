@@ -34,9 +34,8 @@ struct UpcomingGamesWidgetTip: Tip {
     var title: Text {
         Text("Upcoming Games Widget")
     }
-    
+
     var message: Text? {
-        Text("Add the Upcoming Games widget to your home screen to see the latest upcoming games.")
+        Text("To conveniently keep track of your saved upcoming game releases, add the Upcoming Games widget to your home screen.")
     }
 }
-

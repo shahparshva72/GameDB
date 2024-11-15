@@ -38,16 +38,15 @@ struct NewsFeedItemView: View {
 
             VStack(alignment: .leading, spacing: 8.0) {
                 Text(newsItem.title)
-                    .font(.headline)
-                    .fontWeight(.semibold)
+                    .font(.system(size: 12, weight: .semibold, design: .default).width(.expanded))
                     .lineLimit(2)
 
                 if let publishedDate = newsItem.publishedDate {
                     Text(publishedDate, style: .date)
-                        .font(.caption)
+                        .font(.system(size: 10, weight: .semibold, design: .default).width(.expanded))
                 } else {
                     Text("Date unavailable")
-                        .font(.caption)
+                        .font(.system(size: 10, weight: .semibold, design: .default).width(.expanded))
                         .foregroundColor(.gray)
                 }
             }

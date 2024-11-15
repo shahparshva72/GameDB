@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TipKit
 
 struct BoxItem {
     var symbolName: String
@@ -16,25 +17,37 @@ struct BoxItem {
 struct SummaryView: View {
     @ObservedObject var summaryVM = SummaryViewModel()
     @ObservedObject var savedGamesVM = SavedGamesViewModel(category: .upcoming)
-    
-    let layout: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 10), count: 2)
-    
+    let upcomingGamesTip = UpcomingGamesWidgetTip()
+
+    // Use flexible grid items with defined spacing
+    let layout: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 16), count: 2)
+
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 16) {
+                    TipView(upcomingGamesTip)
+                        .padding()
+
                     LazyVGrid(columns: layout, spacing: 20) {
                         ForEach(summaryVM.gameCounts.sorted(by: { $0.key.rawValue < $1.key.rawValue }), id: \.key.rawValue) { category, count in
                             let item = boxItem(for: category)
                             NavigationLink(destination: destinationView(for: category)) {
+                                // Add padding around each BoxView to maintain spacing
                                 BoxView(symbolName: item.symbolName, title: item.title, count: count, categoryColor: category.color)
+                                    .padding(4) // Ensure there's some spacing between the grid items
                             }
                         }
                     }
                 }
-                .padding(.top)
+                .padding()
             }
-            .navigationTitle("Summary")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text("Summary")
+                        .pixelatedFont(size: 20)
+                }
+            }
             .onAppear {
                 summaryVM.fetchAllCounts()
             }
@@ -67,9 +80,9 @@ func destinationView(for category: SaveGamesCategory) -> some View {
 
 struct SavedGamesView: View {
     @ObservedObject var viewModel: SavedGamesViewModel
-    
+
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
-    
+
     var body: some View {
         Group {
             if viewModel.savedGames.isEmpty {
@@ -89,7 +102,7 @@ struct SavedGamesView: View {
                     VStack {
                         Spacer()
                             .frame(height: 20)
-                        
+
                         LazyVGrid(columns: columns, spacing: 20) {
                             ForEach(viewModel.savedGames, id: \.id) { game in
                                 NavigationLink(destination: GameDetailView(gameID: game.id)) {
@@ -98,12 +111,12 @@ struct SavedGamesView: View {
                                             GameThumbnailCell(url: url, name: game.name)
                                                 .aspectRatio(1, contentMode: .fit)
                                         }
-                                        
+
                                         if game.isUpcoming {
                                             var daysLeft: Int {
                                                 Calendar.current.dateComponents([.day], from: Date(), to: game.releaseDate).day ?? 0
                                             }
-                                            
+
                                             Text("\(daysLeft) days left")
                                                 .font(.subheadline)
                                                 .foregroundStyle(Color.white)
@@ -123,7 +136,7 @@ struct SavedGamesView: View {
         }
         .navigationTitle(viewModel.category.description)
     }
-    
+
     func checkDateStatus(for games: [GameDataModel]) {
         for game in games {
             GameDataProvider.shared.updateGameStatus(for: game)

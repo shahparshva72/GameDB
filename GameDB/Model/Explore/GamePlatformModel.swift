@@ -36,7 +36,7 @@ class GamePlatformViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { completion in
-                    if case .failure(let error) = completion {
+                    if case let .failure(error) = completion {
                         print("Error loading platforms: \(error.localizedDescription)")
                     }
                 },

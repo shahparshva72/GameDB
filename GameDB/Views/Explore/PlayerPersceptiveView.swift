@@ -12,7 +12,10 @@ struct PlayerPersceptiveView: View {
         List(PlayerPerspective.allCases, id: \.self) { perspective in
             NavigationLink(destination: PerspectiveDetailView(perspective: perspective)) {
                 Text(perspective.description)
+                    .pixelatedFont(size: 14)
             }
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
         }
         .navigationTitle("Game Perspectives")
         .navigationBarTitleDisplayMode(.inline)

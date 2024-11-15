@@ -14,25 +14,25 @@ class NewsFeedViewModel: ObservableObject {
     @Published var currentPage: Int = 1
     @Published var hasMoreNews: Bool = true
     @Published var isLoading: Bool = false
-    
+
     let perPage: Int = 10
     private var manager = NewsAPIManager.shared
-    
+
     // Ensure fetchNewsFeed performs background work and updates UI on the main thread
     func fetchNewsFeed() async {
         guard !isLoading else { return }
         isLoading = true
-        
+
         do {
             let feedItems = try await fetchFeedItems(page: currentPage, perPage: perPage)
             await updateNewsFeed(feedItems: feedItems) // Ensure this happens on the main thread
         } catch {
             await handleError(error: error) // Handle error safely on the main thread
         }
-        
+
         isLoading = false
     }
-    
+
     func fetchFeedNames() async {
         do {
             let fetchedNames = try await fetchNames()
@@ -41,33 +41,33 @@ class NewsFeedViewModel: ObservableObject {
             await handleError(error: error)
         }
     }
-    
+
     func fetchNewsByName(feedName: String) async {
         guard !isLoading else { return }
         isLoading = true
-        
+
         do {
             let rssResponse = try await fetchNewsByName(feedName: feedName, page: currentPage, perPage: perPage)
             await updateNewsFeed(feedItems: rssResponse.data)
         } catch {
             await handleError(error: error)
         }
-        
+
         isLoading = false
     }
-    
+
     func loadNextPage() async {
         guard hasMoreNews && !isLoading else { return }
         currentPage += 1
         await fetchNewsFeed()
     }
-    
+
     func loadPreviousPage() async {
         guard currentPage > 1 && !isLoading else { return }
         currentPage -= 1
         await fetchNewsFeed()
     }
-    
+
     // Helper method to fetch feed items in the background
     private func fetchFeedItems(page: Int, perPage: Int) async throws -> [RSSItem] {
         return try await manager.fetchNewsFeed(page: page, perPage: perPage)
@@ -82,21 +82,21 @@ class NewsFeedViewModel: ObservableObject {
     private func fetchNewsByName(feedName: String, page: Int, perPage: Int) async throws -> RSSResponse {
         return try await manager.fetchNewsByName(feedName: feedName, page: page, perPage: perPage)
     }
-    
+
     // Update news feed data safely on the main thread
     private func updateNewsFeed(feedItems: [RSSItem]) async {
-        self.items = feedItems
-        self.hasMoreNews = !feedItems.isEmpty && feedItems.count == perPage
+        items = feedItems
+        hasMoreNews = !feedItems.isEmpty && feedItems.count == perPage
     }
 
     // Update feed names safely on the main thread
     private func updateFeedNames(_ names: [String]) async {
-        self.feedNames = names
+        feedNames = names
     }
-    
+
     // Handle errors safely on the main thread
     private func handleError(error: Error) async {
         print("Error: \(error.localizedDescription)")
-        self.hasMoreNews = false
+        hasMoreNews = false
     }
 }

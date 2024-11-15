@@ -159,6 +159,7 @@ struct GameDetailContent: View {
 }
 
 // MARK: - CoverImageView
+
 struct CoverImageView: View {
     var url: URL?
 
