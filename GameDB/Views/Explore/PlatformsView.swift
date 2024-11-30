@@ -27,7 +27,6 @@ struct PlatformsView: View {
                                 NavigationLink(destination: PlatformGamesView(platform: platform)) {
                                     Text(platform.name)
                                         .pixelatedFont(size: 14)
-                                        .lineSpacing(4)
                                 }
                                 .listRowBackground(Color.clear)
                             }

@@ -25,7 +25,7 @@ struct NewsFeedView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Text("News Feed")
-                        .pixelatedFont(size: 20)
+                        .pixelatedFont(size: 18)
                 }
             }
             .refreshable {
@@ -86,6 +86,7 @@ struct PaginationControls: View {
                     await viewModel.loadPreviousPage()
                 }
             }
+            .foregroundColor(viewModel.currentPage == 1 || viewModel.isLoading ? .gray : .primary)
             .disabled(viewModel.currentPage == 1 || viewModel.isLoading)
 
             Spacer()
@@ -95,6 +96,7 @@ struct PaginationControls: View {
                     await viewModel.loadNextPage()
                 }
             }
+            .foregroundColor(!viewModel.hasMoreNews || viewModel.isLoading ? .gray : .primary)
             .disabled(!viewModel.hasMoreNews || viewModel.isLoading)
         }
         .pixelatedFont(size: 14)
@@ -114,9 +116,9 @@ struct NewsErrorView: View {
                 .foregroundColor(.gray)
 
             Text(message)
+                .pixelatedFont(size: 14)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.gray)
-                .pixelatedFont(size: 14)
             
             Button(action: {
                 Task {
@@ -132,6 +134,7 @@ struct NewsErrorView: View {
                     .pixelatedFont(size: 14)
             }
         }
+        .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
 }

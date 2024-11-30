@@ -71,15 +71,14 @@ struct AboutView: View {
                 .foregroundColor(headerColor))
             {
                 Text("\(appName) is not affiliated with or endorsed by any game companies, including but not limited to Apple, Sony, Microsoft, or Nintendo. All platform logos and trademarks are the property of their respective owners. Please note that the logos are used for identification purposes only, and no copyright infringement is intended.")
-                    .font(.custom("PressStart2P-Regular", size: 10))
-                    .lineSpacing(4)
+                    .pixelatedFont(size: 10)
                     .foregroundColor(disclaimerColor)
                     .padding(.top)
             }
         }
         .listStyle(.insetGrouped)
         .navigationTitle("About")
-        .background(backgroundColor.edgesIgnoringSafeArea(.all))
+        .background(backgroundColor.ignoresSafeArea(.all))
     }
 }
 

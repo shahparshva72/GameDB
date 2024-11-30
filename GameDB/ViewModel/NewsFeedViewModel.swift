@@ -85,7 +85,13 @@ class NewsFeedViewModel: ObservableObject {
 
     // Update news feed data safely on the main thread
     private func updateNewsFeed(feedItems: [RSSItem]) async {
-        items = feedItems
+        items = feedItems.sorted { item1, item2 in
+            guard let date1 = item1.publishedDate,
+                  let date2 = item2.publishedDate else {
+                return false
+            }
+            return date1 > date2  // Sort in descending order (newest first)
+        }
         hasMoreNews = !feedItems.isEmpty && feedItems.count == perPage
     }
 

@@ -130,7 +130,7 @@ struct OnboardingPageView: View {
                 .animation(.easeInOut(duration: 0.6), value: isAnimating)
 
             Text(page.title)
-                .pixelatedFont(size: 24)
+                .pixelatedFont(size: 20)
                 .foregroundColor(.white)
                 .opacity(isAnimating ? 1.0 : 0.0)
                 .animation(.easeInOut(duration: 0.5).delay(0.3), value: isAnimating)
@@ -138,7 +138,6 @@ struct OnboardingPageView: View {
             Text(page.description)
                 .pixelatedFont(size: 14)
                 .multilineTextAlignment(.center)
-                .lineSpacing(4)
                 .foregroundColor(.white)
                 .padding(.horizontal)
                 .opacity(isAnimating ? 1.0 : 0.0)

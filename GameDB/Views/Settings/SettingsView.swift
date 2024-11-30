@@ -41,9 +41,7 @@ struct SettingsView: View {
                     .toggleStyle(SwitchToggleStyle(tint: isDarkMode ? .purple : .orange))
                 }
                 
-                Section(header: Text("General Settings")
-                    .pixelatedFont(size: 14, color: headerColor))
-                {
+                Section(header: Text("General Settings").pixelatedFont(size: 14, color: headerColor)) {
                     ForEach(SettingsModel.allCases, id: \.self) { setting in
                         NavigationLink(destination: setting) {
                             Label(setting.rawValue, systemImage: setting.icons)
@@ -61,13 +59,12 @@ struct SettingsView: View {
             .toolbar(content: {
                 ToolbarItem(placement: .topBarLeading) {
                     Text("Settings")
-                        .pixelatedFont(size: 14)
-                        .padding(.leading, 10)
+                        .pixelatedFont(size: 18)
                 }
             })
             .listStyle(.insetGrouped)
             .navigationBarTitleDisplayMode(.inline)
-            .background(backgroundColor.edgesIgnoringSafeArea(.all))
+            .background(backgroundColor.ignoresSafeArea(.all))
         }
     }
 }

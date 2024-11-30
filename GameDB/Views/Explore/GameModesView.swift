@@ -13,7 +13,6 @@ struct GameModesView: View {
             NavigationLink(destination: GameModeDetailView(mode: mode)) {
                 Text(mode.name)
                     .pixelatedFont(size: 14)
-                    .lineSpacing(4)
             }
             .listRowSeparator(.hidden)
             .listRowBackground(Color.clear)

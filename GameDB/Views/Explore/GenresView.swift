@@ -14,7 +14,6 @@ struct GenresView: View {
                 NavigationLink(destination: GenreDetailView(genre: genre)) {
                     Text(genre.description)
                         .pixelatedFont(size: 14)
-                        .lineSpacing(4)
                 }
             }
             .listRowSeparator(.hidden)
@@ -79,7 +78,6 @@ struct GenreDetailView: View {
                     }
                 }
             }
-            .background(Color.black) // Keep background dark
             .navigationTitle(genre.description)
             .onAppear {
                 fetchGames(offset: currentOffset)

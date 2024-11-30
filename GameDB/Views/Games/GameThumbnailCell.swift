@@ -41,10 +41,8 @@ struct GameThumbnailCell: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .pixelatedFont(size: 12)
                 .foregroundColor(.white)
-                .padding(.horizontal, 4)
         }
         .frame(width: thumbnailWidth)
-        .cornerRadius(10)
     }
 }
 

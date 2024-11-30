@@ -68,7 +68,7 @@ struct ExploreCategoryView: View {
                     .foregroundColor(.white)
 
                 Text(category)
-                    .pixelatedFont(size: 12)
+                    .pixelatedFont(size: 12, color: .white)
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
                     .lineLimit(2)

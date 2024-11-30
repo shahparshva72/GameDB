@@ -13,7 +13,6 @@ struct GameThemesView: View {
             NavigationLink(destination: GameThemeDetailView(theme: theme)) {
                 Text(theme.description)
                     .pixelatedFont(size: 16)
-                    .lineSpacing(4)
             }
             .listRowSeparator(.hidden)
             .listRowBackground(Color.clear)

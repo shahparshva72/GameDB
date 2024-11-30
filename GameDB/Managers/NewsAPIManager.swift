@@ -11,7 +11,7 @@ class NewsAPIManager {
     static let shared = NewsAPIManager()
 
     func fetchFeedNames() async throws -> [String] {
-        guard let url = URL(string: "https://gamingnewsapi.onrender.com/get-feed-names") else {
+        guard let url = URL(string: "\(Constants.newsApiUrl)/get-feed-names") else {
             throw NSError(domain: "Invalid URL", code: 400, userInfo: nil)
         }
 
@@ -25,7 +25,7 @@ class NewsAPIManager {
     }
 
     func fetchNewsFeed(page: Int, perPage: Int) async throws -> [RSSItem] {
-        let urlString = "https://gamingnewsapi.onrender.com/get-all-feeds?page=\(page)&per_page=\(perPage)"
+        let urlString = "\(Constants.newsApiUrl)/get-all-feeds?page=\(page)&per_page=\(perPage)"
         guard let url = URL(string: urlString) else {
             throw NSError(domain: "Invalid URL", code: 400, userInfo: nil)
         }
@@ -40,7 +40,7 @@ class NewsAPIManager {
     }
 
     func fetchNewsByName(feedName: String, page: Int, perPage: Int) async throws -> RSSResponse {
-        let urlString = "https://gamingnewsapi.onrender.com/get-feed?feed_name=\(feedName)&page=\(page)&per_page=\(perPage)"
+        let urlString = "\(Constants.newsApiUrl)/get-feed?feed_name=\(feedName)&page=\(page)&per_page=\(perPage)"
 
         guard let url = URL(string: urlString) else {
             throw NSError(domain: "Invalid URL", code: 400, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])

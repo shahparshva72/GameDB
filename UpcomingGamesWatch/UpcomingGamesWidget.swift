@@ -15,11 +15,14 @@ class Provider: TimelineProvider {
     
     init() {
         // Observe Core Data changes
-        notificationToken = NotificationCenter.default.addObserver(
-            forName: .NSManagedObjectContextObjectsDidChange,
-            object: context,
+        let notificationCenter = NotificationCenter.default
+        notificationToken = notificationCenter.addObserver(
+            forName: .NSManagedObjectContextDidSave,
+            object: nil,
             queue: .main
-        ) { [weak self] _ in
+        ) { [weak self] notification in
+            // Force refresh context to ensure latest data
+            self?.context.reset()
             self?.reloadWidgetTimeline()
         }
     }
@@ -60,7 +63,9 @@ class Provider: TimelineProvider {
     }
     
     private func reloadWidgetTimeline() {
-        WidgetCenter.shared.reloadTimelines(ofKind: "UpcomingGamesWidget")
+        DispatchQueue.main.async {
+            WidgetCenter.shared.reloadAllTimelines()
+        }
     }
 }
 
@@ -73,9 +78,18 @@ struct UpcomingGamesWidgetEntryView: View {
     var entry: Provider.Entry
     @Environment(\.widgetFamily) var family
     
-    // Sort games by release date
     private var sortedGames: [GameDataModel] {
         entry.games.sorted { $0.releaseDate < $1.releaseDate }
+    }
+    
+    private var gridColumns: [GridItem] {
+        let gameCount = min(sortedGames.count, 4)
+        switch gameCount {
+        case 0: return []
+        case 1: return [GridItem(.flexible())]
+        case 2: return [GridItem(.flexible()), GridItem(.flexible())]
+        default: return [GridItem(.flexible()), GridItem(.flexible())]
+        }
     }
     
     var body: some View {
@@ -97,12 +111,7 @@ struct UpcomingGamesWidgetEntryView: View {
                 .foregroundStyle(.white)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                let columns = [
-                    GridItem(.flexible(), spacing: 8),
-                    GridItem(.flexible(), spacing: 8),
-                ]
-                
-                LazyVGrid(columns: columns, spacing: 8) {
+                LazyVGrid(columns: gridColumns, spacing: 10) {
                     ForEach(sortedGames.prefix(4)) { game in
                         GameGridCell(game: game)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -142,7 +151,7 @@ struct GameGridCell: View {
             }
             .foregroundStyle(progressColor(daysLeft: daysLeft))
         }
-        .padding(8)
+        .padding(10)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: 8)

@@ -59,6 +59,7 @@ struct FeedSelectionView: View {
             if viewModel.isLoading {
                 ProgressView("Loading...")
                     .foregroundColor(loadingTextColor)
+                    .pixelatedFont(size: 12)
             } else if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)
                     .foregroundColor(errorColor)
@@ -72,7 +73,7 @@ struct FeedSelectionView: View {
         }
         .pixelatedFont(size: 12)
         .navigationTitle("List of Feeds")
-        .background(backgroundColor.edgesIgnoringSafeArea(.all))
+        .background(backgroundColor.ignoresSafeArea(.all))
         .onAppear {
             Task {
                 await viewModel.fetchFeedNames()

@@ -27,21 +27,18 @@ struct BoxView: View {
                 Spacer()
 
                 Text("\(count)")
-                    .pixelatedFont(size: 16)
+                    .pixelatedFont(size: 16, color: .white)
                     .fontWeight(.bold)
-                    .foregroundColor(.white)
                     .shadow(color: .black, radius: 1, x: 0, y: 2)
             }
 
             Spacer()
 
             Text(title)
-                .pixelatedFont(size: 12)
+                .pixelatedFont(size: 12, color: .white)
                 .fontWeight(.semibold)
-                .foregroundColor(.white)
                 .lineLimit(2)
                 .multilineTextAlignment(.leading)
-                .lineSpacing(4)
                 .shadow(color: .black, radius: 1, x: 0, y: 2)
         }
         .padding(12)

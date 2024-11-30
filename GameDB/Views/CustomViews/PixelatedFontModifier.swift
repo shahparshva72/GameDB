@@ -21,6 +21,7 @@ struct PixelatedFontModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         content
+            .lineSpacing(4)
             .font(.custom("PressStart2P-Regular", size: size))
             .foregroundColor(color ?? (isDarkMode ? .white : .black))
     }

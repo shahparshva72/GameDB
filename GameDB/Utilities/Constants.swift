@@ -9,4 +9,5 @@ import Foundation
 
 enum Constants {
     static let proxyURL = "https://igdb-proxy-worker.sparshva72.workers.dev/api"
+    static let newsApiUrl = "https://seahorse-app-27aug.ondigitalocean.app"
 }

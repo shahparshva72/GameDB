@@ -45,7 +45,7 @@ struct SummaryView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Text("Summary")
-                        .pixelatedFont(size: 20)
+                        .pixelatedFont(size: 18)
                 }
             }
             .onAppear {
@@ -89,14 +89,12 @@ struct SavedGamesView: View {
                 VStack {
                     Spacer()
                     Text("No games added yet.")
-                        .foregroundColor(.secondary)
-                        .font(.headline)
                     Text("Please add a game using \(Image(systemName: "plus.app")) to see it here.")
-                        .foregroundColor(.secondary)
-                        .font(.subheadline)
                         .padding(.top, 2)
                     Spacer()
                 }
+                .font(.subheadline.width(.expanded))
+                .foregroundColor(.secondary)
             } else {
                 ScrollView {
                     VStack {
@@ -106,7 +104,7 @@ struct SavedGamesView: View {
                         LazyVGrid(columns: columns, spacing: 20) {
                             ForEach(viewModel.savedGames, id: \.id) { game in
                                 NavigationLink(destination: GameDetailView(gameID: game.id)) {
-                                    VStack(alignment: .leading) {
+                                    VStack(alignment: .leading, spacing: 10) {
                                         if let url = URL(string: game.coverURLString) {
                                             GameThumbnailCell(url: url, name: game.name)
                                                 .aspectRatio(1, contentMode: .fit)
@@ -118,8 +116,10 @@ struct SavedGamesView: View {
                                             }
 
                                             Text("\(daysLeft) days left")
-                                                .font(.subheadline)
-                                                .foregroundStyle(Color.white)
+                                                .pixelatedFont(
+                                                    size: 10,
+                                                    color: .purple
+                                                )
                                         }
                                     }
                                     .onAppear {

@@ -33,7 +33,7 @@ struct PackagesUsedView: View {
                 .padding(.vertical, 5)
         }
         .navigationTitle("Packages Used")
-        .background(backgroundColor.edgesIgnoringSafeArea(.all))
+        .background(backgroundColor.ignoresSafeArea(.all))
     }
 }
 

@@ -14,14 +14,17 @@ struct GameListView: View {
         VStack(alignment: .leading) {
             if gamesList.isLoading {
                 VStack {
+                    Spacer()
                     Text("Loading games...")
-                        .font(.subheadline)
+                        .pixelatedFont(size: 12)
                         .foregroundColor(.gray)
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle())
                         .scaleEffect(1.5)
+                    Spacer()
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.clear)
             } else if gamesList.games.isEmpty {
                 Text("No games found. Refresh to retry if an error.")
                     .foregroundColor(.secondary)

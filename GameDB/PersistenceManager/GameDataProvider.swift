@@ -101,6 +101,7 @@ extension GameDataProvider {
             if let gameToRemove = games.first {
                 viewContext.delete(gameToRemove)
                 try viewContext.save()
+                NotificationCenter.default.post(name: .NSManagedObjectContextDidSave, object: viewContext)
             } else {
                 print("No game found with id \(id)")
             }
