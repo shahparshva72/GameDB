@@ -12,6 +12,10 @@ enum SettingsModel: String, Hashable, CaseIterable, Identifiable, View {
     case feed = "Feed"
     case about = "About"
 
+    static var visibleCases: [SettingsModel] {
+        allCases.filter { FeatureFlags.newsEnabled || $0 != .feed }
+    }
+
     var id: String {
         rawValue
     }

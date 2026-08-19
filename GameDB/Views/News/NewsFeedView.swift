@@ -22,12 +22,8 @@ struct NewsFeedView: View {
                     NewsContentListView(viewModel: viewModel)
                 }
             }
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Text("News Feed")
-                        .pixelatedFont(size: 18)
-                }
-            }
+            .navigationTitle("News Feed")
+            .navigationBarTitleDisplayMode(.inline)
             .refreshable {
                 await viewModel.fetchNewsFeed()
             }

@@ -32,12 +32,8 @@ struct SearchView: View {
             .onChange(of: viewModel.searchQuery) { _, newValue in
                 viewModel.fetchSearchResults(for: newValue)
             }
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Text("Search")
-                        .pixelatedFont(size: 20)
-                }
-            }
+            .navigationTitle("Search")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 

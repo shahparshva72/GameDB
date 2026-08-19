@@ -69,14 +69,9 @@ struct HomeView: View {
                 }
             }
             .padding(.horizontal, 15)
+            .navigationTitle("Home")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar(content: {
-                ToolbarItem(placement: .topBarLeading) {
-                    Text("Home")
-                        .fontWeight(.bold)
-                        .foregroundColor(.primary)
-                        .fontWidth(.standard)
-                }
-
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         ForEach(GameCategory.allCases, id: \.self) { category in
@@ -88,7 +83,10 @@ struct HomeView: View {
                         }
                     } label: {
                         Text(gameList.category.rawValue)
+                            .font(.custom("PressStart2P-Regular", size: 12))
+                            .lineLimit(1)
                     }
+                    .controlSize(.small)
                 }
             })
         }

@@ -42,12 +42,8 @@ struct SummaryView: View {
                 }
                 .padding()
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Text("Summary")
-                        .pixelatedFont(size: 18)
-                }
-            }
+            .navigationTitle("Summary")
+            .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 summaryVM.fetchAllCounts()
             }

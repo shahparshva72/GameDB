@@ -42,7 +42,7 @@ struct SettingsView: View {
                 }
                 
                 Section(header: Text("General Settings").pixelatedFont(size: 14, color: headerColor)) {
-                    ForEach(SettingsModel.allCases, id: \.self) { setting in
+                    ForEach(SettingsModel.visibleCases, id: \.self) { setting in
                         NavigationLink(destination: setting) {
                             Label(setting.rawValue, systemImage: setting.icons)
                                 .pixelatedFont(size: 12, color: labelColor)
@@ -53,15 +53,10 @@ struct SettingsView: View {
                         .pixelatedFont(size: 12, color: onboardingLabelColor)
                         .onTapGesture {
                             isOnboardingComplete.toggle()
-                        }
+                    }
                 }
             }
-            .toolbar(content: {
-                ToolbarItem(placement: .topBarLeading) {
-                    Text("Settings")
-                        .pixelatedFont(size: 18)
-                }
-            })
+            .navigationTitle("Settings")
             .listStyle(.insetGrouped)
             .navigationBarTitleDisplayMode(.inline)
             .background(backgroundColor.ignoresSafeArea(.all))

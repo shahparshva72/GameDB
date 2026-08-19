@@ -37,35 +37,27 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
-            HomeView()
-                .tabItem {
-                    Label("Home", systemImage: "gamecontroller")
+            Tab("Home", systemImage: "gamecontroller") {
+                HomeView()
+            }
+
+            if FeatureFlags.newsEnabled {
+                Tab("News", systemImage: "newspaper.fill") {
+                    NewsFeedView()
                 }
-                .tag(0)
-            
-            NewsFeedView()
-                .tabItem {
-                    Label("News", systemImage: "newspaper.fill")
-                }
-                .tag(1)
-            
-            SearchView()
-                .tabItem {
-                    Label("Search", systemImage: "magnifyingglass")
-                }
-                .tag(2)
-            
-            SummaryView()
-                .tabItem {
-                    Label("Summary", systemImage: "chart.pie.fill")
-                }
-                .tag(3)
-            
-            SettingsView()
-                .tabItem {
-                    Label("Settings", systemImage: "gearshape.fill")
-                }
-                .tag(4)
+            }
+
+            Tab("Search", systemImage: "magnifyingglass") {
+                SearchView()
+            }
+
+            Tab("Summary", systemImage: "chart.pie.fill") {
+                SummaryView()
+            }
+
+            Tab("Settings", systemImage: "gearshape.fill") {
+                SettingsView()
+            }
         }
         .tint(.accentColor)
     }

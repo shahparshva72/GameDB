@@ -8,6 +8,10 @@
 import Foundation
 
 enum Constants {
-    static let proxyURL = "https://igdb-proxy-worker.sparshva72.workers.dev/api"
+    static let proxyURL = "https://igdb-proxy-worker.pus8879.workers.dev/api"
     static let newsApiUrl = "https://seahorse-app-27aug.ondigitalocean.app"
+}
+
+enum FeatureFlags {
+    static let newsEnabled = false
 }
