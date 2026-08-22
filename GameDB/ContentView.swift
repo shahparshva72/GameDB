@@ -35,27 +35,29 @@ struct ContentView: View {
         
     }
     
+    @EnvironmentObject private var deepLinkRouter: DeepLinkRouter
+
     var body: some View {
-        TabView {
-            Tab("Home", systemImage: "gamecontroller") {
+        TabView(selection: $deepLinkRouter.selectedTab) {
+            Tab("Home", systemImage: "gamecontroller", value: AppTab.home) {
                 HomeView()
             }
 
             if FeatureFlags.newsEnabled {
-                Tab("News", systemImage: "newspaper.fill") {
+                Tab("News", systemImage: "newspaper.fill", value: AppTab.news) {
                     NewsFeedView()
                 }
             }
 
-            Tab("Search", systemImage: "magnifyingglass") {
+            Tab("Search", systemImage: "magnifyingglass", value: AppTab.search) {
                 SearchView()
             }
 
-            Tab("Summary", systemImage: "chart.pie.fill") {
+            Tab("Summary", systemImage: "chart.pie.fill", value: AppTab.summary) {
                 SummaryView()
             }
 
-            Tab("Settings", systemImage: "gearshape.fill") {
+            Tab("Settings", systemImage: "gearshape.fill", value: AppTab.settings) {
                 SettingsView()
             }
         }
@@ -66,5 +68,6 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .environmentObject(DeepLinkRouter())
     }
 }

@@ -22,8 +22,10 @@ struct SummaryView: View {
     // Use flexible grid items with defined spacing
     let layout: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 16), count: 2)
 
+    @EnvironmentObject private var deepLinkRouter: DeepLinkRouter
+
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $deepLinkRouter.summaryPath) {
             ScrollView {
                 VStack(spacing: 16) {
                     TipView(upcomingGamesTip)
@@ -32,7 +34,7 @@ struct SummaryView: View {
                     LazyVGrid(columns: layout, spacing: 20) {
                         ForEach(summaryVM.gameCounts.sorted(by: { $0.key.rawValue < $1.key.rawValue }), id: \.key.rawValue) { category, count in
                             let item = boxItem(for: category)
-                            NavigationLink(destination: destinationView(for: category)) {
+                            NavigationLink(value: category) {
                                 // Add padding around each BoxView to maintain spacing
                                 BoxView(symbolName: item.symbolName, title: item.title, count: count, categoryColor: category.color)
                                     .padding(4) // Ensure there's some spacing between the grid items
@@ -44,6 +46,9 @@ struct SummaryView: View {
             }
             .navigationTitle("Summary")
             .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(for: SaveGamesCategory.self) { category in
+                destinationView(for: category)
+            }
             .onAppear {
                 summaryVM.fetchAllCounts()
             }
@@ -136,4 +141,5 @@ struct SavedGamesView: View {
 
 #Preview {
     SummaryView()
+        .environmentObject(DeepLinkRouter())
 }

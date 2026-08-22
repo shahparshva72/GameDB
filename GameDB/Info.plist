@@ -9,5 +9,18 @@
         <string>PressStart2P-Regular.ttf</string>
         <string>SuperMario256.ttf</string>
     </array>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>dev.thefourseas.GameDB</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>gamedb</string>
+            </array>
+        </dict>
+    </array>
 </dict>
 </plist>

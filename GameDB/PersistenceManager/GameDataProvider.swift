@@ -11,6 +11,14 @@ import WidgetKit
 
 enum WidgetConstants {
     static let upcomingGamesKind = "UpcomingGamesWidget"
+
+    /// Deep link scheme shared by the app and its widget extension.
+    static let urlScheme = "gamedb"
+    static let upcomingHost = "upcoming"
+
+    static var upcomingGamesDeepLink: URL? {
+        URL(string: "\(urlScheme)://\(upcomingHost)")
+    }
 }
 
 final class GameDataProvider {

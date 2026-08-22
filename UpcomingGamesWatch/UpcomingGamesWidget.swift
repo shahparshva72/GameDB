@@ -106,6 +106,7 @@ struct UpcomingGamesWidgetEntryView: View {
             }
         }
         .containerBackground(WidgetPalette.background, for: .widget)
+        .widgetURL(WidgetConstants.upcomingGamesDeepLink)
     }
 }
 

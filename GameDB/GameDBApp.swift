@@ -14,6 +14,7 @@ struct GameDBApp: App {
     @AppStorage("isDarkMode") private var isDarkMode = true
     @AppStorage("isOnboardingComplete") private var isOnboardingComplete = false
     @StateObject var networkManager = NetworkManager()
+    @StateObject private var deepLinkRouter = DeepLinkRouter()
 
     init() {
         WidgetCenter.shared.reloadTimelines(ofKind: WidgetConstants.upcomingGamesKind)
@@ -30,9 +31,13 @@ struct GameDBApp: App {
             }
             .environment(\.managedObjectContext, GameDataProvider.shared.viewContext)
             .environmentObject(networkManager)
+            .environmentObject(deepLinkRouter)
             .preferredColorScheme(isDarkMode ? .dark : .light)
             .onAppear {
                 setupTips()
+            }
+            .onOpenURL { url in
+                deepLinkRouter.handle(url)
             }
         }
     }
