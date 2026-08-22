@@ -118,11 +118,6 @@ struct SavedGamesView: View {
                                                 )
                                         }
                                     }
-                                    .onAppear {
-                                        if viewModel.category == .upcoming {
-                                            checkDateStatus(for: viewModel.savedGames)
-                                        }
-                                    }
                                 }
                             }
                         }
@@ -131,11 +126,10 @@ struct SavedGamesView: View {
             }
         }
         .navigationTitle(viewModel.category.description)
-    }
-
-    func checkDateStatus(for games: [GameDataModel]) {
-        for game in games {
-            GameDataProvider.shared.updateGameStatus(for: game)
+        .onChange(of: viewModel.savedGames.count, initial: true) { _, _ in
+            if case .upcoming = viewModel.category {
+                GameDataProvider.shared.updateGameStatuses(for: viewModel.savedGames)
+            }
         }
     }
 }

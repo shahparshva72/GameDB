@@ -7,7 +7,11 @@
 
 import CoreData
 import Foundation
-import SwiftUI
+import WidgetKit
+
+enum WidgetConstants {
+    static let upcomingGamesKind = "UpcomingGamesWidget"
+}
 
 final class GameDataProvider {
     static let shared = GameDataProvider()
@@ -41,6 +45,10 @@ final class GameDataProvider {
         }
 
         persistentContainer = container
+    }
+
+    private func reloadUpcomingGamesWidget() {
+        WidgetCenter.shared.reloadTimelines(ofKind: WidgetConstants.upcomingGamesKind)
     }
 }
 
@@ -84,6 +92,9 @@ extension GameDataProvider {
         if viewContext.hasChanges {
             do {
                 try viewContext.save()
+                if case .upcoming = category {
+                    reloadUpcomingGamesWidget()
+                }
             } catch {
                 print("Error saving game: \(error.localizedDescription)")
             }
@@ -99,9 +110,12 @@ extension GameDataProvider {
         do {
             let games = try viewContext.fetch(fetchRequest)
             if let gameToRemove = games.first {
+                let shouldReloadWidget = gameToRemove.isUpcoming
                 viewContext.delete(gameToRemove)
                 try viewContext.save()
-                NotificationCenter.default.post(name: .NSManagedObjectContextDidSave, object: viewContext)
+                if shouldReloadWidget {
+                    reloadUpcomingGamesWidget()
+                }
             } else {
                 print("No game found with id \(id)")
             }
@@ -127,22 +141,25 @@ extension GameDataProvider {
 }
 
 extension GameDataProvider {
-    func updateGameStatus(for game: GameDataModel) {
-        let currentDate = Date()
+    func updateGameStatuses(for games: [GameDataModel]) {
+        let startOfToday = Calendar.current.startOfDay(for: Date())
+        var didUpdateUpcomingGame = false
 
-        let twoDaysFromNow = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
-
-        if game.releaseDate < twoDaysFromNow {
+        for game in games where game.isUpcoming && game.releaseDate < startOfToday {
             game.isUpcoming = false
             game.isToPlay = true
+            didUpdateUpcomingGame = true
         }
 
-        if viewContext.hasChanges {
-            do {
-                try viewContext.save()
-            } catch {
-                print("Error updating game status: \(error.localizedDescription)")
-            }
+        guard didUpdateUpcomingGame else {
+            return
+        }
+
+        do {
+            try viewContext.save()
+            reloadUpcomingGamesWidget()
+        } catch {
+            print("Error updating game statuses: \(error.localizedDescription)")
         }
     }
 }

@@ -7,12 +7,17 @@
 
 import SwiftUI
 import TipKit
+import WidgetKit
 
 @main
 struct GameDBApp: App {
     @AppStorage("isDarkMode") private var isDarkMode = true
     @AppStorage("isOnboardingComplete") private var isOnboardingComplete = false
     @StateObject var networkManager = NetworkManager()
+
+    init() {
+        WidgetCenter.shared.reloadTimelines(ofKind: WidgetConstants.upcomingGamesKind)
+    }
 
     var body: some Scene {
         WindowGroup {
