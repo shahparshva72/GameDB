@@ -16,7 +16,6 @@ struct OnboardingView: View {
         OnboardingPage(title: "Welcome to GamingQuest", description: "Your personal video game tracker and explorer", imageName: "gamecontroller"),
         OnboardingPage(title: "Track Your Games", description: "Save games you've played, want to play, or are currently playing", imageName: "list.bullet.clipboard"),
         OnboardingPage(title: "Discover New Games", description: "Explore a vast library of games across different categories", imageName: "magnifyingglass"),
-        OnboardingPage(title: "Stay Updated", description: "Get the latest gaming news from popular feeds", imageName: "newspaper"),
     ]
 
     var body: some View {

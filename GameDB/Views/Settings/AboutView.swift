@@ -47,6 +47,12 @@ struct AboutView: View {
                 Link("Website", destination: URL(string: "https://github.com/shahparshva72/GameDB/")!)
                     .font(.custom("PressStart2P-Regular", size: 12))
                     .foregroundColor(linkColor)
+
+                if let privacyPolicyURL = URL(string: "https://gamingquest.vercel.app/privacy") {
+                    Link("Privacy Policy", destination: privacyPolicyURL)
+                        .font(.custom("PressStart2P-Regular", size: 12))
+                        .foregroundColor(linkColor)
+                }
             }
 
             Section(header: Text("Social:")
