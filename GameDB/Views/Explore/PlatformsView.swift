@@ -74,11 +74,9 @@ struct PlatformGamesView: View {
     @State private var isLoading = false
     @State private var areGamesAvailable: Bool = true
     @EnvironmentObject var networkManager: NetworkManager
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
-    private let columns: [GridItem] = [
-        GridItem(.flexible(), spacing: 16),
-        GridItem(.flexible(), spacing: 16),
-    ]
+    private var columns: [GridItem] { dynamicTypeSize.gameGridColumns }
 
     var body: some View {
         ScrollViewReader { _ in

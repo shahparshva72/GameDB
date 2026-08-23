@@ -17,15 +17,15 @@ struct AboutView: View {
 
     // Colors for Light and Dark modes
     private var headerColor: Color {
-        isDarkMode ? .yellow : .blue
+        .primary
     }
 
     private var linkColor: Color {
-        isDarkMode ? .cyan : .green
+        .primary
     }
 
     private var disclaimerColor: Color {
-        isDarkMode ? .gray : .black
+        .primary
     }
 
     private var backgroundColor: Color {

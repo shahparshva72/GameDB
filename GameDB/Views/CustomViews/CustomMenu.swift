@@ -13,6 +13,7 @@ struct CustomMenu<Content: View>: View {
     let label: String
     let fontName: String
     let fontSize: CGFloat
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var menuBody: some View {
         VStack(spacing: 0) {
@@ -56,7 +57,11 @@ struct CustomMenu<Content: View>: View {
                         .frame(maxWidth: .infinity)
                         .padding(.top, 5)
                 }
-                .transition(.scale(scale: 0.01, anchor: .top).combined(with: .opacity))
+                .transition(
+                    reduceMotion
+                        ? .opacity
+                        : .scale(scale: 0.01, anchor: .top).combined(with: .opacity)
+                )
             }
         }
     }

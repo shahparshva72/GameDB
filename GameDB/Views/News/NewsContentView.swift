@@ -27,6 +27,7 @@ struct NewsContentView: View {
     let urlString: String
 
     @State private var isLoading = true
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         ZStack {
@@ -35,18 +36,18 @@ struct NewsContentView: View {
 
             WebView(urlString: urlString)
                 .opacity(isLoading ? 0.0 : 1.0)
-                .transition(.opacity.animation(.easeInOut(duration: 1.0)))
+                .transition(.opacity)
 
             if isLoading {
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle(tint: .blue))
                     .scaleEffect(2, anchor: .center)
-                    .transition(.scale.animation(.easeInOut(duration: 1.0)))
+                    .transition(reduceMotion ? .opacity : .scale.combined(with: .opacity))
             }
         }
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                withAnimation {
+                withAnimation(reduceMotion ? nil : .easeInOut(duration: 1.0)) {
                     isLoading = false
                 }
             }

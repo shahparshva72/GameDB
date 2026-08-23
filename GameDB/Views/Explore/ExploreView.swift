@@ -21,9 +21,13 @@ struct NavigationItem: Hashable, Identifiable {
 }
 
 struct ExploreView: View {
-    let columns = [
-        GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 20),
-    ]
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    private var columns: [GridItem] {
+        dynamicTypeSize.isAccessibilitySize
+            ? [GridItem(.flexible())]
+            : [GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 20)]
+    }
 
     let navigationItems: [NavigationItem] = [
         NavigationItem(category: .genres, icon: "arcade.stick.console"),
@@ -57,7 +61,13 @@ struct ExploreCategoryView: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(LinearGradient(colors: [Color(hex: "#791a97").opacity(0.9), Color(hex: "#791a97").opacity(0.6)], startPoint: .top, endPoint: .bottom))
+                .fill(
+                    LinearGradient(
+                        colors: [Color(hex: "#791a97"), Color(hex: "#4C0F64")],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
                 .shadow(color: .black.opacity(0.15), radius: 10, x: 0, y: 5)
 
             VStack(spacing: 15) {
@@ -83,6 +93,8 @@ struct ExploreCategoryView: View {
                 .stroke(Color.white.opacity(0.4), lineWidth: 2)
         )
         .aspectRatio(1, contentMode: .fill)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(category)
     }
 }
 

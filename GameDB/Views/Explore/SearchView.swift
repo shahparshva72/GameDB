@@ -10,6 +10,7 @@ import Combine
 import IGDB_SWIFT_API
 import Kingfisher
 import SwiftUI
+import UIKit
 
 // MARK: - SearchView
 
@@ -95,8 +96,13 @@ class SearchViewModel: ObservableObject {
                 switch result {
                 case let .success(games):
                     self.state = .loaded(games)
+                    let announcement = games.isEmpty
+                        ? "No games found"
+                        : "\(games.count) search results found"
+                    UIAccessibility.post(notification: .announcement, argument: announcement)
                 case let .failure(error):
                     self.state = .error(error.localizedDescription)
+                    UIAccessibility.post(notification: .announcement, argument: "Search failed")
                 }
             }
         }
@@ -119,6 +125,7 @@ struct SearchCell: View {
                     .clipped()
                     .cornerRadius(10)
                     .shadow(radius: 5)
+                    .accessibilityHidden(true)
             }
             VStack(alignment: .leading, spacing: 10) {
                 Text(name)
@@ -128,6 +135,8 @@ struct SearchCell: View {
             }
         }
         .cornerRadius(10)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(name)
     }
 }
 

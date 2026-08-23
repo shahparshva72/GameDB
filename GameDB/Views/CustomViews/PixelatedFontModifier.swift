@@ -18,11 +18,27 @@ struct PixelatedFontModifier: ViewModifier {
     let size: CGFloat
     let color: Color?
     @AppStorage("isDarkMode") private var isDarkMode = true
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    private var accessibleFont: Font {
+        switch size {
+        case 18...:
+            return .title2
+        case 14...:
+            return .headline
+        default:
+            return .body
+        }
+    }
     
     func body(content: Content) -> some View {
         content
             .lineSpacing(4)
-            .font(.custom("PressStart2P-Regular", size: size))
+            .font(
+                dynamicTypeSize.isAccessibilitySize
+                    ? accessibleFont
+                    : .custom("PressStart2P-Regular", size: size, relativeTo: .body)
+            )
             .foregroundColor(color ?? (isDarkMode ? .white : .black))
     }
 }

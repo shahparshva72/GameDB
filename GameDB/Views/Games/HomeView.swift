@@ -14,6 +14,8 @@ struct HomeView: View {
     @StateObject private var gameList = GameList(platform: .ps5, category: .criticallyAcclaimed)
     @Namespace var namespace
     @State private var isInitialLoad = true
+    @State private var isShowingCategoryPicker = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let switchCategory = SwitchGameCategoryTip()
 
     var body: some View {
@@ -43,9 +45,12 @@ struct HomeView: View {
                                             .matchedGeometryEffect(id: "underline", in: namespace, properties: .frame, isSource: true)
                                     }
                                 }
-                                .animation(.linear(duration: 0.3), value: gameList.platformDescription)
+                                .animation(reduceMotion ? nil : .linear(duration: 0.3), value: gameList.platformDescription)
                                 .transition(.slide)
                             }
+                            .accessibilityLabel(platform.description)
+                            .accessibilityAddTraits(platform == gameList.platform ? .isSelected : [])
+                            .accessibilityHint("Filters games by platform")
                         }
                     }
                 }
@@ -73,22 +78,32 @@ struct HomeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(content: {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
-                        ForEach(GameCategory.allCases, id: \.self) { category in
-                            Button(action: {
-                                gameList.updateCategory(category)
-                            }) {
-                                Text(category.rawValue)
-                            }
-                        }
+                    Button {
+                        isShowingCategoryPicker = true
                     } label: {
                         Text(gameList.category.rawValue)
                             .font(.custom("PressStart2P-Regular", size: 12))
                             .lineLimit(1)
                     }
                     .controlSize(.small)
+                    .accessibilityLabel("Game category")
+                    .accessibilityValue(gameList.category.rawValue)
+                    .accessibilityHint("Shows options for choosing which games appear")
                 }
             })
+            .confirmationDialog(
+                "Choose game category",
+                isPresented: $isShowingCategoryPicker,
+                titleVisibility: .visible
+            ) {
+                ForEach(GameCategory.allCases, id: \.self) { category in
+                    Button(action: {
+                        gameList.updateCategory(category)
+                    }) {
+                        Text(category.rawValue)
+                    }
+                }
+            }
         }
         .pixelatedFont(size: 16, color: .accentColor)
         .onChange(of: networkManager.isConnected) { _, newValue in

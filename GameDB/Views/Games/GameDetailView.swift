@@ -10,6 +10,7 @@ import Kingfisher
 import QuickLook
 import SwiftUI
 import TipKit
+import UIKit
 
 // MARK: - GameDetailView
 
@@ -51,6 +52,8 @@ struct GameDetailView: View {
                 } label: {
                     Image(systemName: showSpoilers ? "eye.slash" : "eye")
                 }
+                .accessibilityLabel(showSpoilers ? "Hide spoilers" : "Show spoilers")
+                .accessibilityValue(showSpoilers ? "Shown" : "Hidden")
             }
             
             ToolbarItem(placement: .topBarTrailing) {
@@ -74,6 +77,7 @@ struct GameDetailView: View {
                 } label: {
                     Image(systemName: "plus.app")
                 }
+                .accessibilityLabel("Save game")
             }
         }
         .toast(isPresenting: $showAlert) {
@@ -86,6 +90,7 @@ struct GameDetailView: View {
             alertTitle = "Error: Game data not available"
             alertType = .error(.red)
             showAlert = true
+            announceAlert()
             return
         }
         
@@ -93,6 +98,7 @@ struct GameDetailView: View {
             alertTitle = "Cannot add game. Game already released"
             alertType = .error(.red)
             showAlert = true
+            announceAlert()
         } else {
             GameDataProvider.shared.saveOrUpdateGame(
                 id: game.id,
@@ -106,12 +112,18 @@ struct GameDetailView: View {
                 alertTitle = "Game Added"
                 alertType = .complete(.green)
                 showAlert = true
+                announceAlert()
             } else {
                 alertTitle = "Game Removed"
                 alertType = .complete(.blue)
                 showAlert = true
+                announceAlert()
             }
         }
+    }
+
+    private func announceAlert() {
+        UIAccessibility.post(notification: .announcement, argument: alertTitle)
     }
     
     private func isCategoryActive(_ category: SaveGamesCategory, for gameID: Int) -> Bool {
@@ -144,11 +156,13 @@ struct GameDetailContent: View {
                 ZStack {
                     CoverImageView(url: game.coverURL)
                         .blur(radius: 5)
+                        .accessibilityHidden(true)
                     
                     CoverImageView(url: game.coverURL)
                         .scaleEffect(0.95)
                         .frame(alignment: .center)
                         .animation(.easeInOut, value: true)
+                        .accessibilityLabel("\(game.name) cover art")
                 }
                 
                 GameInformationView(game: game, showSpoilers: $showSpoilers)
@@ -187,8 +201,6 @@ struct GameInformationView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text(game.name)
                 .font(.title.width(.expanded))
-                .lineLimit(2)
-                .minimumScaleFactor(0.5)
             
             TagsGridView(tagNames: game.genres, tagColor: .accentColor, tagType: .genre)
             TagsGridView(tagNames: game.platforms, tagColor: .accentColor, tagType: .platform)
@@ -246,12 +258,14 @@ struct SummarySection: View {
                         .font(.body.monospaced())
                         .lineLimit(nil)
                         .opacity(showSpoilers ? 1 : 0.02)
+                        .accessibilityHidden(!showSpoilers)
                     
                     // Tap to reveal spoilers
                     if !showSpoilers {
                         Text("Tap on \(Image(systemName: "eye")) to show spoilers")
                             .font(.caption.width(.expanded))
                             .foregroundColor(.secondary)
+                            .accessibilityLabel("Spoilers hidden. Use the Show spoilers button in the toolbar to reveal them.")
                     }
                 }
             }
@@ -277,12 +291,14 @@ struct StorylineSection: View {
                         .font(.body.monospaced())
                         .lineLimit(nil)
                         .opacity(showSpoilers ? 1 : 0.02)
+                        .accessibilityHidden(!showSpoilers)
                     
                     // Tap to reveal spoilers
                     if !showSpoilers {
                         Text("Tap on \(Image(systemName: "eye")) to show spoilers")
                             .font(.caption.width(.expanded))
                             .foregroundColor(.secondary)
+                            .accessibilityLabel("Spoilers hidden. Use the Show spoilers button in the toolbar to reveal them.")
                     }
                 }
             }
@@ -313,6 +329,7 @@ struct ScreenshotsSection: View {
 struct ScreenshotCarouselView: View {
     var urls: [URL]
     @State private var selectedPage: Int = 0
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     
     var body: some View {
         VStack(spacing: 16) {
@@ -321,6 +338,7 @@ struct ScreenshotCarouselView: View {
                     ScreenshotImageView(url: urls[index])
                         .padding(.horizontal, 8)
                         .tag(index)
+                        .accessibilityLabel("Screenshot \(index + 1) of \(urls.count)")
                 }
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
@@ -329,14 +347,33 @@ struct ScreenshotCarouselView: View {
             // Custom dots
             HStack {
                 ForEach(urls.indices, id: \.self) { index in
-                    Circle()
-                        .fill(selectedPage == index ? .accentColor : Color.gray)
-                        .frame(width: 8, height: 8)
-                        .onTapGesture {
-                            withAnimation {
-                                selectedPage = index
-                            }
+                    Button {
+                        withAnimation(reduceMotion ? nil : .default) {
+                            selectedPage = index
                         }
+                    } label: {
+                        Circle()
+                            .fill(selectedPage == index ? .accentColor : Color.gray)
+                            .frame(width: 8, height: 8)
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Show screenshot \(index + 1) of \(urls.count)")
+                    .accessibilityAddTraits(selectedPage == index ? .isSelected : [])
+                }
+            }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Screenshots")
+            .accessibilityValue("Page \(selectedPage + 1) of \(urls.count)")
+            .accessibilityAdjustableAction { direction in
+                switch direction {
+                case .increment where selectedPage < urls.count - 1:
+                    selectedPage += 1
+                case .decrement where selectedPage > 0:
+                    selectedPage -= 1
+                default:
+                    break
                 }
             }
         }
@@ -390,6 +427,7 @@ struct VideosSection: View {
                                 .frame(width: 8, height: 8)
                         }
                     }
+                    .accessibilityHidden(true)
                 }
             }
         }
@@ -423,6 +461,8 @@ struct VideoThumbnailButton: View {
                         .foregroundColor(.red)
                 )
         }
+        .accessibilityLabel("Play video on YouTube")
+        .accessibilityHint("Opens Safari")
     }
 }
 

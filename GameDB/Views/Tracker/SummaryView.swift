@@ -18,9 +18,9 @@ struct SummaryView: View {
     @ObservedObject var summaryVM = SummaryViewModel()
     @ObservedObject var savedGamesVM = SavedGamesViewModel(category: .upcoming)
     let upcomingGamesTip = UpcomingGamesWidgetTip()
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
-    // Use flexible grid items with defined spacing
-    let layout: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 16), count: 2)
+    private var layout: [GridItem] { dynamicTypeSize.gameGridColumns }
 
     @EnvironmentObject private var deepLinkRouter: DeepLinkRouter
 
@@ -81,8 +81,9 @@ func destinationView(for category: SaveGamesCategory) -> some View {
 
 struct SavedGamesView: View {
     @ObservedObject var viewModel: SavedGamesViewModel
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
-    let columns = [GridItem(.flexible()), GridItem(.flexible())]
+    private var columns: [GridItem] { dynamicTypeSize.gameGridColumns }
 
     var body: some View {
         Group {
@@ -119,7 +120,7 @@ struct SavedGamesView: View {
                                             Text("\(daysLeft) days left")
                                                 .pixelatedFont(
                                                     size: 10,
-                                                    color: .purple
+                                                    color: .primary
                                                 )
                                         }
                                     }

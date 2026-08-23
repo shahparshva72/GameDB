@@ -13,15 +13,15 @@ struct SettingsView: View {
     
     // Colors for Light and Dark modes
     private var headerColor: Color {
-        isDarkMode ? .yellow : .blue
+        .primary
     }
     
     private var labelColor: Color {
-        isDarkMode ? .cyan : .green
+        .primary
     }
     
     private var onboardingLabelColor: Color {
-        isDarkMode ? .green : .purple
+        .primary
     }
     
     private var backgroundColor: Color {
@@ -49,11 +49,13 @@ struct SettingsView: View {
                         }
                     }
                     
-                    Label("Show Onboarding", systemImage: "apps.iphone")
-                        .pixelatedFont(size: 12, color: onboardingLabelColor)
-                        .onTapGesture {
+                    Button {
                             isOnboardingComplete.toggle()
+                    } label: {
+                        Label("Show Onboarding", systemImage: "apps.iphone")
+                            .pixelatedFont(size: 12, color: onboardingLabelColor)
                     }
+                    .accessibilityHint("Shows the introduction again")
                 }
             }
             .navigationTitle("Settings")

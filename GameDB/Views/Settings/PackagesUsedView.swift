@@ -18,7 +18,7 @@ struct PackagesUsedView: View {
 
     // Colors for Light and Dark modes
     private var linkColor: Color {
-        isDarkMode ? .cyan : .green
+        .primary
     }
 
     private var backgroundColor: Color {

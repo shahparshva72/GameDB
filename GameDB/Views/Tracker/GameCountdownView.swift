@@ -27,11 +27,12 @@ struct GameCountdownView: View {
                 .clipped()
                 .cornerRadius(10)
                 .shadow(radius: 5)
+                .accessibilityHidden(true)
 
             VStack(alignment: .leading) {
                 Text(game.name)
                     .font(.headline)
-                    .lineLimit(1)
+                    .lineLimit(2)
                     .truncationMode(.tail)
                     .foregroundStyle(Color.white)
 
@@ -42,8 +43,13 @@ struct GameCountdownView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(SaveGamesCategory.upcoming.color)
+        .background(
+            SaveGamesCategory.upcoming.color
+                .overlay(Color.black.opacity(0.5))
+        )
         .cornerRadius(10)
         .shadow(radius: 5)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(game.name), \(daysLeft) days left")
     }
 }

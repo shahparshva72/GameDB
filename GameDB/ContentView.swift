@@ -14,25 +14,6 @@ struct ContentView: View {
         
         UITabBar.appearance().scrollEdgeAppearance = appearance
         UITabBar.appearance().standardAppearance = appearance
-        // Custom font for tab bar
-        UITabBarItem.appearance().setTitleTextAttributes([
-            NSAttributedString.Key.font: UIFont(name: "PressStart2P-Regular", size: 10)!,
-        ], for: .normal)
-        
-        // Custom font for navigation bar
-        
-        let appear = UINavigationBarAppearance()
-        
-        let atters: [NSAttributedString.Key: Any] = [
-            .font: UIFont(name: "PressStart2P-Regular", size: 12)!
-        ]
-        
-        appear.largeTitleTextAttributes = atters
-        appear.titleTextAttributes = atters
-        UINavigationBar.appearance().standardAppearance = appear
-        UINavigationBar.appearance().compactAppearance = appear
-//        UINavigationBar.appearance().scrollEdgeAppearance = appear
-        
     }
     
     @EnvironmentObject private var deepLinkRouter: DeepLinkRouter

@@ -13,6 +13,7 @@ struct QuickScroll<T: Hashable, Content: View>: View {
     let sectionIdentifiers: [T]
     let proxy: ScrollViewProxy
     let content: (T) -> Content
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         HStack {
@@ -21,13 +22,14 @@ struct QuickScroll<T: Hashable, Content: View>: View {
             VStack(alignment: .center, spacing: 0) {
                 ForEach(sectionIdentifiers, id: \.self) { identifier in
                     Button {
-                        withAnimation {
+                        withAnimation(reduceMotion ? nil : .default) {
                             proxy.scrollTo(identifier, anchor: .top)
                             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                         }
                     } label: {
                         content(identifier)
                     }
+                    .accessibilityLabel("Jump to \(String(describing: identifier))")
                 }
             }
         }

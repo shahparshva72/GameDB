@@ -12,7 +12,8 @@ struct PlaceholderImage: View {
         Image(systemName: "photo")
             .aspectRatio(contentMode: .fit)
             .foregroundColor(.gray)
-            .background(Color(white: 0.95))
+            .background(Color(.secondarySystemBackground))
+            .accessibilityHidden(true)
     }
 }
 

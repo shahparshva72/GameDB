@@ -13,7 +13,6 @@ struct GameThumbnail: View {
     var name: String
 
     @State private var dominantColor: Color = .clear
-    @State private var dominantUIColor: UIColor = .clear
 
     var body: some View {
         VStack(alignment: .center) {
@@ -22,26 +21,29 @@ struct GameThumbnail: View {
                 .aspectRatio(contentMode: .fill)
                 .clipped()
                 .cornerRadius(20)
+                .accessibilityHidden(true)
                 .onAppear {
-                    ImageProcessing.getDominantColor(imageURLString: url!.absoluteString) { color, uiColor in
+                    guard let url else { return }
+                    ImageProcessing.getDominantColor(imageURLString: url.absoluteString) { color, _ in
                         dominantColor = color
-                        dominantUIColor = uiColor
                     }
                 }
 
             Text(name)
-                .pixelatedFont(size: 12, color: dominantUIColor.perceivedBrightness < 0.5 ? Color(hex: "#FAFAFA") : Color(hex: "#121212"))
+                .pixelatedFont(size: 12, color: .white)
                 .multilineTextAlignment(.center)
                 .padding(EdgeInsets(top: 16, leading: 8, bottom: 16, trailing: 16))
-                .background(
-                    Rectangle()
-                        .foregroundColor(dominantColor)
-                        .opacity(0.6)
-                        .blur(radius: 2.5)
-                )
+                .background {
+                    ZStack {
+                        dominantColor
+                        Color.black.opacity(0.65)
+                    }
+                }
         }
         .padding(10)
         .background(dominantColor)
         .cornerRadius(20)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(name)
     }
 }

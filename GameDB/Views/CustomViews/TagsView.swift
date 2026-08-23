@@ -15,9 +15,10 @@ struct TagsGridView: View {
     var tagType: TagType
 
     let viewModel = GamePlatformViewModel()
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
-        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+        LazyVGrid(columns: dynamicTypeSize.gameGridColumns, spacing: 10) {
             ForEach(tagNames, id: \.self) { tagName in
                 TagsView(name: tagName, color: tagColor)
             }
@@ -32,7 +33,7 @@ struct TagsView: View {
     var body: some View {
         Text(name)
             .font(.subheadline.width(.expanded))
-            .lineLimit(1)
+            .lineLimit(2)
             .truncationMode(.tail)
             .padding(.vertical, 5)
             .padding(.horizontal, 5)

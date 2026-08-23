@@ -11,8 +11,6 @@ import SwiftUI
 struct GameThumbnailCell: View {
     var url: URL?
     var name: String
-    let thumbnailHeight: CGFloat = 200
-    let thumbnailWidth: CGFloat = 155
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -21,13 +19,15 @@ struct GameThumbnailCell: View {
                     Image(systemName: "gamecontroller")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: thumbnailWidth * 0.5, height: thumbnailHeight * 0.5)
+                        .padding(40)
                         .foregroundColor(.gray)
                         .background(Color.gray.opacity(0.2))
+                        .accessibilityHidden(true)
                 }
                 .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: thumbnailWidth, height: thumbnailHeight)
+                .aspectRatio(CGFloat(3) / CGFloat(4), contentMode: .fill)
+                .frame(maxWidth: .infinity)
+                .clipped()
                 .background(Color(hex: "#27272A")) // Dark gray background
                 .cornerRadius(10)
                 .overlay(
@@ -35,14 +35,25 @@ struct GameThumbnailCell: View {
                         .stroke(Color.white, lineWidth: 2) // Border for retro feel
                 )
                 .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
+                .accessibilityHidden(true)
 
             Text(name)
-                .lineLimit(1)
+                .lineLimit(2)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .pixelatedFont(size: 12)
-                .foregroundColor(.white)
         }
-        .frame(width: thumbnailWidth)
+        .frame(maxWidth: .infinity)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(name)
+    }
+}
+
+extension DynamicTypeSize {
+    var gameGridColumns: [GridItem] {
+        Array(
+            repeating: GridItem(.flexible(), spacing: 16),
+            count: isAccessibilitySize ? 1 : 2
+        )
     }
 }
 

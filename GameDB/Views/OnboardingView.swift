@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct OnboardingView: View {
     @State private var currentPage = 0
     @Binding var isOnboardingComplete: Bool
     @State private var dragOffset: CGFloat = 0
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     let pages: [OnboardingPage] = [
         OnboardingPage(title: "Welcome to GamingQuest", description: "Your personal video game tracker and explorer", imageName: "gamecontroller"),
@@ -35,8 +37,8 @@ struct OnboardingView: View {
                         ForEach(0 ..< pages.count, id: \.self) { index in
                             if currentPage == index {
                                 OnboardingPageView(page: pages[index])
-                                    .transition(.opacity.combined(with: .scale))
-                                    .scaleEffect(currentPage == index ? 1 : 0.8)
+                                    .transition(reduceMotion ? .opacity : .opacity.combined(with: .scale))
+                                    .scaleEffect(reduceMotion || currentPage == index ? 1 : 0.8)
                                     .offset(x: CGFloat(index - currentPage) * geometry.size.width + dragOffset)
                             }
                         }
@@ -48,9 +50,9 @@ struct OnboardingView: View {
                             .onEnded { value in
                                 let threshold = geometry.size.width * 0.2
                                 if value.translation.width > threshold, currentPage > 0 {
-                                    withAnimation(.spring()) { currentPage -= 1 }
+                                    withAnimation(reduceMotion ? nil : .spring()) { currentPage -= 1 }
                                 } else if value.translation.width < -threshold, currentPage < pages.count - 1 {
-                                    withAnimation(.spring()) { currentPage += 1 }
+                                    withAnimation(reduceMotion ? nil : .spring()) { currentPage += 1 }
                                 }
                                 dragOffset = 0
                             }
@@ -64,13 +66,14 @@ struct OnboardingView: View {
 
                     if currentPage < pages.count - 1 {
                         Button(action: {
-                            withAnimation(.spring()) { currentPage += 1 }
+                            withAnimation(reduceMotion ? nil : .spring()) { currentPage += 1 }
                         }) {
                             Text("Next")
                                 .pixelatedFont(size: 14)
                                 .foregroundColor(.white)
-                                .frame(width: 200, height: 50)
-                                .background(Color.purple)
+                                .padding(.horizontal, 24)
+                                .frame(minWidth: 200, minHeight: 50)
+                                .background(Color.accentColor)
                                 .cornerRadius(10)
                         }
                         .padding(.bottom, 50)
@@ -81,11 +84,12 @@ struct OnboardingView: View {
                             Text("Get Started")
                                 .pixelatedFont(size: 14)
                                 .foregroundColor(.white)
-                                .frame(width: 200, height: 50)
+                                .padding(.horizontal, 24)
+                                .frame(minWidth: 200, minHeight: 50)
                                 .background(
                                     LinearGradient(
                                         gradient: Gradient(
-                                            colors: [.purple, .purple.opacity(0.8)]
+                                            colors: [.accentColor, .accentColor.opacity(0.85)]
                                         ),
                                         startPoint: .topLeading,
                                         endPoint: .bottomTrailing
@@ -95,11 +99,20 @@ struct OnboardingView: View {
                                 .scaleEffect(1.1)
                         }
                         .padding(.bottom, 50)
-                        .scaleEffect(1.05)
-                        .animation(Animation.easeInOut(duration: 0.8).repeatForever(autoreverses: true), value: currentPage)
+                        .scaleEffect(reduceMotion ? 1 : 1.05)
+                        .animation(
+                            reduceMotion ? nil : Animation.easeInOut(duration: 0.8).repeatForever(autoreverses: true),
+                            value: currentPage
+                        )
                     }
                 }
             }
+        }
+        .onChange(of: currentPage) { _, newPage in
+            UIAccessibility.post(
+                notification: .pageScrolled,
+                argument: "\(pages[newPage].title), page \(newPage + 1) of \(pages.count)"
+            )
         }
     }
 }
@@ -115,6 +128,7 @@ struct OnboardingPage: Identifiable {
 struct OnboardingPageView: View {
     let page: OnboardingPage
     @State private var isAnimating = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         VStack(spacing: 20) {
@@ -125,14 +139,15 @@ struct OnboardingPageView: View {
                 .padding()
                 .foregroundColor(.white)
                 .shadow(color: Color.black.opacity(0.5), radius: 10, x: 0, y: 4)
-                .scaleEffect(isAnimating ? 1.0 : 0.5)
-                .animation(.easeInOut(duration: 0.6), value: isAnimating)
+                .scaleEffect(reduceMotion || isAnimating ? 1.0 : 0.5)
+                .animation(reduceMotion ? nil : .easeInOut(duration: 0.6), value: isAnimating)
+                .accessibilityHidden(true)
 
             Text(page.title)
                 .pixelatedFont(size: 20)
                 .foregroundColor(.white)
                 .opacity(isAnimating ? 1.0 : 0.0)
-                .animation(.easeInOut(duration: 0.5).delay(0.3), value: isAnimating)
+                .animation(reduceMotion ? nil : .easeInOut(duration: 0.5).delay(0.3), value: isAnimating)
 
             Text(page.description)
                 .pixelatedFont(size: 14)
@@ -140,7 +155,7 @@ struct OnboardingPageView: View {
                 .foregroundColor(.white)
                 .padding(.horizontal)
                 .opacity(isAnimating ? 1.0 : 0.0)
-                .animation(.easeInOut(duration: 0.5).delay(0.4), value: isAnimating)
+                .animation(reduceMotion ? nil : .easeInOut(duration: 0.5).delay(0.4), value: isAnimating)
         }
         .onAppear { isAnimating = true }
         .onDisappear { isAnimating = false }
@@ -150,6 +165,7 @@ struct OnboardingPageView: View {
 // Custom Progress Bar View
 struct ProgressBar: View {
     var progress: CGFloat
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -160,8 +176,11 @@ struct ProgressBar: View {
             Capsule()
                 .fill(Color.purple)
                 .frame(width: progress * 200, height: 10)
-                .animation(.easeInOut(duration: 0.6), value: progress)
+                .animation(reduceMotion ? nil : .easeInOut(duration: 0.6), value: progress)
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Onboarding progress")
+        .accessibilityValue("\(Int(progress * 100)) percent")
     }
 }
 

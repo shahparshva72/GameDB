@@ -49,6 +49,7 @@ struct BoxView: View {
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
+            .overlay(Color.black.opacity(0.55))
         )
         .cornerRadius(15)
         .overlay(
@@ -57,7 +58,7 @@ struct BoxView: View {
         )
 //        .shadow(color: categoryColor.opacity(0.6), radius: 10, x: 0, y: 8) // Deeper shadow for depth
         .accessibilityElement(children: .ignore)
-        .accessibility(label: Text("\(title) \(count)"))
+        .accessibilityLabel("\(title), \(count)")
         .scaleEffect(1.05) // Slight enlargement for emphasis
     }
 }

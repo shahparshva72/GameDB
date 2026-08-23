@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct NewsFeedView: View {
     @StateObject private var viewModel = NewsFeedViewModel()
@@ -45,14 +46,12 @@ struct NewsContentListView: View {
             if viewModel.isLoading {
                 ShimmerListView()
                     .padding([.horizontal, .top])
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel("Loading news")
             } else {
                 List(viewModel.items, id: \.id) { newsItem in
-                    ZStack {
+                    NavigationLink(destination: NewsContentView(urlString: newsItem.link)) {
                         NewsFeedItemView(newsItem: newsItem)
-                        NavigationLink(destination: NewsContentView(urlString: newsItem.link)) {
-                            EmptyView()
-                        }
-                        .opacity(0)
                     }
                     .listRowSeparator(.hidden)
                 }
@@ -80,8 +79,13 @@ struct PaginationControls: View {
             Button("Previous") {
                 Task {
                     await viewModel.loadPreviousPage()
+                    UIAccessibility.post(
+                        notification: .pageScrolled,
+                        argument: "News page \(viewModel.currentPage)"
+                    )
                 }
             }
+            .frame(minHeight: 44)
             .foregroundColor(viewModel.currentPage == 1 || viewModel.isLoading ? .gray : .primary)
             .disabled(viewModel.currentPage == 1 || viewModel.isLoading)
 
@@ -90,14 +94,21 @@ struct PaginationControls: View {
             Button("Next") {
                 Task {
                     await viewModel.loadNextPage()
+                    UIAccessibility.post(
+                        notification: .pageScrolled,
+                        argument: "News page \(viewModel.currentPage)"
+                    )
                 }
             }
+            .frame(minHeight: 44)
             .foregroundColor(!viewModel.hasMoreNews || viewModel.isLoading ? .gray : .primary)
             .disabled(!viewModel.hasMoreNews || viewModel.isLoading)
         }
         .pixelatedFont(size: 14)
         .padding()
         .background(.ultraThinMaterial)
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("News pagination, page \(viewModel.currentPage)")
     }
 }
 
@@ -109,12 +120,12 @@ struct NewsErrorView: View {
         VStack(spacing: 16) {
             Image(systemName: "newspaper.fill")
                 .font(.system(size: 50))
-                .foregroundColor(.gray)
+                .foregroundColor(.secondary)
 
             Text(message)
                 .pixelatedFont(size: 14)
                 .multilineTextAlignment(.center)
-                .foregroundColor(.gray)
+                .foregroundColor(.primary)
             
             Button(action: {
                 Task {
@@ -125,7 +136,7 @@ struct NewsErrorView: View {
                     .foregroundColor(.white)
                     .padding(.horizontal, 24)
                     .padding(.vertical, 12)
-                    .background(Color.purple)
+                    .background(Color.accentColor)
                     .cornerRadius(10)
                     .pixelatedFont(size: 14)
             }

@@ -175,6 +175,10 @@ private struct WidgetHeader: View {
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(WidgetPalette.secondaryText)
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(
+            gameCount == 1 ? "Up Next, 1 game" : "Up Next, \(gameCount) games"
+        )
     }
 }
 

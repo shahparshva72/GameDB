@@ -9,6 +9,7 @@ import SwiftUI
 
 struct GameListView: View {
     @ObservedObject var gamesList: GameList
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -39,7 +40,11 @@ struct GameListView: View {
                         }
                     }
                 }
-                .transition(AnyTransition.opacity.combined(with: .move(edge: .trailing)).animation(.easeInOut(duration: 0.8)))
+                .transition(
+                    reduceMotion
+                        ? .opacity
+                        : .opacity.combined(with: .move(edge: .trailing))
+                )
             }
         }
         .pixelatedFont(size: 12)

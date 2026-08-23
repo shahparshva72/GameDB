@@ -39,11 +39,11 @@ struct FeedSelectionView: View {
 
     // Colors for Light and Dark modes
     private var textColor: Color {
-        isDarkMode ? .cyan : .green
+        .primary
     }
 
     private var loadingTextColor: Color {
-        isDarkMode ? .yellow : .blue
+        .primary
     }
 
     private var errorColor: Color {

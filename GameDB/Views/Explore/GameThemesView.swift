@@ -30,11 +30,9 @@ struct GameThemeDetailView: View {
     @State private var currentOffset: Int = 0
     @State private var areGamesAvailable: Bool = true
     @EnvironmentObject var networkManager: NetworkManager
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
-    private let columns: [GridItem] = [
-        GridItem(.flexible(), spacing: 16),
-        GridItem(.flexible(), spacing: 16),
-    ]
+    private var columns: [GridItem] { dynamicTypeSize.gameGridColumns }
 
     var body: some View {
         ScrollViewReader { _ in
@@ -43,7 +41,6 @@ struct GameThemeDetailView: View {
                     ForEach(games) { game in
                         NavigationLink(destination: GameDetailView(gameID: game.id)) {
                             GameThumbnailCell(url: game.coverURL, name: game.name)
-                                .frame(width: 155)
                         }
                     }
                 }

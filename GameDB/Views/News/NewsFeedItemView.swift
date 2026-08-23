@@ -10,6 +10,7 @@ import SwiftUI
 
 struct NewsFeedItemView: View {
     let newsItem: RSSItem
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     @State private var dominantColor: Color = .white
     @State private var dominantUIColor: UIColor = .clear
@@ -26,6 +27,7 @@ struct NewsFeedItemView: View {
                     .fade(duration: 0.25)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
+                    .accessibilityHidden(true)
                     .onAppear {
                         ImageProcessing.getDominantColor(imageURLString: newsItem.image) { color, uiColor in
                             dominantColor = color
@@ -38,15 +40,15 @@ struct NewsFeedItemView: View {
 
             VStack(alignment: .leading, spacing: 8.0) {
                 Text(newsItem.title)
-                    .font(.system(size: 12, weight: .semibold, design: .default).width(.expanded))
-                    .lineLimit(2)
+                    .font(.headline.width(.expanded))
+                    .lineLimit(dynamicTypeSize.isAccessibilitySize ? nil : 2)
 
                 if let publishedDate = newsItem.publishedDate {
                     Text(publishedDate, style: .date)
-                        .font(.system(size: 10, weight: .semibold, design: .default).width(.expanded))
+                        .font(.caption.weight(.semibold).width(.expanded))
                 } else {
                     Text("Date unavailable")
-                        .font(.system(size: 10, weight: .semibold, design: .default).width(.expanded))
+                        .font(.caption.weight(.semibold).width(.expanded))
                         .foregroundColor(.gray)
                 }
             }
@@ -54,7 +56,22 @@ struct NewsFeedItemView: View {
             .padding(.horizontal, 16)
         }
         .padding(.bottom, 8)
-        .background(dominantColor.opacity(0.6))
+        .background {
+            ZStack {
+                dominantColor
+                Color.black.opacity(0.65)
+            }
+        }
         .cornerRadius(20)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityLabel)
+        .accessibilityHint("Opens the article")
+    }
+
+    private var accessibilityLabel: String {
+        if let publishedDate = newsItem.publishedDate {
+            return "\(newsItem.title), published \(publishedDate.formatted(date: .long, time: .omitted))"
+        }
+        return "\(newsItem.title), date unavailable"
     }
 }
